@@ -122,9 +122,7 @@ local function loadSlots(...)
 end
 local function checkLink(link)
 	local data=select(3,strsplit("|",link))
-	print("cl1",data)
     local enchant=select(3,strsplit(':',data)) or 0
-	print("cl2",enchant)
     return tonumber(enchant) or 0
 end
 local function slotsCheck (...)
@@ -143,9 +141,6 @@ local function slotsCheck (...)
 			ilevel=ilevel or 1
 			t.ilevel:SetFormattedText("%3d",ilevel)
 			local g	=(ilevel-avgmin)/(range*2)
-			if (slotId==1) then
-				print("avgmin="..avgmin,ilevel-avgmin,range,g)
-				end
 			equippedCount=equippedCount+1
 			trueAvg=trueAvg+ilevel
 			t.ilevel:SetTextColor(ColorGradient(g,1,0,0,1,1,0,0,1,0))
