@@ -1,0 +1,22 @@
+## Interface: 40200
+## Title: ItemLevelDisplay
+## Notes: Useful automation routines
+## Author: Alar of Daggerspine
+## Version: @project-version@ r@project-revision@
+## X-Version: 1.0.0alfa
+## eMail: alar@aspide.it
+## RequiredDeps:
+## OptionalDeps: 
+## X-Embeds: 
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: dbILD
+## SavedVariablesPerCharacter: localdbILD
+## X-ID: ILD
+## X-Database: dbILD
+## X-Revision: $Revision: 1 $
+## X-Category: Bags and Inventory
+## X-License: GPL v3
+## X-eMail: alar@aspide.it
+## X-Date: @project-date-iso@
+ItemLevelDisplay.lua

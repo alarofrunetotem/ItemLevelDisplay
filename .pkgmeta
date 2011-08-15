@@ -1,0 +1,16 @@
+package-as: ItemLevelDisplay
+enable-nolib-creation: no
+
+#externals:
+#  libs/Ace3: 
+#    url: svn://svn.wowace.com/wow/ace3/mainline/trunk
+#    tag: latest
+#  libs/AlarShared-3.0: svn://svn.curseforge.net/wow/alar-art-remover/mainline/trunk/AlarShared-3.0 
+#    url: svn://svn.curseforge.net/wow/alar-art-remover/mainline/trunk/AlarShared-3.0
+#    tag: latest
+
+
+ignore: 
+ - .buildpath
+ - .project
+ 
