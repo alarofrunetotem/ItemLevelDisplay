@@ -48,12 +48,16 @@ local tmp={}
 local function getNumSocket(itemlink)
 	if (not sockets[itemlink]) then
 		local s=0
-		table.wipe(tmp)
 		tmp=GetItemStats(itemlink,tmp)
-		for k,v in pairs(tmp) do
-			if (k:find("EMPTY_SOCKET_",1,true)) then
-				s=s+v
+		if (type(tmp)=="table") then
+			for k,v in pairs(tmp) do
+				if (k:find("EMPTY_SOCKET_",1,true)) then
+					s=s+v
+				end
 			end
+			table.wipe(tmp)
+		else
+			tmp={}
 		end
 		sockets[itemlink]=s
 	end
@@ -127,6 +131,7 @@ local function checkLink(link)
 end
 local function slotsCheck (...)
 	if (not dirty) then return end
+	if (not CharacterFrame:IsShown()) then return end
 	if (not slots) then loadSlots(PaperDollItemsFrame:GetChildren()) end
 	local avgmin=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
@@ -151,7 +156,6 @@ local function slotsCheck (...)
 			end
 			local sockets=getNumSocket(itemlink)
 			local gems=getNumGems(GetInventoryItemGems(slotId))
-			debug(name,slotId,"S",sockets,"G",gems)
 			if (sockets ~= gems ) then
 				t.gem:SetFormattedText("%d",sockets-gems)
 			else
