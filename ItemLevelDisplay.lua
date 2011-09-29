@@ -11,7 +11,35 @@ local function debug(...)
 print(...)
 --@end-debug@
 end
-print("ItemLevelDisplay Version 0.9")
+local print=_G.print
+local notify=_G.print
+local error=_G.error
+local function dump() end
+local function debugEnable() end
+if (LibStub("AlarLoader-3.0",true)) then
+	local rc=LibStub("AlarLoader-3.0"):GetPrintFunctions(me)
+	print=rc.print
+	--@debug@
+	debug=rc.debug
+	dump=rc.dump
+	--@end-debug@
+	notify=rc.notify
+	error=rc.error
+	debugEnable=rc.debugEnable
+else
+	debug("Missing AlarLoader-3.0")
+end
+debugEnable(false)
+local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
+--------------------------------------
+local _G=_G
+local GetItemStats=GetItemStats
+local GetInventorySlotInfo=GetInventorySlotInfo
+local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true)
+_G.ILD=addon
+local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
+local C=LibStub("AlarCrayon-3.0"):GetColorTable()
+--------------------------------------
 local range=8
 local markdirty
 local blue={0, 0.6, 1}
@@ -20,32 +48,33 @@ local yellow={1, 1, 0}
 local prismatic={1, 1, 1}
 local green={0,1,0}
 local dirty=true
+local eventframe=nil
 local slotsList={
-HeadSlot={E=true,F=nil},
-NeckSlot={E=false,F=nil},
-ShoulderSlot={E=true,F=nil},
-BackSlot={E=true,F=nil},
-ChestSlot={E=true,F=nil},
+HeadSlot={E=true},
+NeckSlot={E=false},
+ShoulderSlot={E=true},
+BackSlot={E=true},
+ChestSlot={E=true},
 ShirtSlot=false,
 TabardSlot=false,
-WristSlot={E=true,F=nil},
-HandsSlot={E=true,F=nil},
-WaistSlot={E=false,F=nil},
-LegsSlot={E=true,F=nil},
-FeetSlot={E=true,F=nil},
-Finger0Slot={E=false,F=nil},
-Finger1Slot={E=false,F=nil},
-Trinket0Slot={E=false,F=nil},
-Trinket1Slot={E=false,F=nil},
-MainHandSlot={E=false,F=nil},
-SecondaryHandSlot={E=true,F=nil},
-RangedSlot={E=true,F=nil}
+WristSlot={E=true},
+HandsSlot={E=true},
+WaistSlot={E=false,S=true},
+LegsSlot={E=true},
+FeetSlot={E=true},
+Finger0Slot={E=false},
+Finger1Slot={E=false},
+Trinket0Slot={E=false},
+Trinket1Slot={E=false},
+MainHandSlot={E=false},
+SecondaryHandSlot={E=true},
+RangedSlot={E=true,S=true}
 }
 local stats={}
 local sockets={}
 local slots=false
 local tmp={}
-local function getNumSocket(itemlink)
+function addon:getNumSocket(itemlink)
 	if (not sockets[itemlink]) then
 		local s=0
 		tmp=GetItemStats(itemlink,tmp)
@@ -63,7 +92,7 @@ local function getNumSocket(itemlink)
 	end
 	return sockets[itemlink]
 end		
-local function getNumGems(...)
+function addon:getNumGems(...)
 	local s=0
 	for v in pairs({...}) do
 		if v then s=s+1 end
@@ -71,7 +100,7 @@ local function getNumGems(...)
 	return s
 end
 
-local function ColorGradient(perc, ...)
+function addon:colorGradient(perc, ...)
 	if perc >= 1 then
 		local r, g, b = select(select('#', ...) - 2, ...)
 		return r, g, b
@@ -84,7 +113,7 @@ local function ColorGradient(perc, ...)
 	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
 	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 end
-local function addLayer(f,id)
+function addon:addLayer(f,id)
 	local font="NumberFont_Outline_Med"
 	--local font="NumberFont_OutlineThick_Mono_Small"
 	--local font="NumberFontNormalYellow"         
@@ -111,7 +140,7 @@ local function addLayer(f,id)
 	g:SetJustifyH("RIGHT")
 	return {ilevel=t,gem=g,enc=e}
 end
-local function loadSlots(...)
+function addon:loadSlots(...)
 	slots={}
    	for i=1,select('#',...) do
    		local frame=select(i,...) -- Got SlotFrame 
@@ -119,20 +148,34 @@ local function loadSlots(...)
    		if (slotsList[slotname]) then
 			local slotId=GetInventorySlotInfo(slotname)
 			if (slotId) then
-				slots[slotId]={frame=addLayer(frame,slotId),enchantable=slotsList[slotname]['E']}
+				slots[slotId]={
+					frame=self:addLayer(frame,slotId),
+					enchantable=slotsList[slotname]['E'],
+					special=slotsList[slotname]['S']
+				}
 			end
 		end
    end
 end
-local function checkLink(link)
+function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
     local enchant=select(3,strsplit(':',data)) or 0
     return tonumber(enchant) or 0
 end
-local function slotsCheck (...)
+function addon:checkSpecial(ID,link)
+	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
+	itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link)  
+	print(ID,itemLink,itemType)
+	if (itemEquipLoc == "INVTYPE_RANGED") then
+		return true
+	else
+		return false
+	end
+end
+function addon:slotsCheck (...)
 	if (not dirty) then return end
 	if (not CharacterFrame:IsShown()) then return end
-	if (not slots) then loadSlots(PaperDollItemsFrame:GetChildren()) end
+	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
 	local avgmin=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
 	local equippedCount=0
@@ -143,20 +186,25 @@ local function slotsCheck (...)
 		if (itemid) then
 			local  name,itemlink,itemrarity,ilevel=GetItemInfo(itemid)
 			local itemlink=GetInventoryItemLink("player",slotId)
+			if enchantable and data.special then
+				enchantable=self:checkSpecial(slotId,itemlink)
+			end
 			ilevel=ilevel or 1
 			t.ilevel:SetFormattedText("%3d",ilevel)
 			local g	=(ilevel-avgmin)/(range*2)
 			equippedCount=equippedCount+1
 			trueAvg=trueAvg+ilevel
-			t.ilevel:SetTextColor(ColorGradient(g,1,0,0,1,1,0,0,1,0))
-			if (enchantable and checkLink(itemlink) <1) then 
+			if (self:GetToggle("COLORIZE")) then
+				t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
+			end
+			if (enchantable and self:GetToggle("SHOWENCHANT") and self:checkLink(itemlink) <1) then
 				t.enc:SetText("E") 
 			else 
 				t.enc:SetText("") 
 			end
-			local sockets=getNumSocket(itemlink)
-			local gems=getNumGems(GetInventoryItemGems(slotId))
-			if (sockets ~= gems ) then
+			local sockets=self:getNumSocket(itemlink)
+			local gems=self:getNumGems(GetInventoryItemGems(slotId))
+			if (sockets > gems and self:GetToggle("SHOWSOCKETS")) then
 				t.gem:SetFormattedText("%d",sockets-gems)
 			else
 				t.gem:SetText("")
@@ -168,14 +216,36 @@ local function slotsCheck (...)
 		end
 	end
 end
-local function markdirty()
+function addon:markDirty()
 	dirty=true
-	slotsCheck()
+	self:slotsCheck()
 end
 
-local XX1 -- Event Dispatcher
-XX1=CreateFrame("Frame","XX1",CharacterFrame)
-XX1:RegisterEvent("UNIT_INVENTORY_CHANGED")
-XX1:RegisterEvent("PLAYER_LOGIN")
-XX1:SetScript("OnEvent",markdirty)
-CharacterFrame:HookScript("OnShow",slotsCheck)
+function addon:OnInitialized()
+	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
+	self:RegisterEvent("PLAYER_LOGIN","markDirty")
+	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
+	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])    
+	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])    
+	self:AddToggle('COLORIZE',true,L['Colors item level relative to average itemlevel'])    
+	self:loadHelp()
+end
+function addon:loadHelp()
+self:RelNotes(1,0,1,[[
+Fixed: Waist slot was ignored
+]])
+self:RelNotes(1,0,0,[[
+Initial release
+]])
+self:HF_Title("Quick Item Level Display","Description")
+self:HF_Paragraph("Description")
+self:HF_Pre([[
+ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll frame showing:
+
+    ItemLevel
+    Socket Status
+    Enchant Status
+    
+(internal)
+]])
+end

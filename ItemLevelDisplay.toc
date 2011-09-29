@@ -3,7 +3,7 @@
 ## Notes: Useful automation routines
 ## Author: Alar of Daggerspine
 ## Version: @project-version@ r@project-revision@
-## X-Version: 1.0.1
+## X-Version: 1.0.2beta
 ## eMail: alar@aspide.it
 ## RequiredDeps:
 ## OptionalDeps: 
@@ -19,4 +19,7 @@
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
 ## X-Date: @project-date-iso@
+embeds.xml
+localization.lua
 ItemLevelDisplay.lua
+RelNotes.lua
