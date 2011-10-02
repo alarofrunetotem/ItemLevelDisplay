@@ -3,7 +3,7 @@
 ## Notes: Useful automation routines
 ## Author: Alar of Daggerspine
 ## Version: @project-version@ r@project-revision@
-## X-Version: 1.0.2beta
+## X-Version: 1.0.3
 ## eMail: alar@aspide.it
 ## RequiredDeps:
 ## OptionalDeps: 

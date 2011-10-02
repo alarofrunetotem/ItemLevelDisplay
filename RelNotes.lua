@@ -3,6 +3,10 @@ local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 -- $Id: RelNotes.lua 191 2010-12-26 17:09:14Z alar $
 function hlp:loadHelp()
+self:RelNotes(1,0,3,[[
+Fixed: Removed chat spam  18 [Name of item in slot 18] item type
+Feature: Config menu via blizzard menu or /ild gui 
+]])
 self:RelNotes(1,0,2,[[
 Fixed: Waist slot no longer display -1 when you have a belt buckle filled
 Fixed: Now only guns/bows/crossbows should check for enchants

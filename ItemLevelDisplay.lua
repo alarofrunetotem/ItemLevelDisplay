@@ -165,7 +165,6 @@ end
 function addon:checkSpecial(ID,link)
 	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
 	itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link)  
-	print(ID,itemLink,itemType)
 	if (itemEquipLoc == "INVTYPE_RANGED") then
 		return true
 	else
