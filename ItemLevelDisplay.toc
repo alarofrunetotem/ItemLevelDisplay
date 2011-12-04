@@ -1,9 +1,9 @@
-## Interface: 40200
+## Interface: 40300
 ## Title: ItemLevelDisplay
 ## Notes: Useful automation routines
 ## Author: Alar of Daggerspine
 ## Version: @project-version@ r@project-revision@
-## X-Version: 1.0.3
+## X-Version: 1.0.4
 ## eMail: alar@aspide.it
 ## RequiredDeps:
 ## OptionalDeps: 
