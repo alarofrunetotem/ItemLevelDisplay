@@ -194,7 +194,11 @@ function addon:slotsCheck (...)
 			equippedCount=equippedCount+1
 			trueAvg=trueAvg+ilevel
 			if (self:GetToggle("COLORIZE")) then
-				t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
+				if (self:GetToggle("REVERSE")) then
+					t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
+				else
+					t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
+				end
 			end
 			if (enchantable and self:GetToggle("SHOWENCHANT") and self:checkLink(itemlink) <1) then
 				t.enc:SetText("E") 
@@ -227,6 +231,7 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])    
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])    
 	self:AddToggle('COLORIZE',true,L['Colors item level relative to average itemlevel'])    
+	self:AddToggle('REVERSE',false,L['Invert color scale (best items are red)'])    
 	self:loadHelp()
 end
 function addon:loadHelp()
