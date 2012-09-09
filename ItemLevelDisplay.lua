@@ -33,6 +33,8 @@ debugEnable(false)
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 --------------------------------------
 local _G=_G
+local type=type
+local pairs=pairs
 local GetItemStats=GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
 local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true)
