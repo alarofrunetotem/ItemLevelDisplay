@@ -52,7 +52,7 @@ local green={0,1,0}
 local dirty=true
 local eventframe=nil
 local slotsList={
-HeadSlot={E=true},
+HeadSlot={E=false},
 NeckSlot={E=false},
 ShoulderSlot={E=true},
 BackSlot={E=true},
@@ -121,7 +121,7 @@ function addon:addLayer(f,id)
 	--local font="NumberFontNormalYellow"         
 	--local font="NumberFont_Outline_Large"
 	--local font="NumberFont_Outline_Huge"
-	t=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font)      
+	local t=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font)      
 	t:SetHeight(15)
 	t:SetWidth(45)
 	t:SetPoint("BOTTOMRIGHT")
