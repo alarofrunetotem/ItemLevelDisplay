@@ -3,7 +3,7 @@ local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 -- $Id: RelNotes.lua 191 2010-12-26 17:09:14Z alar $
 function hlp:loadHelp()
-self:RelNotes(1,0,8)[[
+self:RelNotes(1,0,8,[[
 Fixed: Head slot is no longer enchantable
 ]])
 self:RelNotes(1,0,5,[[
