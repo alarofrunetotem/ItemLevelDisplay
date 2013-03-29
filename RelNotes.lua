@@ -5,6 +5,7 @@ local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
 self:RelNotes(1,1,0,[[
 Upgrade: Accounts for 5.1 item upgrades
+Feature: Level text can now be moved via /ild gui
 ]])
 self:RelNotes(1,0,8,[[
 Fixed: Head slot is no longer enchantable

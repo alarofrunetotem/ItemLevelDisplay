@@ -128,26 +128,51 @@ function addon:addLayer(f,id)
 	--local font="NumberFontNormalYellow"         
 	--local font="NumberFont_Outline_Large"
 	--local font="NumberFont_Outline_Huge"
-	local t=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font)      
-	t:SetHeight(15)
-	t:SetWidth(45)
-	t:SetPoint("BOTTOMRIGHT")
-	t:SetJustifyH("RIGHT")
+	local t=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font)
+	t:SetText()      
 	font="NumberFont_OutlineThick_Mono_Small"
 	local e=f:CreateFontString(me .."enc"..id,"OVERLAY",font)
+	e:SetText("")
+	local g=f:CreateFontString(me..'gem'..id,"OVERLAY",font)
+	g:SetText("")
+	self:placeLayer(t,e,g)
+	return {ilevel=t,gem=g,enc=e}
+end	
+function addon:placeLayer(t,e,g)
+	t:ClearAllPoints()
+	e:ClearAllPoints()
+	g:ClearAllPoints()
+	t:SetHeight(15)
+	t:SetWidth(45)
+	local corner=self:GetVar("CORNER")
+	local additional="BOTTOM"
+	if (corner == "br" or corner == "bl") then
+	  additional="TOP"
+	end
+	if (corner == "br") then
+	t:SetPoint("BOTTOMRIGHT")
+	t:SetJustifyH("RIGHT")
+	elseif (corner=="tr") then
+	t:SetPoint("TOPRIGHT")
+	t:SetJustifyH("RIGHT")
+	elseif (corner=="bl") then
+	t:SetPoint("BOTTOMLEFT")
+	t:SetJustifyH("LEFT")
+	elseif (corner=="tl") then
+	t:SetPoint("TOPLEFT")
+	t:SetJustifyH("LEFT")
+	end
 	e:SetHeight(15)
 	e:SetWidth(30)
-	e:SetPoint("TOPLEFT")
+	e:SetPoint(additional .."LEFT")
 	e:SetJustifyH("LEFT")
-	e:SetText("")
 	e:SetTextColor(1,0,0)
-	local g=f:CreateFontString(me..'gem'..id,"OVERLAY",font)
+
 	g:SetHeight(15)
 	g:SetWidth(30)
-	g:SetPoint("TOPRIGHT")
+	g:SetPoint(additional .. "RIGHT")
 	g:SetTextColor(1,0,0)
 	g:SetJustifyH("RIGHT")
-	return {ilevel=t,gem=g,enc=e}
 end
 function addon:loadSlots(...)
 	slots={}
@@ -170,7 +195,6 @@ function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
     local enchant=select(3,strsplit(':',data)) or 0
     local upgrade=select(12,strsplit(':',data)) or 0
-	print(link,upgrade,enchant,"(",data,")")
     return tonumber(enchant) or 0,tonumber(upgrade) or 0
 end
 function addon:checkSpecial(ID,link)
@@ -180,6 +204,12 @@ function addon:checkSpecial(ID,link)
 		return true
 	else
 		return false
+	end
+end
+function addon:ApplyCORNER(value)
+	if (not slots) then return end 
+	for  slotId,data in pairs(slots) do
+		self:placeLayer(data.frame.ilevel,data.frame.enc,data.frame.gem)
 	end
 end
 function addon:slotsCheck (...)
@@ -244,7 +274,13 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])    
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])    
 	self:AddToggle('COLORIZE',true,L['Colors item level relative to average itemlevel'])    
-	self:AddToggle('REVERSE',false,L['Invert color scale (best items are red)'])    
+	self:AddToggle('REVERSE',false,L['Invert color scale (best items are red)'])
+	self:AddSelect('CORNER',"br",
+		{br=L['Bottom Right'],
+		tr=L['Top Right'],
+		tl=L['Top Left'],
+		bl=L['Bottom Left']
+		},L['Position'],L['Level text aligned to'])	    
 	self:loadHelp()
 end
 function addon:loadHelp()

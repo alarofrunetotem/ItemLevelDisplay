@@ -35,3 +35,7 @@ L=l:NewLocale(me,"zhTW")
 if (L) then
 --@localization(locale="zhTW", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="english" )@
 end
+L=l:NewLocale(me,"itIT")
+if (L) then
+--@localization(locale="itIT", format="lua_additive_table" , escape-non-ascii=true, same-key-is-true=true, handle-unlocalized="english" )@
+end
