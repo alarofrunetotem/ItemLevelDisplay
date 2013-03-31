@@ -14,7 +14,7 @@
 ## SavedVariablesPerCharacter: localdbILD
 ## X-ID: ILD
 ## X-Database: dbILD
-## X-Revision: $Revision: 1 $
+## X-Revision: $Revision$
 ## X-Category: Bags and Inventory
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it

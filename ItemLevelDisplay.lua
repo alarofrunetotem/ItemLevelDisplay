@@ -32,6 +32,9 @@ end
 debugEnable(false)
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 --------------------------------------
+--@debug@
+local wininfo
+--@end-debug@
 local _G=_G
 local type=type
 local pairs=pairs
@@ -195,7 +198,10 @@ function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
     local enchant=select(3,strsplit(':',data)) or 0
     local upgrade=select(12,strsplit(':',data)) or 0
-    return tonumber(enchant) or 0,tonumber(upgrade) or 0
+--@alpha@    
+    print (link,"[",upgrade,"]",data)
+--@end-alpha@
+    return tonumber(enchant) or 0,upgrade or "0"
 end
 function addon:checkSpecial(ID,link)
 	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
@@ -280,25 +286,46 @@ function addon:OnInitialized()
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-		},L['Position'],L['Level text aligned to'])	    
+		},L['Position'],L['Level text aligned to'])
+	
+	--@debug@
+    self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot"])
+	--@end-debug@
 	self:loadHelp()
 end
-function addon:loadHelp()
-self:RelNotes(1,0,1,[[
-Fixed: Waist slot was ignored
-]])
-self:RelNotes(1,0,0,[[
-Initial release
-]])
-self:HF_Title("Quick Item Level Display","Description")
-self:HF_Paragraph("Description")
-self:HF_Pre([[
-ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll frame showing:
-
-    ItemLevel
-    Socket Status
-    Enchant Status
-    
-(internal)
-]])
+--@debug@
+local wininfo
+function addon:cmdInfo()
+	local gui=LibStub("AceGUI-3.0")
+	wininfo=gui:Create("Frame")
+	wininfo:SetTitle("Please post this screenshot to curse, thanks")
+	wininfo:SetStatusText("Add the expected ilevel for upgraded items")
+	if (not CharacterFrame:IsShown()) then
+		ToggleCharacter("PaperDollFrame")
+	else
+		print("Already show")
+	end
+	ToggleCharacter("PaperDollFrame")
+	for  slotId,data in pairs(slots) do
+		local gui=LibStub("AceGUI-3.0")				
+		local l=gui:Create("Label")
+		local itemid=GetInventoryItemID("player",slotId)
+		if (itemid) then
+			local  name,itemlink,itemrarity,ilevel=GetItemInfo(itemid)
+			local itemlink=GetInventoryItemLink("player",slotId)
+			local data=select(3,strsplit("|",itemlink or "|||||"))
+			local e,u=self:checkLink(itemlink)
+			l:SetFullWidth(true)
+			l:SetText(format("%s:  %s %s %s %s",
+				name,
+				C(ilevel,"green"),
+				C(u,"yellow"),
+				C(levelAdjust[u],"orange"),
+				data or "<empty>"
+				)
+				)
+				wininfo:AddChild(l)
+		end
+	end	
 end
+--@end-debug@
