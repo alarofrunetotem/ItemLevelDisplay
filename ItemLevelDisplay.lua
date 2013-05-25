@@ -430,10 +430,7 @@ function addon:OnInitialized()
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
 		},L['Position'],L['Gem frame position'])
-	
-	--@debug@
-    self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot"])
-	--@end-debug@
+    self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"])
 	self:loadHelp()
 end
 function addon:addGemLayer()
@@ -495,7 +492,7 @@ function addon:placeGemLayer()
 		previous=i
 	end
 end
---@debug@
+
 local wininfo
 function addon:cmdInfo()
 	local gui=LibStub("AceGUI-3.0")
@@ -530,4 +527,4 @@ function addon:cmdInfo()
 		end
 	end	
 end
---@end-debug@
+

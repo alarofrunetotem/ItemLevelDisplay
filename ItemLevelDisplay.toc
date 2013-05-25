@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50300
 ## Title: ItemLevelDisplay
 ## Notes: Useful automation routines
 ## Author: Alar of Daggerspine
