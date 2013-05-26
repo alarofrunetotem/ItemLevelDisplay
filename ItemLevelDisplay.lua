@@ -32,9 +32,6 @@ end
 debugEnable(false)
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 --------------------------------------
---@debug@
-local wininfo
---@end-debug@
 local _G=_G
 local type=type
 local pairs=pairs
@@ -42,8 +39,8 @@ local GetItemStats=GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
 local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true)
 _G.ILD=addon
-local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local C=LibStub("AlarCrayon-3.0"):GetColorTable()
+local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
 local addonName="ILD"
 local range=8
@@ -107,13 +104,6 @@ local Green_localized = 52245
 local Purple_localized = 52213
 local Orange_localized = 52222
 local Meta_localized = 52296
---http://www.wowinterface.com/forums/showthread.php?t=45388
-  local levelAdjust={ -- 11th item:id field and level adjustment
-  ["0"]=0,["1"]=8,["373"]=4,["374"]=8,["375"]=4,["376"]=4,
-  ["377"]=4,["379"]=4,["380"]=4,["445"]=0,["446"]=4,["447"]=8,
-  ["451"]=0,["452"]=8,["453"]=0,["454"]=4,["455"]=8,["456"]=0,
-  ["457"]=8,["458"]=0,["459"]=4,["460"]=8,["461"]=12,["462"]=16}
-
 function addon:getSockets(itemlink)
 	if (not sockets[itemlink]) then
 		local s=0
@@ -326,7 +316,7 @@ function addon:slotsCheck (...)
 				enchantable=self:checkSpecial(slotId,itemlink)
 			end
 			ilevel=ilevel or 1
-			local upvalue=levelAdjust[upval] or 0
+			local upvalue=I:GetItemLevelUpgrade(upval)
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 			local g	=(ilevel-avgmin)/(range*2)
 			equippedCount=equippedCount+1
