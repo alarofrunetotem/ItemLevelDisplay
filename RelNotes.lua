@@ -3,6 +3,12 @@ local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
 self:RelNotes(1,1,2,[[
+Fixed: Gem count was inaccurate
+Fixed: Gem layer was appearing even when on different Character Frame tab
+Fixed: (Hopefully) Upgraded item was displayed incorrectly
+Fixed: /ild showinfo was giving an error
+]])
+self:RelNotes(1,1,2,[[
 Upgrade: Accounts for 5.3 item upgrades
 ]])
 self:RelNotes(1,1,0,[[

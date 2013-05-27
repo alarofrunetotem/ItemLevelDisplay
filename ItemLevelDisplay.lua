@@ -29,9 +29,11 @@ if (LibStub("AlarLoader-3.0",true)) then
 else
 	debug("Missing AlarLoader-3.0")
 end
-debugEnable(false)
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 --------------------------------------
+--@debug@
+print("ItemLevelDisplay ALPHA version")
+--@end-debug@
 local _G=_G
 local type=type
 local pairs=pairs
@@ -48,23 +50,23 @@ local markdirty
 local blue={0, 0.6, 1}
 local red={1, 0.4, 0.4}
 local yellow={1, 1, 0}
-local prismatic={1, 1, 1}
+local meta={1, 1, 1}
 local green={0,1,0}
 local dirty=true
 local eventframe=nil
-local redGems, blueGems, yellowGems, prismaticGems = 0, 0, 0, 0
+local redGems, blueGems, yellowGems, metaGems = 0, 0, 0, 0
 local gems={}
 local textures={
  blue = "Interface\\Icons\\inv_misc_cutgemsuperior2",
  red =  "Interface\\Icons\\inv_misc_cutgemsuperior6",
  yellow =  "Interface\\Icons\\inv_misc_cutgemsuperior",
- prismatic = "Interface\\Icons\\INV_Jewelcrafting_DragonsEye02"
+ meta = "Interface\\Icons\\INV_Jewelcrafting_DragonsEye02"
 }
 local gemcolors={
 	blue=blue,
 	red=red,
 	yellow=yellow,
-	prismatic=prismatic
+	meta=meta
 }
 
 local slotsList={
@@ -95,7 +97,7 @@ local gframe=false
 local gred=false
 local gblue=false
 local gyellow=false
-local prismatic=false
+local meta=false
 local tmp={}
 local Red_localized = 52255
 local Blue_localized = 52235
@@ -111,7 +113,9 @@ function addon:getSockets(itemlink)
 		local b=0
 		local y=0
 		local p=0
-		--debug (itemlink)
+		--@debug@
+		debug ("ItemLink for gem",itemlink)
+		--@end-debug@
 		local tmp=GetItemStats(itemlink,tmp)
 		if (type(tmp)=="table") then
 			for k,v in pairs(tmp) do
@@ -132,16 +136,22 @@ function addon:getSockets(itemlink)
 		end
 		s=r+b+y+p
 		sockets[itemlink]={s=s,r=r,y=y,b=b,p=p}
-		--debug(s,r,y,b,p)
+		--@debug@
+		debug("Gem List","T:",s,"R:",r,"Y:",y,"B:",b,"M:",p)
+		--@end-debug@
 	end
 	return sockets[itemlink]
 end		
 function addon:getNumGems(...)
 	local s=0
-	--debug("GEMS",...)
+	--@debug@
+	debug("GEMS",...)
+	--@end-debug@
 	for v,i in pairs({...}) do
 		if v then
-		 	--debug("GEM",v,GetItemInfo(i))
+			--@debug@
+		 	debug("GEM",v,GetItemInfo(i))
+		 	--@end-debug@
 			s=s+1 
 		end
 	end
@@ -235,7 +245,7 @@ function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
     local enchant=select(3,strsplit(':',data)) or 0
     local upgrade=select(12,strsplit(':',data)) or 0
-    return tonumber(enchant) or 0,upgrade or "0"
+    return tonumber(enchant) or 0,tonumber(upgrade) or 0
 end
 function addon:checkSpecial(ID,link)
 	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
@@ -285,9 +295,9 @@ local empty={r=0,p=0,b=0,y=0}
 	    	r=1
 	    	y=1
 	    elseif testGem == Meta_localized then
-	    	p=0
-	    else
 	    	p=1
+	    else
+	    	p=0
 	    end
 	    gems[gem]={r=r,b=b,y=y,p=p}
 	    debug(testGem,r,b,y,p)
@@ -375,7 +385,7 @@ function addon:slotsCheck (...)
 
 	end
 	if (self:GetToggle("SHOWGEMS")) then
-		self["buttonprismatic"].text:SetFormattedText("%d/%d",p,tp)
+		self["buttonmeta"].text:SetFormattedText("%d/%d",p,tp)
 		self["buttonred"].text:SetFormattedText("%d/%d",r,tr)
 		self["buttonblue"].text:SetFormattedText("%d/%d",b,tb)
 		self["buttonyellow"].text:SetFormattedText("%d/%d",y,ty)
@@ -395,7 +405,9 @@ function addon:loadGemLocalizedStrings()
 	Green_localized = select(7, GetItemInfo(Green_localized))
 	Purple_localized = select(7, GetItemInfo(Purple_localized))
 	Orange_localized = select(7, GetItemInfo(Orange_localized))
+	debug(Meta_localized,GetItemInfo(Meta_localized))
 	Meta_localized = select(7,GetItemInfo(Meta_localized))
+	debug(Meta_localized)
 	self:addGemLayer()
 end
 
@@ -424,9 +436,13 @@ function addon:OnInitialized()
 	self:loadHelp()
 end
 function addon:addGemLayer()
-	gframe=CreateFrame("frame",addonName .. "main",CharacterFrame)
+	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame)
+	local alarframe=LibStub("AlarFrames-3.0",true)
 	gframe:SetHeight(75)
 	gframe:SetWidth(100)
+	if (alarframe) then
+		alarframe:TTAdd(gframe,L["Total compatible gems/Total sockets"],false)
+	end
 	local x=0
 	for i,k in pairs(textures) do
 		self["button"..i] = PaperDollItemsFrame:CreateTexture(addonName.."button"..i, "OVERLAY")
@@ -453,11 +469,9 @@ function addon:placeGemLayer()
 	local x,y=0,0
 	local notv
 	if (v=="TOP") then
-		y=-55
-		notv="BOTTOM"
+		y=-65
 	else
 	    y=40
-	    notv="TOP"
 	end
 	if (h=="LEFT") then
 		x=55
@@ -466,21 +480,7 @@ function addon:placeGemLayer()
 		x=240
 	end
 	gframe:ClearAllPoints()
-	gframe:SetPoint(v..h,CharacterFrame,v..h,x,y)
-	if (true) then return end
-	for i,k in pairs(textures) do
-		local frame = self["button"..i]
-		if (not frame) then return end
-		if first then
-			first=false
-			frame:ClearAllPoints();
-			frame:SetPoint(v..h, CharacterFrame, v..h, x, y)
-		else
-			frame:ClearAllPoints()
-			frame:SetPoint(v, self["button"..previous],notv)
-		end
-		previous=i
-	end
+	gframe:SetPoint(v..h,PaperDollFrame,v..h,x,y)
 end
 
 local wininfo
@@ -509,7 +509,7 @@ function addon:cmdInfo()
 				name,
 				C(ilevel,"green"),
 				C(u,"yellow"),
-				C(levelAdjust[u],"orange"),
+				C(I:GetItemLevelUpgrade(u),"orange"),
 				data or "<empty>"
 				)
 				)
