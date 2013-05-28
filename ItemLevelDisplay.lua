@@ -2,14 +2,14 @@ local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- MUST BE LINE 1
 local _,_,_,toc=GetBuildInfo()
 local pp=print
 local me, ns = ...
---@debug@
+--[===[@debug@
 print("Loading",__FILE__," inside ",me)
---@end-debug@
+--@end-debug@]===]
 if (LibDebug) then LibDebug() end
 local function debug(...) 
---@debug@
+--[===[@debug@
 print(...)
---@end-debug@
+--@end-debug@]===]
 end
 local print=_G.print
 local notify=_G.print
@@ -19,10 +19,10 @@ local function debugEnable() end
 if (LibStub("AlarLoader-3.0",true)) then
 	local rc=LibStub("AlarLoader-3.0"):GetPrintFunctions(me)
 	print=rc.print
-	--@debug@
+	--[===[@debug@
 	debug=rc.debug
 	dump=rc.dump
-	--@end-debug@
+	--@end-debug@]===]
 	notify=rc.notify
 	error=rc.error
 	debugEnable=rc.debugEnable
@@ -31,9 +31,9 @@ else
 end
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 --------------------------------------
---@debug@
+--[===[@debug@
 print("ItemLevelDisplay ALPHA version")
---@end-debug@
+--@end-debug@]===]
 local _G=_G
 local type=type
 local pairs=pairs
@@ -113,9 +113,9 @@ function addon:getSockets(itemlink)
 		local b=0
 		local y=0
 		local p=0
-		--@debug@
+		--[===[@debug@
 		debug ("ItemLink for gem",itemlink)
-		--@end-debug@
+		--@end-debug@]===]
 		local tmp=GetItemStats(itemlink,tmp)
 		if (type(tmp)=="table") then
 			for k,v in pairs(tmp) do
@@ -136,22 +136,22 @@ function addon:getSockets(itemlink)
 		end
 		s=r+b+y+p
 		sockets[itemlink]={s=s,r=r,y=y,b=b,p=p}
-		--@debug@
+		--[===[@debug@
 		debug("Gem List","T:",s,"R:",r,"Y:",y,"B:",b,"M:",p)
-		--@end-debug@
+		--@end-debug@]===]
 	end
 	return sockets[itemlink]
 end		
 function addon:getNumGems(...)
 	local s=0
-	--@debug@
+	--[===[@debug@
 	debug("GEMS",...)
-	--@end-debug@
+	--@end-debug@]===]
 	for v,i in pairs({...}) do
 		if v then
-			--@debug@
+			--[===[@debug@
 		 	debug("GEM",v,GetItemInfo(i))
-		 	--@end-debug@
+		 	--@end-debug@]===]
 			s=s+1 
 		end
 	end

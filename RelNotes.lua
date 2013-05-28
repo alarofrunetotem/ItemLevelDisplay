@@ -5,7 +5,7 @@ function hlp:loadHelp()
 self:RelNotes(1,1,2,[[
 Fixed: Gem count was inaccurate
 Fixed: Gem layer was appearing even when on different Character Frame tab
-Fixed: (Hopefully) Upgraded item was displayed incorrectly
+Fixed: Upgraded item was displayed incorrectly
 Fixed: /ild showinfo was giving an error
 ]])
 self:RelNotes(1,1,2,[[
