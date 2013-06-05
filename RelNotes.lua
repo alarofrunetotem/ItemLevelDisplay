@@ -2,6 +2,9 @@ local me,ns=...
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
+self:RelNotes(1,2,4,[[
+Feature: More localization
+]])
 self:RelNotes(1,1,2,[[
 Fixed: Gem count was inaccurate
 Fixed: Gem layer was appearing even when on different Character Frame tab
