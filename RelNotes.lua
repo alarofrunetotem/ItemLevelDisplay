@@ -2,6 +2,9 @@ local me,ns=...
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
+self:RelNotes(1,2,6,[[
+Upgrade: Accounts for 5.4 item upgrades
+]])
 self:RelNotes(1,2,4,[[
 Feature: More localization
 ]])

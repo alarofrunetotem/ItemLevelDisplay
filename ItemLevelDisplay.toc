@@ -1,9 +1,9 @@
-## Interface: 50300
+## Interface: 50400
 ## Title: ItemLevelDisplay
 ## Notes: Useful automation routines
 ## Author: Alar of Daggerspine
 ## Version: @project-version@ r@project-revision@
-## X-Version: 1.1.3Beta
+## X-Version: 1.2.6
 ## eMail: alar@aspide.it
 ## RequiredDeps:
 ## OptionalDeps: 
