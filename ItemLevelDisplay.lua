@@ -328,11 +328,25 @@ function addon:slotsCheck (...)
 			ilevel=ilevel or 1
 			local upvalue=I:GetItemLevelUpgrade(upval)
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
-			local g	=(ilevel-avgmin)/(range*2)
-			equippedCount=equippedCount+1
-			trueAvg=trueAvg+ilevel
-			if (self:GetToggle("COLORIZE")) then
-				if (self:GetToggle("REVERSE")) then
+			-- Apply actual color scheme
+			if (self:GetToggle('COLORSCHEME')=='qual') then
+				for token in string.gmatch((itemrarity), "[^%s]+") do
+					if tonumber(token) == 3 then
+					t.ilevel:SetTextColor(0.39,0.73,1.0,1.0)
+					elseif tonumber(token) == 4 then
+					t.ilevel:SetTextColor(0.8,0.6,1.0,1.0)
+					else
+					local r, g, b, hex = GetItemQualityColor(itemrarity)
+					t.ilevel:SetTextColor(r,g,b,1.0)
+					end
+				end
+			elseif (self:GetToggle("COLORSCHEME")=='plain') then
+					t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
+			else		
+				-- Only the two level based schemes are left	
+				local g	=(ilevel-avgmin)/(range*2)
+				trueAvg=trueAvg+ilevel
+				if (self:GetToggle("COLORSCHEME")=='lvdn') then
 					t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
 				else
 					t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
@@ -418,8 +432,15 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])    
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])    
 	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems'])    
-	self:AddToggle('COLORIZE',true,L['Colors item level relative to average itemlevel'])    
-	self:AddToggle('REVERSE',false,L['Invert color scale (best items are red)'])
+	self:AddSelect('COLORSCHEME',"lvup",
+		{
+		lvup=L['level relative to average itemlevel (best are red)'],
+		lvdn=L['level relative to average itemlevel (worst are red)'],
+		qual=L['quality'],
+		plain=L['plain white']},
+		L['Color scheme'],
+		L['Colorize items by']
+	)
 	self:AddSelect('CORNER',"br",
 		{br=L['Bottom Right'],
 		tr=L['Top Right'],
