@@ -8,6 +8,7 @@ Feature: Refactored appearance with now 4 color schmeme:
  * Quality: based on item quality from poor to Heirloom
  * Level Up: based on relative level (red are best)
  * Level Down: based on relative level (red are worst)
+ Thanks to KVLtv for donating the code
 ]])
 self:RelNotes(1,2,7,[[
 Upgrade: Accounts for 5.4.8 item upgrades
