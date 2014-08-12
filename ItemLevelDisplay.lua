@@ -6,10 +6,10 @@ local me, ns = ...
 print("Loading",__FILE__," inside ",me)
 --@end-debug@
 if (LibDebug) then LibDebug() end
-local function debug(...) 
---@debug@
-print(...)
---@end-debug@
+local function debug(...)
+	--@debug@
+	print(...)
+	--@end-debug@
 end
 local print=_G.print
 local notify=_G.print
@@ -57,10 +57,10 @@ local eventframe=nil
 local redGems, blueGems, yellowGems, metaGems = 0, 0, 0, 0
 local gems={}
 local textures={
- blue = "Interface\\Icons\\inv_misc_cutgemsuperior2",
- red =  "Interface\\Icons\\inv_misc_cutgemsuperior6",
- yellow =  "Interface\\Icons\\inv_misc_cutgemsuperior",
- meta = "Interface\\Icons\\INV_Jewelcrafting_DragonsEye02"
+	blue = "Interface\\Icons\\inv_misc_cutgemsuperior2",
+	red =  "Interface\\Icons\\inv_misc_cutgemsuperior6",
+	yellow =  "Interface\\Icons\\inv_misc_cutgemsuperior",
+	meta = "Interface\\Icons\\INV_Jewelcrafting_DragonsEye02"
 }
 local gemcolors={
 	blue=blue,
@@ -70,25 +70,25 @@ local gemcolors={
 }
 
 local slotsList={
-HeadSlot={E=false},
-NeckSlot={E=false},
-ShoulderSlot={E=true},
-BackSlot={E=true},
-ChestSlot={E=true},
-ShirtSlot=false,
-TabardSlot=false,
-WristSlot={E=true},
-HandsSlot={E=true},
-WaistSlot={E=false,S=true},
-LegsSlot={E=true},
-FeetSlot={E=true},
-Finger0Slot={E=false},
-Finger1Slot={E=false},
-Trinket0Slot={E=false},
-Trinket1Slot={E=false},
-MainHandSlot={E=false},
-SecondaryHandSlot={E=true},
-RangedSlot={E=true,S=true}
+	HeadSlot={E=false},
+	NeckSlot={E=false},
+	ShoulderSlot={E=true},
+	BackSlot={E=true},
+	ChestSlot={E=true},
+	ShirtSlot=false,
+	TabardSlot=false,
+	WristSlot={E=true},
+	HandsSlot={E=true},
+	WaistSlot={E=false,S=true},
+	LegsSlot={E=true},
+	FeetSlot={E=true},
+	Finger0Slot={E=false},
+	Finger1Slot={E=false},
+	Trinket0Slot={E=false},
+	Trinket1Slot={E=false},
+	MainHandSlot={E=false},
+	SecondaryHandSlot={E=true},
+	RangedSlot={E=true,S=true}
 }
 local stats={}
 local sockets={}
@@ -141,7 +141,7 @@ function addon:getSockets(itemlink)
 		--@end-debug@
 	end
 	return sockets[itemlink]
-end		
+end
 function addon:getNumGems(...)
 	local s=0
 	--@debug@
@@ -150,9 +150,9 @@ function addon:getNumGems(...)
 	for v,i in pairs({...}) do
 		if v then
 			--@debug@
-		 	debug("GEM",v,GetItemInfo(i))
-		 	--@end-debug@
-			s=s+1 
+			debug("GEM",v,GetItemInfo(i))
+			--@end-debug@
+			s=s+1
 		end
 	end
 	return s
@@ -174,11 +174,11 @@ end
 function addon:addLayer(f,id)
 	local font="NumberFont_Outline_Med"
 	--local font="NumberFont_OutlineThick_Mono_Small"
-	--local font="NumberFontNormalYellow"         
+	--local font="NumberFontNormalYellow"
 	--local font="NumberFont_Outline_Large"
 	--local font="NumberFont_Outline_Huge"
 	local t=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font)
-	t:SetText()      
+	t:SetText()
 	font="NumberFont_OutlineThick_Mono_Small"
 	local e=f:CreateFontString(me .."enc"..id,"OVERLAY",font)
 	e:SetText("")
@@ -186,7 +186,7 @@ function addon:addLayer(f,id)
 	g:SetText("")
 	self:placeLayer(t,e,g)
 	return {ilevel=t,gem=g,enc=e}
-end	
+end
 
 local function corner2points(corner)
 	local positions={
@@ -208,7 +208,7 @@ function addon:placeLayer(t,e,g)
 	local v,h=corner2points(self:GetVar("CORNER"))
 	local additional="BOTTOM"
 	if (v=="BOTTOM") then
-	  additional="TOP"
+		additional="TOP"
 	end
 	t:SetPoint(v..h)
 	t:SetJustifyH(h)
@@ -226,10 +226,10 @@ function addon:placeLayer(t,e,g)
 end
 function addon:loadSlots(...)
 	slots={}
-   	for i=1,select('#',...) do
-   		local frame=select(i,...) -- Got SlotFrame 
-   		local slotname=frame:GetName():gsub('Character','')
-   		if (slotsList[slotname]) then
+	for i=1,select('#',...) do
+		local frame=select(i,...) -- Got SlotFrame
+		local slotname=frame:GetName():gsub('Character','')
+		if (slotsList[slotname]) then
 			local slotId=GetInventorySlotInfo(slotname)
 			if (slotId) then
 				slots[slotId]={
@@ -239,17 +239,17 @@ function addon:loadSlots(...)
 				}
 			end
 		end
-   end
+	end
 end
 function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
-    local enchant=select(3,strsplit(':',data)) or 0
-    local upgrade=select(12,strsplit(':',data)) or 0
-    return tonumber(enchant) or 0,tonumber(upgrade) or 0
+	local enchant=select(3,strsplit(':',data)) or 0
+	local upgrade=select(12,strsplit(':',data)) or 0
+	return tonumber(enchant) or 0,tonumber(upgrade) or 0
 end
 function addon:checkSpecial(ID,link)
 	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
-	itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link)  
+	itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link)
 	if (itemEquipLoc == "INVTYPE_RANGED") then
 		return true
 	else
@@ -257,7 +257,7 @@ function addon:checkSpecial(ID,link)
 	end
 end
 function addon:ApplySHOWGEMS(value)
-if (not gframe) then return end
+	if (not gframe) then return end
 	if (value) then
 		gframe:Show()
 	else
@@ -265,7 +265,7 @@ if (not gframe) then return end
 	end
 end
 function addon:ApplyCORNER(value)
-	if (not slots) then return end 
+	if (not slots) then return end
 	for  slotId,data in pairs(slots) do
 		self:placeLayer(data.frame.ilevel,data.frame.enc,data.frame.gem)
 	end
@@ -274,35 +274,35 @@ function addon:ApplyGEMCORNER(value)
 	self:placeGemLayer()
 end
 function addon:getGemColors(gem)
-local empty={r=0,p=0,b=0,y=0}
+	local empty={r=0,p=0,b=0,y=0}
 	if (not gem) then return empty end
 	if (false or not gems[gem]) then
 		local r,b,y,p=0,0,0,0
-	    local testGem = (select(7, GetItemInfo(gem)))
-	    if testGem == Red_localized then
-	    	r=1
-	    elseif testGem == Blue_localized then
-	    	b=1
-	    elseif testGem == Yellow_localized then
-	    	y=1
-	    elseif testGem == Green_localized then
-	    	b=1
-	    	y=1
-	    elseif testGem == Purple_localized then
-	    	r=1
-	    	b=1
-	    elseif testGem == Orange_localized then
-	    	r=1
-	    	y=1
-	    elseif testGem == Meta_localized then
-	    	p=1
-	    else
-	    	p=0
-	    end
-	    gems[gem]={r=r,b=b,y=y,p=p}
-	    debug(testGem,r,b,y,p)
-    end
-    return gems[gem]
+		local testGem = (select(7, GetItemInfo(gem)))
+		if testGem == Red_localized then
+			r=1
+		elseif testGem == Blue_localized then
+			b=1
+		elseif testGem == Yellow_localized then
+			y=1
+		elseif testGem == Green_localized then
+			b=1
+			y=1
+		elseif testGem == Purple_localized then
+			r=1
+			b=1
+		elseif testGem == Orange_localized then
+			r=1
+			y=1
+		elseif testGem == Meta_localized then
+			p=1
+		else
+			p=0
+		end
+		gems[gem]={r=r,b=b,y=y,p=p}
+		debug(testGem,r,b,y,p)
+	end
+	return gems[gem]
 end
 function addon:slotsCheck (...)
 	if (not dirty) then return end
@@ -321,7 +321,7 @@ function addon:slotsCheck (...)
 			local  name,itemlink,itemrarity,ilevel=GetItemInfo(itemid)
 			local itemlink=GetInventoryItemLink("player",slotId)
 			local enchval,upval=self:checkLink(itemlink)
-			
+
 			if enchantable and data.special then
 				enchantable=self:checkSpecial(slotId,itemlink)
 			end
@@ -329,33 +329,33 @@ function addon:slotsCheck (...)
 			local upvalue=I:GetItemLevelUpgrade(upval)
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 			-- Apply actual color scheme
-			if (self:GetToggle('COLORSCHEME')=='qual') then
+			if (self:GetVar('COLORSCHEME')=='qual') then
 				for token in string.gmatch((itemrarity), "[^%s]+") do
 					if tonumber(token) == 3 then
-					t.ilevel:SetTextColor(0.39,0.73,1.0,1.0)
+						t.ilevel:SetTextColor(0.39,0.73,1.0,1.0)
 					elseif tonumber(token) == 4 then
-					t.ilevel:SetTextColor(0.8,0.6,1.0,1.0)
+						t.ilevel:SetTextColor(0.8,0.6,1.0,1.0)
 					else
-					local r, g, b, hex = GetItemQualityColor(itemrarity)
-					t.ilevel:SetTextColor(r,g,b,1.0)
+						local r, g, b, hex = GetItemQualityColor(itemrarity)
+						t.ilevel:SetTextColor(r,g,b,1.0)
 					end
 				end
-			elseif (self:GetToggle("COLORSCHEME")=='plain') then
-					t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
-			else		
-				-- Only the two level based schemes are left	
+			elseif (self:GetVar("COLORSCHEME")=='plain') then
+				t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
+			else
+				-- Only the two level based schemes are left
 				local g	=(ilevel-avgmin)/(range*2)
 				trueAvg=trueAvg+ilevel
-				if (self:GetToggle("COLORSCHEME")=='lvdn') then
+				if (self:GetVar("COLORSCHEME")=='lvdn') then
 					t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
 				else
 					t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
 				end
 			end
 			if (enchantable and self:GetToggle("SHOWENCHANT") and  enchval<1) then
-				t.enc:SetText(L["E"]) 
-			else 
-				t.enc:SetText("") 
+				t.enc:SetText(L["E"])
+			else
+				t.enc:SetText("")
 			end
 			local sockets=self:getSockets(itemlink)
 			local gem1,gem2,gem3,gem4=GetInventoryItemGems(slotId)
@@ -392,8 +392,8 @@ function addon:slotsCheck (...)
 			ty=ty+sockets.y
 			tp=tp+sockets.p
 		else
-			t.gem:SetText("") 
-			t.enc:SetText("") 
+			t.gem:SetText("")
+			t.enc:SetText("")
 			t.ilevel:SetText('')
 		end
 
@@ -429,31 +429,31 @@ function addon:OnInitialized()
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
 	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
 	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
-	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])    
-	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])    
-	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems'])    
+	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])
+	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])
+	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems'])
 	self:AddSelect('COLORSCHEME',"lvup",
-		{
-		lvup=L['level relative to average itemlevel (best are red)'],
-		lvdn=L['level relative to average itemlevel (worst are red)'],
+	{
+		lvup=L['itemlevel (green best)'],
+		lvdn=L['itemlevel (red best)'],
 		qual=L['quality'],
-		plain=L['plain white']},
-		L['Color scheme'],
-		L['Colorize items by']
+		plain=L['none (plain white)']},
+	L['Colorize items by'],
+	L['Choose a color scheme']
 	)
 	self:AddSelect('CORNER',"br",
-		{br=L['Bottom Right'],
+	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-		},L['Position'],L['Level text aligned to'])
+	},L['Position'],L['Level text aligned to'])
 	self:AddSelect('GEMCORNER',"br",
-		{br=L['Bottom Right'],
+	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-		},L['Position'],L['Gem frame position'])
-    self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"])
+	},L['Position'],L['Gem frame position'])
+	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"])
 	self:loadHelp()
 end
 function addon:addGemLayer()
@@ -483,7 +483,7 @@ function addon:addGemLayer()
 	self:placeGemLayer()
 end
 function addon:placeGemLayer()
-	if (not gframe) then return end 
+	if (not gframe) then return end
 	local first=true
 	local previous
 	local v,h=corner2points(self:GetVar("GEMCORNER"))
@@ -492,7 +492,7 @@ function addon:placeGemLayer()
 	if (v=="TOP") then
 		y=-65
 	else
-	    y=40
+		y=40
 	end
 	if (h=="LEFT") then
 		x=55
@@ -517,7 +517,7 @@ function addon:cmdInfo()
 	end
 	ToggleCharacter("PaperDollFrame")
 	for  slotId,data in pairs(slots) do
-		local gui=LibStub("AceGUI-3.0")				
+		local gui=LibStub("AceGUI-3.0")
 		local l=gui:Create("Label")
 		local itemid=GetInventoryItemID("player",slotId)
 		if (itemid) then
@@ -527,15 +527,15 @@ function addon:cmdInfo()
 			local e,u=self:checkLink(itemlink)
 			l:SetFullWidth(true)
 			l:SetText(format("%s:  %s %s %s %s",
-				name,
-				C(ilevel,"green"),
-				C(u,"yellow"),
-				C(I:GetItemLevelUpgrade(u),"orange"),
-				data or "<empty>"
-				)
-				)
-				wininfo:AddChild(l)
+			name,
+			C(ilevel,"green"),
+			C(u,"yellow"),
+			C(I:GetItemLevelUpgrade(u),"orange"),
+			data or "<empty>"
+			)
+			)
+			wininfo:AddChild(l)
 		end
-	end	
+	end
 end
 

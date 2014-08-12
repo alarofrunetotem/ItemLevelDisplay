@@ -6,8 +6,8 @@ self:RelNotes(1,3,0,[[
 Feature: Refactored appearance with now 4 color schmeme:
  * Plain: no color at all
  * Quality: based on item quality from poor to Heirloom
- * Level Up: based on relative level (red are best)
- * Level Down: based on relative level (red are worst)
+ * Level green: based on relative level (green are best)
+ * Level red: based on relative level (red are best)
  Thanks to KVLtv for donating the code
 ]])
 self:RelNotes(1,2,7,[[
