@@ -39,7 +39,7 @@ local type=type
 local pairs=pairs
 local GetItemStats=GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
-local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true)
+local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true) --#ItemLevelDisplay
 _G.ILD=addon
 local C=LibStub("AlarCrayon-3.0"):GetColorTable()
 local I=LibStub("LibItemUpgradeInfo-1.0")
@@ -106,6 +106,8 @@ local Green_localized = 52245
 local Purple_localized = 52213
 local Orange_localized = 52222
 local Meta_localized = 52296
+---
+--@function [parent=#ItemLevelDisplay]
 function addon:getSockets(itemlink)
 	if (not sockets[itemlink]) then
 		local s=0
@@ -142,6 +144,8 @@ function addon:getSockets(itemlink)
 	end
 	return sockets[itemlink]
 end
+---
+--@function [parent=#ItemLevelDisplay] 
 function addon:getNumGems(...)
 	local s=0
 	--@debug@
@@ -432,27 +436,27 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])
 	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems'])
-	self:AddSelect('COLORSCHEME',"lvup",
-	{
-		lvup=L['itemlevel (green best)'],
-		lvdn=L['itemlevel (red best)'],
-		qual=L['quality'],
-		plain=L['none (plain white)']},
-	L['Colorize items by'],
-	L['Choose a color scheme']
-	)
 	self:AddSelect('CORNER',"br",
 	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-	},L['Position'],L['Level text aligned to'])
+	},L['Level text aligned to'],L['Position'])
+	self:AddSelect('COLORSCHEME',"qual",
+	{
+		lvup=L['itemlevel (red best)'],
+		lvdn=L['itemlevel (green best)'],
+		qual=L['quality'],
+		plain=L['none (plain white)']},
+	L['Colorize level text by'],
+	L['Choose a color scheme']
+	)
 	self:AddSelect('GEMCORNER',"br",
 	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-	},L['Position'],L['Gem frame position'])
+	},L['Gem frame position'],L['Position'])
 	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"])
 	self:loadHelp()
 end

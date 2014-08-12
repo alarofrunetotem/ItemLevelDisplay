@@ -12,6 +12,6 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>net.sf.lunareclipse.core.nature</nature>
+		<nature>org.eclipse.koneki.ldt.nature</nature>
 	</natures>
 </projectDescription>
