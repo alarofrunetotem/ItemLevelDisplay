@@ -79,17 +79,17 @@ local slotsList={
 	TabardSlot=false,
 	WristSlot={E=true},
 	HandsSlot={E=true},
-	WaistSlot={E=false,S=true},
+	WaistSlot={E=false},
 	LegsSlot={E=true},
 	FeetSlot={E=true},
 	Finger0Slot={E=false},
 	Finger1Slot={E=false},
 	Trinket0Slot={E=false},
 	Trinket1Slot={E=false},
-	MainHandSlot={E=false},
+	MainHandSlot={E=true},
 	SecondaryHandSlot={E=true},
-	RangedSlot={E=true,S=true}
 }
+
 local stats={}
 local sockets={}
 local slots=false
@@ -109,7 +109,7 @@ local Meta_localized = 52296
 ---
 --@function [parent=#ItemLevelDisplay]
 function addon:getSockets(itemlink)
-	if (not sockets[itemlink]) then
+	--if (not sockets[itemlink]) then
 		local s=0
 		local r=0
 		local b=0
@@ -141,7 +141,7 @@ function addon:getSockets(itemlink)
 		--@debug@
 		debug("Gem List","T:",s,"R:",r,"Y:",y,"B:",b,"M:",p)
 		--@end-debug@
-	end
+	--end
 	return sockets[itemlink]
 end
 ---
@@ -251,15 +251,6 @@ function addon:checkLink(link)
 	local upgrade=select(12,strsplit(':',data)) or 0
 	return tonumber(enchant) or 0,tonumber(upgrade) or 0
 end
-function addon:checkSpecial(ID,link)
-	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
-	itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(link)
-	if (itemEquipLoc == "INVTYPE_RANGED") then
-		return true
-	else
-		return false
-	end
-end
 function addon:ApplySHOWGEMS(value)
 	if (not gframe) then return end
 	if (value) then
@@ -322,14 +313,11 @@ function addon:slotsCheck (...)
 		local enchantable=data.enchantable
 		local itemid=GetInventoryItemID("player",slotId)
 		if (itemid) then
-			local  name,itemlink,itemrarity,ilevel=GetItemInfo(itemid)
+			local  name,itemlink,itemrarity,ilevel,itemMinLevel,itemType,itemSubType,itemStackCount,ItemEquipLoc=GetItemInfo(itemid)
 			local itemlink=GetInventoryItemLink("player",slotId)
 			local enchval,upval=self:checkLink(itemlink)
 
-			if enchantable and data.special then
-				enchantable=self:checkSpecial(slotId,itemlink)
-			end
-			ilevel=ilevel or 1
+  		ilevel=ilevel or 1
 			local upvalue=I:GetItemLevelUpgrade(upval)
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 			-- Apply actual color scheme
@@ -388,6 +376,8 @@ function addon:slotsCheck (...)
 			end
 			if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
 				t.gem:SetFormattedText("%d",(sockets.s)-gems)
+			elseif (sockets.s==0 and ItemEquipLoc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
+			 t.gem:SetText("B")
 			else
 				t.gem:SetText("")
 			end
@@ -433,15 +423,18 @@ function addon:OnInitialized()
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
 	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
 	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
-	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants'])
-	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket'])
-	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems'])
+  self:AddLabel(L['Options'],L['Choose what is shown'])
+	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
+	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
+	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems']).width="full"
+	self:AddToggle('SHOWBUCKLE',true,L['Assume Buckle on waist']).width="full"
+	self:AddLabel(L['Appearance'],L['Change colors and appearance'])
 	self:AddSelect('CORNER',"br",
 	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-	},L['Level text aligned to'],L['Position'])
+	},L['Level text aligned to'],L['Position']).width="full"
 	self:AddSelect('COLORSCHEME',"qual",
 	{
 		lvup=L['itemlevel (red best)'],
@@ -450,21 +443,27 @@ function addon:OnInitialized()
 		plain=L['none (plain white)']},
 	L['Colorize level text by'],
 	L['Choose a color scheme']
-	)
+	).width="full"
 	self:AddSelect('GEMCORNER',"br",
 	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
 		bl=L['Bottom Left']
-	},L['Gem frame position'],L['Position'])
-	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"])
+	},L['Gem frame position'],L['Position']).width="full"
+	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"]).width="full"
 	self:loadHelp()
+  if self:getEnchantLevel() >= 360 then
+    Finger0Slot.E=true
+    Finger1Slot.E=true
+  end
+  	
 end
 function addon:addGemLayer()
 	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame)
 	local alarframe=LibStub("AlarFrames-3.0",true)
 	gframe:SetHeight(75)
-	gframe:SetWidth(100)
+	gframe:SetWidth(50)
+	gframe:SetFrameStrata("FULLSCREEN")
 	if (alarframe) then
 		alarframe:TTAdd(gframe,L["Total compatible gems/Total sockets"],false)
 	end
@@ -542,4 +541,22 @@ function addon:cmdInfo()
 		end
 	end
 end
+
+function addon:getEnchantLevel()
+  local p1,p2=GetProfessions()
+  if (p1) then
+    local name,icon,level=GetProfessionInfo(p1)
+    if (icon=='Interface\\Icons\\INV_Misc_Gem') then
+      return level
+    end
+  end
+  if (p2) then
+    local name,icon,level=GetProfessionInfo(p2)
+    if (icon=='Interface\\Icons\\INV_Misc_Gem') then
+      return level
+    end
+  end
+  return 0
+end
+
 

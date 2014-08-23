@@ -2,6 +2,11 @@ local me,ns=...
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
 local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
+self:RelNotes(1,3,1,[[
+Feature: Refined configuration panel
+Feature: Added enchantable rings for enchanter
+Fix: gem mini panel is now always updated 
+ ]])
 self:RelNotes(1,3,0,[[
 Feature: Refactored appearance with now 4 color schemes:
  * Quality: based on item quality from poor to Heirloom
