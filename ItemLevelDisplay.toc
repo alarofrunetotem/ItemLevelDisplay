@@ -6,7 +6,7 @@
 ## X-Version: 1.3.1
 ## eMail: alar@aspide.it
 ## RequiredDeps:
-## OptionalDeps: 
+## OptionalDeps: AlarArtRemover
 ## X-Embeds: 
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
