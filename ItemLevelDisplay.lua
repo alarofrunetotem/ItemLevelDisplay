@@ -56,6 +56,7 @@ local dirty=true
 local eventframe=nil
 local redGems, blueGems, yellowGems, metaGems = 0, 0, 0, 0
 local gems={}
+local profilelabel={name=''}
 local textures={
 	blue = "Interface\\Icons\\inv_misc_cutgemsuperior2",
 	red =  "Interface\\Icons\\inv_misc_cutgemsuperior6",
@@ -106,8 +107,7 @@ local Green_localized = 52245
 local Purple_localized = 52213
 local Orange_localized = 52222
 local Meta_localized = 52296
----
---@function [parent=#ItemLevelDisplay]
+
 function addon:getSockets(itemlink)
 	--if (not sockets[itemlink]) then
 		local s=0
@@ -144,8 +144,7 @@ function addon:getSockets(itemlink)
 	--end
 	return sockets[itemlink]
 end
----
---@function [parent=#ItemLevelDisplay] 
+
 function addon:getNumGems(...)
 	local s=0
 	--@debug@
@@ -303,6 +302,7 @@ function addon:slotsCheck (...)
 	if (not dirty) then return end
 	if (not CharacterFrame:IsShown()) then return end
 	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
+	if (not gframe) then self:addGemLayer() end
 	local avgmin=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
 	local equippedCount=0
@@ -416,13 +416,26 @@ function addon:loadGemLocalizedStrings()
 	debug(Meta_localized,GetItemInfo(Meta_localized))
 	Meta_localized = select(7,GetItemInfo(Meta_localized))
 	debug(Meta_localized)
-	self:addGemLayer()
 end
 
 function addon:OnInitialized()
-	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
-	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
+  self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
+  if (not self.db.global.hascommon) then
+    local myprofile=self.db:GetCurrentProfile()
+    if (myprofile~='Default') then
+      self.db:SetProfile('Default')
+      self.db:CopyProfile(myprofile)
+      self.db:SetProfile(myprofile)
+    end
+    self.db.global.hascommon=true
+  end   
+  if (not self.db.char.choosen) then
+    self:askProfile(true)
+    return
+  end
 	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
+	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
+	self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
   self:AddLabel(L['Options'],L['Choose what is shown'])
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
@@ -456,8 +469,10 @@ function addon:OnInitialized()
     Finger0Slot.E=true
     Finger1Slot.E=true
   end
+  self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
   	
 end
+
 function addon:addGemLayer()
 	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame)
 	local alarframe=LibStub("AlarFrames-3.0",true)
@@ -508,6 +523,57 @@ function addon:placeGemLayer()
 end
 
 local wininfo
+local profiles={}
+function addon:switchProfile()
+  self:askProfile(false)
+end
+function addon:askProfile(useCallBack)
+  local gui=LibStub("AceGUI-3.0")
+  wininfo=gui:Create("Frame")
+  wininfo:SetWidth(480)
+  wininfo:SetHeight(160)
+  wininfo:SetLayout('Flow')
+  wininfo:SetTitle('ItemLevelDisplay')
+  wininfo:SetStatusText(L['Current profile is: '] .. self.db:GetCurrentProfile())
+  local profile=self.db:GetCurrentProfile()
+  local l0=gui:Create("Label")
+  local l1=gui:Create("Label")
+  local l2=gui:Create("Label")
+  l0:SetText(L["Please, choose between global or per character profile"])
+  l0:SetColor(C.Yellow())
+  l1:SetText(L['You can now choose if you want all your character share the same configuration or not.'])
+  l2:SetText(L['You can change this decision on a per character basis in configuration panel.'])
+  l0:SetFullWidth(true)
+  l1:SetFullWidth(true)
+  l2:SetFullWidth(true)
+  local g=gui:Create("Dropdown")
+  g:SetList({Default=L["Default"],character=L["Per character profile"]},{'Default','character'})
+  if (profile=='Default') then
+    g:SetValue('Default')
+  else
+    g:SetValue('character')
+  end
+  g:SetFullWidth(true)
+  g:SetCallback('OnValueChanged',function(widget,method,key)
+    if (key=='Default') then
+      self.db:SetProfile("Default")
+    else
+      local profile=self.db.keys.char
+      self.db:SetProfile(profile)
+    end
+    profilelabel.name=L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green')
+    wininfo:SetStatusText(profilelabel.name)
+  end)
+  wininfo:AddChild(l0)
+  wininfo:AddChild(l1)
+  wininfo:AddChild(l2)
+  wininfo:AddChild(g)
+  if (useCallBack) then 
+    wininfo:SetCallback('OnClose',function(widget) widget:Release() self.db.char.choosen=true  self:OnInitialized() return end)
+  else
+    wininfo:SetCallback('OnClose',function(widget) widget:Release() self:Gui() end)
+  end
+end
 function addon:cmdInfo()
 	local gui=LibStub("AceGUI-3.0")
 	wininfo=gui:Create("Frame")
@@ -541,6 +607,22 @@ function addon:cmdInfo()
 		end
 	end
 end
+function addon:cmdProfiles()
+  local gui=LibStub("AceGUI-3.0")
+  wininfo=gui:Create("Frame")
+  wininfo:SetTitle("Please post this screenshot to curse, thanks")
+  wininfo:SetStatusText("Add the expected ilevel for upgraded items")
+  wipe(profiles)
+  profiles=self.db:GetProfiles(profiles)
+  for index,name in pairs(profiles) do
+    local gui=LibStub("AceGUI-3.0")
+    local l=gui:Create("Label")
+    l:SetFullWidth(true)
+    l:SetText(format("%s: %s",index,name))
+    wininfo:AddChild(l)
+  end
+end
+
 
 function addon:getEnchantLevel()
   local p1,p2=GetProfessions()
