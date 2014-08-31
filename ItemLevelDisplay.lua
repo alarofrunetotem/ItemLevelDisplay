@@ -267,6 +267,10 @@ end
 function addon:ApplyGEMCORNER(value)
 	self:placeGemLayer()
 end
+function addon:Apply()
+  print("apply")
+  self:markDirty()
+end
 function addon:getGemColors(gem)
 	local empty={r=0,p=0,b=0,y=0}
 	if (not gem) then return empty end
@@ -338,7 +342,7 @@ function addon:slotsCheck (...)
 				-- Only the two level based schemes are left
 				local g	=(ilevel-avgmin)/(range*2)
 				trueAvg=trueAvg+ilevel
-				if (self:GetVar("COLORSCHEME")=='lvdn') then
+				if (self:GetVar("COLORSCHEME")=='lvup') then
 					t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
 				else
 					t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
@@ -417,7 +421,6 @@ function addon:loadGemLocalizedStrings()
 	Meta_localized = select(7,GetItemInfo(Meta_localized))
 	debug(Meta_localized)
 end
-
 function addon:OnInitialized()
   self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
   if (not self.db.global.hascommon) then
@@ -429,12 +432,9 @@ function addon:OnInitialized()
     end
     self.db.global.hascommon=true
   end   
-  if (not self.db.char.choosen) then
-    self:askProfile(true)
-    return
-  end
 	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
+	profilelabel.fontSize="large"
 	self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
   self:AddLabel(L['Options'],L['Choose what is shown'])
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
@@ -470,6 +470,9 @@ function addon:OnInitialized()
     Finger1Slot.E=true
   end
   self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
+  if (not self.db.char.choosen) then
+    self:switchProfile()
+  end
   	
 end
 
@@ -525,12 +528,9 @@ end
 local wininfo
 local profiles={}
 function addon:switchProfile()
-  self:askProfile(false)
-end
-function addon:askProfile(useCallBack)
   local gui=LibStub("AceGUI-3.0")
   wininfo=gui:Create("Frame")
-  wininfo:SetWidth(480)
+  wininfo:SetWidth(500)
   wininfo:SetHeight(160)
   wininfo:SetLayout('Flow')
   wininfo:SetTitle('ItemLevelDisplay')
@@ -539,6 +539,9 @@ function addon:askProfile(useCallBack)
   local l0=gui:Create("Label")
   local l1=gui:Create("Label")
   local l2=gui:Create("Label")
+  l0:SetFontObject(GameFontNormalLarge)
+  l1:SetFontObject(GameFontWhite)
+  l2:SetFontObject(GameFontWhite)
   l0:SetText(L["Please, choose between global or per character profile"])
   l0:SetColor(C.Yellow())
   l1:SetText(L['You can now choose if you want all your character share the same configuration or not.'])
@@ -568,11 +571,14 @@ function addon:askProfile(useCallBack)
   wininfo:AddChild(l1)
   wininfo:AddChild(l2)
   wininfo:AddChild(g)
-  if (useCallBack) then 
-    wininfo:SetCallback('OnClose',function(widget) widget:Release() self.db.char.choosen=true  self:OnInitialized() return end)
-  else
-    wininfo:SetCallback('OnClose',function(widget) widget:Release() self:Gui() end)
+  wininfo:SetCallback('OnClose',
+  function(widget) 
+    widget:Release() 
+    self:Gui()
+    self:markDirty()
   end
+  )
+  
 end
 function addon:cmdInfo()
 	local gui=LibStub("AceGUI-3.0")
@@ -640,5 +646,4 @@ function addon:getEnchantLevel()
   end
   return 0
 end
-
 

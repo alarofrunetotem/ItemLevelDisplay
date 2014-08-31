@@ -4,6 +4,7 @@ local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
 self:RelNotes(1,3,2,[[
 Feature: Configuration can now be global.(i.e. all characters share the same settings)
+Fix: Best green and best red were swapped
  ]])
 self:RelNotes(1,3,1,[[
 Feature: Refined configuration panel
