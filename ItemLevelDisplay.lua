@@ -40,7 +40,9 @@ local pairs=pairs
 local GetItemStats=GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
 local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true) --#ItemLevelDisplay
+--@debug@
 _G.ILD=addon
+--@end-debug@
 local C=LibStub("AlarCrayon-3.0"):GetColorTable()
 local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
@@ -471,7 +473,7 @@ function addon:OnInitialized()
   end
   self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
   if (not self.db.char.choosen) then
-    self:switchProfile()
+    self:switchProfile(false)
   end
   	
 end
@@ -527,15 +529,16 @@ end
 
 local wininfo
 local profiles={}
-function addon:switchProfile()
+function addon:switchProfile(fromPanel)
   local gui=LibStub("AceGUI-3.0")
-  wininfo=gui:Create("Frame")
+  wininfo=gui:Create("AlarConfig")
   wininfo:SetWidth(500)
   wininfo:SetHeight(160)
   wininfo:SetLayout('Flow')
   wininfo:SetTitle('ItemLevelDisplay')
-  wininfo:SetStatusText(L['Current profile is: '] .. self.db:GetCurrentProfile())
-  local profile=self.db:GetCurrentProfile()
+  wininfo:SetUserData("currentprofile",self.db:GetCurrentProfile())
+  wininfo:SetUserData("newprofile",self.db:GetCurrentProfile())
+  wininfo:SetStatusText("")
   local l0=gui:Create("Label")
   local l1=gui:Create("Label")
   local l2=gui:Create("Label")
@@ -559,23 +562,31 @@ function addon:switchProfile()
   g:SetFullWidth(true)
   g:SetCallback('OnValueChanged',function(widget,method,key)
     if (key=='Default') then
-      self.db:SetProfile("Default")
+      wininfo:SetUserData("newprofile","Default")
     else
-      local profile=self.db.keys.char
-      self.db:SetProfile(profile)
+      wininfo:SetUserData("newprofile",self.db.keys.char)
     end
-    profilelabel.name=L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green')
-    wininfo:SetStatusText(profilelabel.name)
   end)
   wininfo:AddChild(l0)
   wininfo:AddChild(l1)
   wininfo:AddChild(l2)
   wininfo:AddChild(g)
-  wininfo:SetCallback('OnClose',
+  wininfo:SetCallback('OnCancel',print)
+  wininfo:SetCallback('OnSave',
   function(widget) 
-    widget:Release() 
-    self:Gui()
+    print("Boxclose",fromPanel)
+    if (wininfo:GetUserData("currentprofile") ~= wininfo:GetUserData("newprofile")) then
+      self.db:SetProfile(wininfo:GetUserData("newprofile"))
+    end
+    profilelabel.name=L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green')
+    if (fromPanel) then
+      print("Reloading gui")
+      self:Gui()
+    end
     self:markDirty()
+    widget:Hide()
+    widget:Release() 
+    self.db.char.choosen=true
   end
   )
   
