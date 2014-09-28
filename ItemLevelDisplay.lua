@@ -270,8 +270,8 @@ function addon:ApplyGEMCORNER(value)
 	self:placeGemLayer()
 end
 function addon:Apply()
-  print("apply")
-  self:markDirty()
+	print("apply")
+	self:markDirty()
 end
 function addon:getGemColors(gem)
 	local empty={r=0,p=0,b=0,y=0}
@@ -323,7 +323,7 @@ function addon:slotsCheck (...)
 			local itemlink=GetInventoryItemLink("player",slotId)
 			local enchval,upval=self:checkLink(itemlink)
 
-  		ilevel=ilevel or 1
+			ilevel=ilevel or 1
 			local upvalue=I:GetItemLevelUpgrade(upval)
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 			-- Apply actual color scheme
@@ -383,7 +383,7 @@ function addon:slotsCheck (...)
 			if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
 				t.gem:SetFormattedText("%d",(sockets.s)-gems)
 			elseif (sockets.s==0 and ItemEquipLoc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
-			 t.gem:SetText("B")
+			t.gem:SetText("B")
 			else
 				t.gem:SetText("")
 			end
@@ -424,21 +424,21 @@ function addon:loadGemLocalizedStrings()
 	debug(Meta_localized)
 end
 function addon:OnInitialized()
-  self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
-  if (not self.db.global.hascommon) then
-    local myprofile=self.db:GetCurrentProfile()
-    if (myprofile~='Default') then
-      self.db:SetProfile('Default')
-      self.db:CopyProfile(myprofile)
-      self.db:SetProfile(myprofile)
-    end
-    self.db.global.hascommon=true
-  end   
+	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
+	if (not self.db.global.hascommon) then
+		local myprofile=self.db:GetCurrentProfile()
+		if (myprofile~='Default') then
+			self.db:SetProfile('Default')
+			self.db:CopyProfile(myprofile)
+			self.db:SetProfile(myprofile)
+		end
+		self.db.global.hascommon=true
+	end
 	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"
 	self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
-  self:AddLabel(L['Options'],L['Choose what is shown'])
+	self:AddLabel(L['Options'],L['Choose what is shown'])
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
 	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems']).width="full"
@@ -467,15 +467,15 @@ function addon:OnInitialized()
 	},L['Gem frame position'],L['Position']).width="full"
 	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"]).width="full"
 	self:loadHelp()
-  if self:getEnchantLevel() >= 360 then
-    Finger0Slot.E=true
-    Finger1Slot.E=true
-  end
-  self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
-  if (not self.db.char.choosen) then
-    self:switchProfile(false)
-  end
-  	
+	if self:getEnchantLevel() >= 360 then
+		Finger0Slot.E=true
+		Finger1Slot.E=true
+	end
+	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
+	if (not self.db.char.choosen) then
+		self:switchProfile(false)
+	end
+
 end
 
 function addon:addGemLayer()
@@ -530,66 +530,69 @@ end
 local wininfo
 local profiles={}
 function addon:switchProfile(fromPanel)
-  local gui=LibStub("AceGUI-3.0")
-  wininfo=gui:Create("AlarConfig")
-  wininfo:SetWidth(500)
-  wininfo:SetHeight(160)
-  wininfo:SetLayout('Flow')
-  wininfo:SetTitle('ItemLevelDisplay')
-  wininfo:SetUserData("currentprofile",self.db:GetCurrentProfile())
-  wininfo:SetUserData("newprofile",self.db:GetCurrentProfile())
-  wininfo:SetStatusText("")
-  local l0=gui:Create("Label")
-  local l1=gui:Create("Label")
-  local l2=gui:Create("Label")
-  l0:SetFontObject(GameFontNormalLarge)
-  l1:SetFontObject(GameFontWhite)
-  l2:SetFontObject(GameFontWhite)
-  l0:SetText(L["Please, choose between global or per character profile"])
-  l0:SetColor(C.Yellow())
-  l1:SetText(L['You can now choose if you want all your character share the same configuration or not.'])
-  l2:SetText(L['You can change this decision on a per character basis in configuration panel.'])
-  l0:SetFullWidth(true)
-  l1:SetFullWidth(true)
-  l2:SetFullWidth(true)
-  local g=gui:Create("Dropdown")
-  g:SetList({Default=L["Default"],character=L["Per character profile"]},{'Default','character'})
-  if (profile=='Default') then
-    g:SetValue('Default')
-  else
-    g:SetValue('character')
-  end
-  g:SetFullWidth(true)
-  g:SetCallback('OnValueChanged',function(widget,method,key)
-    if (key=='Default') then
-      wininfo:SetUserData("newprofile","Default")
-    else
-      wininfo:SetUserData("newprofile",self.db.keys.char)
-    end
-  end)
-  wininfo:AddChild(l0)
-  wininfo:AddChild(l1)
-  wininfo:AddChild(l2)
-  wininfo:AddChild(g)
-  wininfo:SetCallback('OnCancel',print)
-  wininfo:SetCallback('OnSave',
-  function(widget) 
-    print("Boxclose",fromPanel)
-    if (wininfo:GetUserData("currentprofile") ~= wininfo:GetUserData("newprofile")) then
-      self.db:SetProfile(wininfo:GetUserData("newprofile"))
-    end
-    profilelabel.name=L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green')
-    if (fromPanel) then
-      print("Reloading gui")
-      self:Gui()
-    end
-    self:markDirty()
-    widget:Hide()
-    widget:Release() 
-    self.db.char.choosen=true
-  end
-  )
-  
+	local gui=LibStub("AceGUI-3.0")
+	wininfo=gui:Create("AlarConfig")
+	wininfo:SetWidth(500)
+	wininfo:SetHeight(180)
+	print("Finestra ",wininfo:GetHeight())
+	wininfo:SetLayout('Flow')
+	wininfo:SetTitle('ItemLevelDisplay')
+	wininfo:SetUserData("currentprofile",self.db:GetCurrentProfile())
+	wininfo:SetUserData("newprofile",self.db:GetCurrentProfile())
+	wininfo:SetStatusText("")
+	local l0=gui:Create("Label")
+	local l1=gui:Create("Label")
+	local l2=gui:Create("Label")
+	l0:SetFontObject(GameFontNormalLarge)
+	l1:SetFontObject(GameFontWhite)
+	l2:SetFontObject(GameFontWhite)
+	l0:SetText(L["Please, choose between global or per character profile"])
+	l0:SetColor(C.Yellow())
+	l1:SetText(L['You can now choose if you want all your character share the same configuration or not.'])
+	l2:SetText(L['You can change this decision on a per character basis in configuration panel.'])
+	l0:SetFullWidth(true)
+	l1:SetFullWidth(true)
+	l2:SetFullWidth(true)
+	local g=gui:Create("Dropdown")
+	g:SetList({Default=L["Default"],character=L["Per character profile"]},{'Default','character'})
+	if (profile=='Default') then
+		g:SetValue('Default')
+	else
+		g:SetValue('character')
+	end
+	g:SetFullWidth(true)
+	g:SetCallback('OnValueChanged',function(widget,method,key)
+		if (key=='Default') then
+			wininfo:SetUserData("newprofile","Default")
+		else
+			wininfo:SetUserData("newprofile",self.db.keys.char)
+		end
+	end)
+	wininfo:AddChild(l0)
+	wininfo:AddChild(l1)
+	wininfo:AddChild(l2)
+	wininfo:AddChild(g)
+	wininfo:SetCallback('OnCancel',print)
+	wininfo:SetCallback('OnSave',
+	function(widget)
+		print("Boxclose",fromPanel)
+		if (wininfo:GetUserData("currentprofile") ~= wininfo:GetUserData("newprofile")) then
+			self.db:SetProfile(wininfo:GetUserData("newprofile"))
+		end
+		profilelabel.name=L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green')
+		if (fromPanel) then
+			print("Reloading gui")
+			self:Gui()
+		end
+		self:markDirty()
+		widget:Hide()
+		widget:Release()
+		self.db.char.choosen=true
+	end
+	)
+	wininfo:Show()
+	print("Finestra ",wininfo:GetHeight())
+
 end
 function addon:cmdInfo()
 	local gui=LibStub("AceGUI-3.0")
@@ -625,36 +628,36 @@ function addon:cmdInfo()
 	end
 end
 function addon:cmdProfiles()
-  local gui=LibStub("AceGUI-3.0")
-  wininfo=gui:Create("Frame")
-  wininfo:SetTitle("Please post this screenshot to curse, thanks")
-  wininfo:SetStatusText("Add the expected ilevel for upgraded items")
-  wipe(profiles)
-  profiles=self.db:GetProfiles(profiles)
-  for index,name in pairs(profiles) do
-    local gui=LibStub("AceGUI-3.0")
-    local l=gui:Create("Label")
-    l:SetFullWidth(true)
-    l:SetText(format("%s: %s",index,name))
-    wininfo:AddChild(l)
-  end
+	local gui=LibStub("AceGUI-3.0")
+	wininfo=gui:Create("Frame")
+	wininfo:SetTitle("Please post this screenshot to curse, thanks")
+	wininfo:SetStatusText("Add the expected ilevel for upgraded items")
+	wipe(profiles)
+	profiles=self.db:GetProfiles(profiles)
+	for index,name in pairs(profiles) do
+		local gui=LibStub("AceGUI-3.0")
+		local l=gui:Create("Label")
+		l:SetFullWidth(true)
+		l:SetText(format("%s: %s",index,name))
+		wininfo:AddChild(l)
+	end
 end
 
 
 function addon:getEnchantLevel()
-  local p1,p2=GetProfessions()
-  if (p1) then
-    local name,icon,level=GetProfessionInfo(p1)
-    if (icon=='Interface\\Icons\\INV_Misc_Gem') then
-      return level
-    end
-  end
-  if (p2) then
-    local name,icon,level=GetProfessionInfo(p2)
-    if (icon=='Interface\\Icons\\INV_Misc_Gem') then
-      return level
-    end
-  end
-  return 0
+	local p1,p2=GetProfessions()
+	if (p1) then
+		local name,icon,level=GetProfessionInfo(p1)
+		if (icon=='Interface\\Icons\\INV_Misc_Gem') then
+			return level
+		end
+	end
+	if (p2) then
+		local name,icon,level=GetProfessionInfo(p2)
+		if (icon=='Interface\\Icons\\INV_Misc_Gem') then
+			return level
+		end
+	end
+	return 0
 end
 
