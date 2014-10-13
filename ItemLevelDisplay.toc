@@ -1,9 +1,11 @@
 ## Interface: 50400
 ## Title: ItemLevelDisplay
 ## Notes: Displays item's levels in paperdoll
+## Notes-itIT: Mostra il livello degli items nella schermata del personaggio
 ## Author: Alar of Daggerspine
-## Version: #@project-version@ @project-abbreviated-hash@
+## Version: @project-version@ @project-abbreviated-hash@
 ## X-Version: 1.3.2
+## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## RequiredDeps:
 ## OptionalDeps: Ace3,AlarArtRemover,LibDebug
@@ -14,7 +16,6 @@
 ## SavedVariablesPerCharacter: localdbILD
 ## X-ID: ILD
 ## X-Database: dbILD
-## X-Revision: $Revision$
 ## X-Category: Bags and Inventory
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it

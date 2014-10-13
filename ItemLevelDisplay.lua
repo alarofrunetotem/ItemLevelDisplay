@@ -1,35 +1,13 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- MUST BE LINE 1
-local _,_,_,toc=GetBuildInfo()
-local pp=print
+local toc=select(4,GetBuildInfo())
 local me, ns = ...
---@debug@
-print("Loading",__FILE__," inside ",me)
---@end-debug@
-if (LibDebug) then LibDebug() end
-local function debug(...)
-	--@debug@
-	print(...)
-	--@end-debug@
-end
-local print=_G.print
-local notify=_G.print
-local error=_G.error
-local function dump() end
-local function debugEnable() end
-if (LibStub("AlarLoader-3.0",true)) then
-	local rc=LibStub("AlarLoader-3.0"):GetPrintFunctions(me)
-	print=rc.print
-	--@debug@
-	debug=rc.debug
-	dump=rc.dump
-	--@end-debug@
-	notify=rc.notify
-	error=rc.error
-	debugEnable=rc.debugEnable
-else
-	debug("Missing AlarLoader-3.0")
-end
+local pp=print
 local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
+local C=LibStub("AlarCrayon-3.0"):GetColorTable()
+local addon=LibStub("AlarLoader-3.0")(__FILE__,me,ns):CreateAddon(me,true) --#Addon
+local print=ns.print or print
+local debug=ns.debug or print
+-----------------------------------------------------------------
 --------------------------------------
 --@debug@
 print("ItemLevelDisplay ALPHA version")
@@ -39,11 +17,6 @@ local type=type
 local pairs=pairs
 local GetItemStats=GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
-local addon=LibStub("AlarLoader-3.0"):CreateAddon(me,true) --#ItemLevelDisplay
---@debug@
-_G.ILD=addon
---@end-debug@
-local C=LibStub("AlarCrayon-3.0"):GetColorTable()
 local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
 local addonName="ILD"
@@ -554,7 +527,8 @@ function addon:switchProfile(fromPanel)
 	l1:SetFullWidth(true)
 	l2:SetFullWidth(true)
 	local g=gui:Create("Dropdown")
-	g:SetList({Default=L["Default"],character=L["Per character profile"]},{'Default','character'})
+	g:SetList({Default=L["Common profile for all characters"],character=L["Per character profile"]},{'Default','character'})
+	local profile=self.db:GetCurrentProfile()
 	if (profile=='Default') then
 		g:SetValue('Default')
 	else
@@ -581,7 +555,6 @@ function addon:switchProfile(fromPanel)
 		end
 		profilelabel.name=L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green')
 		if (fromPanel) then
-			print("Reloading gui")
 			self:Gui()
 		end
 		self:markDirty()
