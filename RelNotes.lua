@@ -12,6 +12,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 		Enchant Status
 
 ]])
+self:RelNotes(1,4,1,[[
+Upgrade: libItemUpgradeInfo upgraded to 1.0.7
+]])
 self:RelNotes(1,3,2,[[
 Feature: Configuration can now be global.(i.e. all characters share the same settings)
 Fix: Best green and best red were swapped
