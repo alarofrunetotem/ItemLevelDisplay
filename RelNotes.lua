@@ -12,6 +12,10 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 		Enchant Status
 
 ]])
+self:RelNotes(1,4,2,[[
+Fix: Upgraded items are back!!
+]])
+
 self:RelNotes(1,4,1,[[
 Upgrade: libItemUpgradeInfo upgraded to 1.0.7
 ]])

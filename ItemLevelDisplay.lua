@@ -222,8 +222,7 @@ end
 function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
 	local enchant=select(3,strsplit(':',data)) or 0
-	local upgrade=select(12,strsplit(':',data)) or 0
-	return tonumber(enchant) or 0,tonumber(upgrade) or 0
+	return tonumber(enchant) or 0
 end
 function addon:ApplySHOWGEMS(value)
 	if (not gframe) then return end
@@ -294,10 +293,10 @@ function addon:slotsCheck (...)
 		if (itemid) then
 			local  name,itemlink,itemrarity,ilevel,itemMinLevel,itemType,itemSubType,itemStackCount,ItemEquipLoc=GetItemInfo(itemid)
 			local itemlink=GetInventoryItemLink("player",slotId)
-			local enchval,upval=self:checkLink(itemlink)
+			local enchval=self:checkLink(itemlink)
 
 			ilevel=ilevel or 1
-			local upvalue=I:GetItemLevelUpgrade(upval)
+			local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 			-- Apply actual color scheme
 			if (self:GetVar('COLORSCHEME')=='qual') then
@@ -586,13 +585,13 @@ function addon:cmdInfo()
 			local  name,itemlink,itemrarity,ilevel=GetItemInfo(itemid)
 			local itemlink=GetInventoryItemLink("player",slotId)
 			local data=select(3,strsplit("|",itemlink or "|||||"))
-			local e,u=self:checkLink(itemlink)
+			local e=self:checkLink(itemlink)
 			l:SetFullWidth(true)
-			l:SetText(format("%s:  %s %s %s %s",
+			l:SetText(format("%02d.%s: %s  <%s>   %s",
+			slotId,
 			name,
 			C(ilevel,"green"),
-			C(u,"yellow"),
-			C(I:GetItemLevelUpgrade(u),"orange"),
+			C(I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink)),"orange"),
 			data or "<empty>"
 			)
 			)
