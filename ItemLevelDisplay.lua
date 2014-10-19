@@ -314,7 +314,7 @@ function addon:slotsCheck (...)
 				t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
 			else
 				-- Only the two level based schemes are left
-				local g	=(ilevel-avgmin)/(range*2)
+				local g	=(ilevel+upvalue-avgmin)/(range*2)
 				trueAvg=trueAvg+ilevel
 				if (self:GetVar("COLORSCHEME")=='lvup') then
 					t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))

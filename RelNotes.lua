@@ -12,6 +12,10 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 		Enchant Status
 
 ]])
+self:RelNotes(1,4,3,[[
+Fix: For level based coloring, upgrade value was not taken in account.
+Thanks to Mergele for sending the fix
+]])
 self:RelNotes(1,4,2,[[
 Fix: Upgraded items are back!!
 ]])
