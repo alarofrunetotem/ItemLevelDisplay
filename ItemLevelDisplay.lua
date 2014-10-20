@@ -242,7 +242,6 @@ function addon:ApplyGEMCORNER(value)
 	self:placeGemLayer()
 end
 function addon:Apply()
-	print("apply")
 	self:markDirty()
 end
 function addon:getGemColors(gem)
@@ -397,15 +396,6 @@ function addon:loadGemLocalizedStrings()
 end
 function addon:OnInitialized()
 	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
-	if (not self.db.global.hascommon) then
-		local myprofile=self.db:GetCurrentProfile()
-		if (myprofile~='Default') then
-			self.db:SetProfile('Default')
-			self.db:CopyProfile(myprofile)
-			self.db:SetProfile(myprofile)
-		end
-		self.db.global.hascommon=true
-	end
 	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"
@@ -444,6 +434,15 @@ function addon:OnInitialized()
 		Finger1Slot.E=true
 	end
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
+	if (not self.db.global.hascommon) then
+		local myprofile=self.db:GetCurrentProfile()
+		if (myprofile~='Default') then
+			self.db:SetProfile('Default')
+			self.db:CopyProfile(myprofile)
+			self.db:SetProfile(myprofile)
+		end
+		self.db.global.hascommon=true
+	end
 	if (not self.db.char.choosen) then
 		self:switchProfile(false)
 	end
@@ -506,7 +505,6 @@ function addon:switchProfile(fromPanel)
 	wininfo=gui:Create("AlarConfig")
 	wininfo:SetWidth(500)
 	wininfo:SetHeight(180)
-	print("Finestra ",wininfo:GetHeight())
 	wininfo:SetLayout('Flow')
 	wininfo:SetTitle('ItemLevelDisplay')
 	wininfo:SetUserData("currentprofile",self.db:GetCurrentProfile())
@@ -545,10 +543,8 @@ function addon:switchProfile(fromPanel)
 	wininfo:AddChild(l1)
 	wininfo:AddChild(l2)
 	wininfo:AddChild(g)
-	wininfo:SetCallback('OnCancel',print)
 	wininfo:SetCallback('OnSave',
 	function(widget)
-		print("Boxclose",fromPanel)
 		if (wininfo:GetUserData("currentprofile") ~= wininfo:GetUserData("newprofile")) then
 			self.db:SetProfile(wininfo:GetUserData("newprofile"))
 		end
@@ -563,8 +559,6 @@ function addon:switchProfile(fromPanel)
 	end
 	)
 	wininfo:Show()
-	print("Finestra ",wininfo:GetHeight())
-
 end
 function addon:cmdInfo()
 	local gui=LibStub("AceGUI-3.0")

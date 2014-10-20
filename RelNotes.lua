@@ -12,6 +12,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 		Enchant Status
 
 ]])
+self:RelNotes(1,4,4,[[
+Fix: when you install ItemLevelDisplay for tha absolute first time ItemLevelDisplay, it raises an error if you choose "Common profile for all characters" at the one time profile type request.
+]])
 self:RelNotes(1,4,3,[[
 Fix: For level based coloring, upgrade value was not taken in account.
 Thanks to Mergele for sending the fix
