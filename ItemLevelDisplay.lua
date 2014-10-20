@@ -288,12 +288,10 @@ function addon:slotsCheck (...)
 	for  slotId,data in pairs(slots) do
 		local t=data.frame
 		local enchantable=data.enchantable
-		local itemid=GetInventoryItemID("player",slotId)
-		if (itemid) then
-			local  name,itemlink,itemrarity,ilevel,itemMinLevel,itemType,itemSubType,itemStackCount,ItemEquipLoc=GetItemInfo(itemid)
-			local itemlink=GetInventoryItemLink("player",slotId)
+		local itemlink=GetInventoryItemLink("player",slotId)
+		if (itemlink) then
+			local  name,itemlink,itemrarity,ilevel,itemMinLevel,itemType,itemSubType,itemStackCount,ItemEquipLoc=GetItemInfo(itemlink)
 			local enchval=self:checkLink(itemlink)
-
 			ilevel=ilevel or 1
 			local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
 			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
