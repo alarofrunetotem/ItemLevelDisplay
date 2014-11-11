@@ -11,6 +11,11 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 		Socket Status
 		Enchant Status
 
+It also enriches your flyout equipment buttons
+
+]])
+self:RelNotes(1,5,0,[[
+Feature: Equipment in flyout equipmente manager buttons are now taken in consideration and ilevel added to them.
 ]])
 self:RelNotes(1,4,5,[[
 Fix: now accounts for bonus level due to difficulty in raid dropped items. With this release upgrade for Wod should be now complete

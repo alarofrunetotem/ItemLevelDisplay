@@ -17,10 +17,15 @@ local type=type
 local pairs=pairs
 local GetItemStats=GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
+local GetInventoryItemGems=GetInventoryItemGems
+local GetAverageItemLevel=GetAverageItemLevel
+local GetItemQualityColor=GetItemQualityColor
+local GetItemInfo=GetItemInfo
 local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
 local addonName="ILD"
 local range=8
+local average=1
 local markdirty
 local blue={0, 0.6, 1}
 local red={1, 0.4, 0.4}
@@ -69,6 +74,7 @@ local slotsList={
 local stats={}
 local sockets={}
 local slots=false
+local flyouts={}
 local gframe=false
 local gred=false
 local gblue=false
@@ -275,58 +281,74 @@ function addon:getGemColors(gem)
 	end
 	return gems[gem]
 end
+function addon:paintButton(t,slotId,itemlink,average,enchantable)
+		if (not itemlink) then
+			t.gem:SetText("")
+			t.enc:SetText("")
+			t.ilevel:SetText('')
+			return
+		end
+		local ilevel=select(4,GetItemInfo(itemlink))
+		local loc=select(9,GetItemInfo(itemlink))
+		local itemrarity=select(3,GetItemInfo(itemlink))
+		local enchval=self:checkLink(itemlink)
+		ilevel=ilevel or 1
+		local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
+		t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
+		-- Apply actual color scheme
+		if (self:GetVar('COLORSCHEME')=='qual') then
+			for token in string.gmatch((itemrarity), "[^%s]+") do
+				if tonumber(token) == 3 then
+					t.ilevel:SetTextColor(0.39,0.73,1.0,1.0)
+				elseif tonumber(token) == 4 then
+					t.ilevel:SetTextColor(0.8,0.6,1.0,1.0)
+				else
+					local r, g, b, hex = GetItemQualityColor(itemrarity)
+					t.ilevel:SetTextColor(r,g,b,1.0)
+				end
+			end
+		elseif (self:GetVar("COLORSCHEME")=='plain') then
+			t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
+		else
+			-- Only the two level based schemes are left
+			local g =(ilevel+upvalue-average)/(range*2)
+			if (self:GetVar("COLORSCHEME")=='lvup') then
+				t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
+			else
+				t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
+			end
+		end
+		if (enchantable and self:GetToggle("SHOWENCHANT") and  enchval<1) then
+			t.enc:SetText(L["E"])
+		else
+			t.enc:SetText("")
+		end
+		local sockets=self:getSockets(itemlink)
+		local gem1,gem2,gem3,gem4=GetInventoryItemGems(slotId)
+		local gems=self:getNumGems(gem1,gem2,gem3,gem4)
+		if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
+			t.gem:SetFormattedText("%d",(sockets.s)-gems)
+		elseif (sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
+		t.gem:SetText("B")
+		else
+			t.gem:SetText("")
+		end
+	return sockets,gem1,gem2,gem3,gem4
+end
 function addon:slotsCheck (...)
 	if (not dirty) then return end
 	if (not CharacterFrame:IsShown()) then return end
 	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
 	if (not gframe) then self:addGemLayer() end
-	local avgmin=GetAverageItemLevel()-range -- 1 tier up are full green
+	average=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
 	local equippedCount=0
 	local r,y,b,p=0,0,0,0
 	local tr,ty,tb,tp=0,0,0,0
 	for  slotId,data in pairs(slots) do
-		local t=data.frame
-		local enchantable=data.enchantable
 		local itemlink=GetInventoryItemLink("player",slotId)
 		if (itemlink) then
-			local  name,itemlink,itemrarity,ilevel,itemMinLevel,itemType,itemSubType,itemStackCount,ItemEquipLoc=GetItemInfo(itemlink)
-			local enchval=self:checkLink(itemlink)
-			ilevel=ilevel or 1
-			local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
-			t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
-			-- Apply actual color scheme
-			if (self:GetVar('COLORSCHEME')=='qual') then
-				for token in string.gmatch((itemrarity), "[^%s]+") do
-					if tonumber(token) == 3 then
-						t.ilevel:SetTextColor(0.39,0.73,1.0,1.0)
-					elseif tonumber(token) == 4 then
-						t.ilevel:SetTextColor(0.8,0.6,1.0,1.0)
-					else
-						local r, g, b, hex = GetItemQualityColor(itemrarity)
-						t.ilevel:SetTextColor(r,g,b,1.0)
-					end
-				end
-			elseif (self:GetVar("COLORSCHEME")=='plain') then
-				t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
-			else
-				-- Only the two level based schemes are left
-				local g	=(ilevel+upvalue-avgmin)/(range*2)
-				trueAvg=trueAvg+ilevel
-				if (self:GetVar("COLORSCHEME")=='lvup') then
-					t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
-				else
-					t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
-				end
-			end
-			if (enchantable and self:GetToggle("SHOWENCHANT") and  enchval<1) then
-				t.enc:SetText(L["E"])
-			else
-				t.enc:SetText("")
-			end
-			local sockets=self:getSockets(itemlink)
-			local gem1,gem2,gem3,gem4=GetInventoryItemGems(slotId)
-			local gems=self:getNumGems(gem1,gem2,gem3,gem4)
+			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
 			if (self:GetToggle("SHOWGEMS")) then
 				local gg=self:getGemColors(gem1)
 				r=r+gg.r
@@ -349,21 +371,10 @@ function addon:slotsCheck (...)
 				y=y+gg.y
 				p=p+gg.p
 			end
-			if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
-				t.gem:SetFormattedText("%d",(sockets.s)-gems)
-			elseif (sockets.s==0 and ItemEquipLoc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
-			t.gem:SetText("B")
-			else
-				t.gem:SetText("")
-			end
 			tr=tr+sockets.r
 			tb=tb+sockets.b
 			ty=ty+sockets.y
 			tp=tp+sockets.p
-		else
-			t.gem:SetText("")
-			t.enc:SetText("")
-			t.ilevel:SetText('')
 		end
 
 	end
@@ -392,9 +403,39 @@ function addon:loadGemLocalizedStrings()
 	Meta_localized = select(7,GetItemInfo(Meta_localized))
 	debug(Meta_localized)
 end
+function addon:EquipmentFlyout_CreateButton(...)
+	local button=self.hooks.EquipmentFlyout_CreateButton(...)
+	local id=tonumber(button:GetName():sub(-1))
+	if (id and id > 1) then
+			flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
+	end
+end
+local calls={}
+function addon:EquipmentFlyout_DisplayButton(button,paperdoll)
+	calls[button]=(calls[button] or 0) +1
+	local id=tonumber(button:GetName():sub(-1))
+	if (id==1) then return end
+	local location,itemid,level = button.location,nil,0;
+	if ( not location ) then
+		return;
+	end
+	local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
+	if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
+		return;
+	end
+	local rc
+	if (voidStorage) then
+		itemid=GetVoidItemInfo(tab,voidSlot)
+	elseif (bags) then
+		itemid=GetContainerItemLink(bag,slot)
+	elseif (player) then
+		itemid=GetInventoryItemLink("player",slot)
+	end
+	self:paintButton(flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
+end
 function addon:OnInitialized()
+	GetItemInfo=addon:GetCachingGetItemInfo()
 	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
-	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"
 	self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
@@ -444,6 +485,9 @@ function addon:OnInitialized()
 	if (not self.db.char.choosen) then
 		self:switchProfile(false)
 	end
+	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
+	self:RawHook("EquipmentFlyout_CreateButton",true)
+	self:SecureHook("EquipmentFlyout_DisplayButton")
 
 end
 
