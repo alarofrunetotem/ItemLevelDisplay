@@ -288,9 +288,9 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 			t.ilevel:SetText('')
 			return
 		end
-		local ilevel=select(4,GetItemInfo(itemlink))
-		local loc=select(9,GetItemInfo(itemlink))
-		local itemrarity=select(3,GetItemInfo(itemlink))
+		local ilevel=GetItemInfo(itemlink,4)
+		local loc=GetItemInfo(itemlink,9)
+		local itemrarity=GetItemInfo(itemlink,3)
 		local enchval=self:checkLink(itemlink)
 		ilevel=ilevel or 1
 		local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
