@@ -56,8 +56,8 @@ local slotsList={
 	ShoulderSlot={E=true},
 	BackSlot={E=true},
 	ChestSlot={E=true},
-	ShirtSlot=false,
-	TabardSlot=false,
+	ShirtSlot={E=false},
+	TabardSlot={E=false},
 	WristSlot={E=true},
 	HandsSlot={E=true},
 	WaistSlot={E=false},
@@ -410,11 +410,12 @@ function addon:EquipmentFlyout_CreateButton(...)
 			flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
 	end
 end
-local calls={}
+--local calls={}
 function addon:EquipmentFlyout_DisplayButton(button,paperdoll)
-	calls[button]=(calls[button] or 0) +1
+	--calls[button]=(calls[button] or 0) +1
 	local id=tonumber(button:GetName():sub(-1))
 	if (id==1) then return end
+	if (not slots[button.id]) then return end
 	local location,itemid,level = button.location,nil,0;
 	if ( not location ) then
 		return;

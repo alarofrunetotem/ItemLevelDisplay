@@ -14,6 +14,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,5,1,[[
+Fix: No longer gives error when opening tabard or shirt flyout.
+]])
 self:RelNotes(1,5,0,[[
 Feature: Equipment in flyout equipment manager buttons are now taken in consideration and ilevel added to them.
 ]])

@@ -4,7 +4,7 @@
 ## Notes-itIT: Mostra il livello degli items nella schermata del personaggio
 ## Author: Alar of Daggerspine
 ## Version: @project-version@ @project-abbreviated-hash@
-## X-Version: 1.5.0
+## X-Version: 1.5.1
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## RequiredDeps:
