@@ -227,8 +227,13 @@ function addon:loadSlots(...)
 end
 function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
-	local enchant=select(3,strsplit(':',data)) or 0
-	return tonumber(enchant) or 0
+	if (data) then
+		local enchant=select(3,strsplit(':',data)) or 0
+		return tonumber(enchant) or 0
+	else
+		debug("No data for",link)
+		return 0
+	end
 end
 function addon:ApplySHOWGEMS(value)
 	if (not gframe) then return end
