@@ -407,12 +407,11 @@ function addon:EquipmentFlyout_CreateButton(...)
 	local button=self.hooks.EquipmentFlyout_CreateButton(...)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id and id > 1) then
-			flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
+		flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
+		button:HookScript("OnShow",function(...) self:FlyOutButton_OnShow(...) end)
 	end
 end
---local calls={}
-function addon:EquipmentFlyout_DisplayButton(button,paperdoll)
-	--calls[button]=(calls[button] or 0) +1
+function addon:FlyOutButton_OnShow(button)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id==1) then return end
 	if (not slots[button.id]) then return end
@@ -432,9 +431,16 @@ function addon:EquipmentFlyout_DisplayButton(button,paperdoll)
 	elseif (player) then
 		itemid=GetInventoryItemLink("player",slot)
 	end
-	self:paintButton(flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
+	if (itemid) then
+		self:paintButton(flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
+	else
+		debug("Item",itemid , "not found")
+	end
 end
 function addon:OnInitialized()
+	self.OptionsTable.args.on=nil
+	self.OptionsTable.args.off=nil
+	self.OptionsTable.args.standby=nil
 	GetItemInfo=addon:GetCachingGetItemInfo()
 	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
@@ -486,10 +492,8 @@ function addon:OnInitialized()
 	if (not self.db.char.choosen) then
 		self:switchProfile(false)
 	end
-	CharacterFrame:HookScript("OnShow",function(...) self.slotsCheck(self,...) end)
+	CharacterFrame:HookScript("OnShow",function(...) self:slotsCheck(...) end)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
-	self:SecureHook("EquipmentFlyout_DisplayButton")
-
 end
 
 function addon:addGemLayer()
