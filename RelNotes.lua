@@ -15,7 +15,7 @@ It also enriches your flyout equipment buttons
 
 ]])
 self:RelNotes(1,5,2,[[
-Fix: In some casses, opening the flyout caused error spamming (signaled by Phosphoros)
+Fix: In some cases, opening the flyout caused error spamming (signaled by Phosphoros)
 ]])
 self:RelNotes(1,5,1,[[
 Fix: No longer gives error when opening tabard or shirt flyout.
