@@ -14,27 +14,30 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,5,3,[[
+Fixed: Opening a flyout in trasmogrification panel, when no flyout was ever open in the standard paperdoll raised: ItemLevelDisplay-1.5.2.lua:422 attempt to index upvalue 'slots' (a boolean value)
+]])
 self:RelNotes(1,5,2,[[
-Fix: In some cases, opening the flyout caused error spamming (signaled by Phosphoros)
+Fixed: In some cases, opening the flyout caused error spamming (signaled by Phosphoros)
 ]])
 self:RelNotes(1,5,1,[[
-Fix: No longer gives error when opening tabard or shirt flyout.
+Fixed: No longer gives error when opening tabard or shirt flyout.
 ]])
 self:RelNotes(1,5,0,[[
 Feature: Equipment in flyout equipment manager buttons are now taken in consideration and ilevel added to them.
 ]])
 self:RelNotes(1,4,5,[[
-Fix: now accounts for bonus level due to difficulty in raid dropped items. With this release upgrade for Wod should be now complete
+Fixed: now accounts for bonus level due to difficulty in raid dropped items. With this release upgrade for Wod should be now complete
 ]])
 self:RelNotes(1,4,4,[[
-Fix: when you install ItemLevelDisplay for tha absolute first time, it raises an error if you choose "Common profile for all characters" at the one time profile type request.
+Fixed: when you install ItemLevelDisplay for tha absolute first time, it raises an error if you choose "Common profile for all characters" at the one time profile type request.
 ]])
 self:RelNotes(1,4,3,[[
-Fix: For level based coloring, upgrade value was not taken in account.
+Fixed: For level based coloring, upgrade value was not taken in account.
 Thanks to Mergele for sending the fix
 ]])
 self:RelNotes(1,4,2,[[
-Fix: Upgraded items are back!!
+Fixed: Upgraded items are back!!
 ]])
 
 self:RelNotes(1,4,1,[[
@@ -42,12 +45,12 @@ Upgrade: libItemUpgradeInfo upgraded to 1.0.7
 ]])
 self:RelNotes(1,3,2,[[
 Feature: Configuration can now be global.(i.e. all characters share the same settings)
-Fix: Best green and best red were swapped
+Fixed: Best green and best red were swapped
 ]])
 self:RelNotes(1,3,1,[[
 Feature: Refined configuration panel
 Feature: Added enchantable rings for enchanter
-Fix: gem mini panel is now always updated
+Fixed: gem mini panel is now always updated
 ]])
 self:RelNotes(1,3,0,[[
 Feature: Refactored appearance with now 4 color schemes:

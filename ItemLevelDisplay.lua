@@ -9,9 +9,6 @@ local print=ns.print or print
 local debug=ns.debug or print
 -----------------------------------------------------------------
 --------------------------------------
---@debug@
-print("ItemLevelDisplay ALPHA version")
---@end-debug@
 local _G=_G
 local type=type
 local pairs=pairs
@@ -419,6 +416,7 @@ end
 function addon:FlyOutButton_OnShow(button)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id==1) then return end
+	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
 	if (not slots[button.id]) then return end
 	local location,itemid,level = button.location,nil,0;
 	if ( not location ) then
