@@ -30,6 +30,7 @@ local yellow={1, 1, 0}
 local meta={1, 1, 1}
 local green={0,1,0}
 local dirty=true
+local flyoutDrawn={}
 local eventframe=nil
 local redGems, blueGems, yellowGems, metaGems = 0, 0, 0, 0
 local gems={}
@@ -295,7 +296,8 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		local itemrarity=GetItemInfo(itemlink,3)
 		local enchval=self:checkLink(itemlink)
 		ilevel=ilevel or 1
-		local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
+		--local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
+		local upvalue=GetItemInfo(itemlink,99) or 0
 		t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 		-- Apply actual color scheme
 		if (self:GetVar('COLORSCHEME')=='qual') then
@@ -410,29 +412,37 @@ function addon:EquipmentFlyout_CreateButton(...)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id and id > 1) then
 		flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
-		button:HookScript("OnShow",function(...) self:FlyOutButton_OnShow(...) end)
 	end
 end
-function addon:FlyOutButton_OnShow(button)
-	local id=tonumber(button:GetName():sub(-1))
-	if (id==1) then return end
-	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
-	if (not slots[button.id]) then return end
+function addon:EquipmentFlyout_DisplayButton(button,slot)
 	local location,itemid,level = button.location,nil,0;
 	if ( not location ) then
 		return;
 	end
+	if ( location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION ) then
+		return
+	end
+	local id=tonumber(button:GetName():sub(-1))
+	local key=id..tostring(slot)
+	if (flyoutDrawn[key]) then return end
+	print(slot:GetName(),slot:GetID(),"Drawn:",flyoutDrawn[slot])
+	flyoutDrawn[key]=true
+	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
+	if (not slots[button.id]) then return end
 	local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
+	print (location, player, bank, bags, voidStorage, slot, bag, tab, voidSlot)
 	if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
 		return;
 	end
 	local rc
-	if (voidStorage) then
+	if (voidStorage and voidSlot) then
 		itemid=GetVoidItemInfo(tab,voidSlot)
-	elseif (bags) then
+	elseif (bags and slot) then
 		itemid=GetContainerItemLink(bag,slot)
-	elseif (player) then
+	elseif (player and slot) then
 		itemid=GetInventoryItemLink("player",slot)
+	else
+		itemid=nil
 	end
 	if (itemid) then
 		self:paintButton(flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
@@ -495,8 +505,11 @@ function addon:OnInitialized()
 	if (not self.db.char.choosen) then
 		self:switchProfile(false)
 	end
-	CharacterFrame:HookScript("OnShow",function(...) self:slotsCheck(...) end)
+	self:HookScript(CharacterFrame,"OnShow",function(...) self:slotsCheck(...) end)
+	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) print("Clicckete") wipe(flyoutDrawn) end)
+	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) print("Clicckete") wipe(flyoutDrawn) end)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
+	self:SecureHook("EquipmentFlyout_DisplayButton")
 end
 
 function addon:addGemLayer()

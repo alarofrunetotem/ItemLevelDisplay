@@ -14,6 +14,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,5,4,[[
+Fixed: Error when opening equipmentset flyout with nore than one equipment set
+]])
 self:RelNotes(1,5,3,[[
 Fixed: Opening a flyout in trasmogrification panel, when no flyout was ever open in the standard paperdoll raised: ItemLevelDisplay-1.5.2.lua:422 attempt to index upvalue 'slots' (a boolean value)
 ]])
