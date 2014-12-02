@@ -14,6 +14,10 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,5,5,[[
+Fixed: Removes debug spam from chat
+Update: Will remove old enchant/buckles info in 1.6.0
+]])
 self:RelNotes(1,5,4,[[
 Fixed: Error when opening equipmentset flyout with nore than one equipment set
 ]])

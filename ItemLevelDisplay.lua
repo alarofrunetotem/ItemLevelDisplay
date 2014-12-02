@@ -425,12 +425,10 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 	local id=tonumber(button:GetName():sub(-1))
 	local key=id..tostring(slot)
 	if (flyoutDrawn[key]) then return end
-	print(slot:GetName(),slot:GetID(),"Drawn:",flyoutDrawn[slot])
 	flyoutDrawn[key]=true
 	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
 	if (not slots[button.id]) then return end
 	local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
-	print (location, player, bank, bags, voidStorage, slot, bag, tab, voidSlot)
 	if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
 		return;
 	end
@@ -506,8 +504,8 @@ function addon:OnInitialized()
 		self:switchProfile(false)
 	end
 	self:HookScript(CharacterFrame,"OnShow",function(...) self:slotsCheck(...) end)
-	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) print("Clicckete") wipe(flyoutDrawn) end)
-	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) print("Clicckete") wipe(flyoutDrawn) end)
+	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) wipe(flyoutDrawn) end)
+	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) wipe(flyoutDrawn) end)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
 	self:SecureHook("EquipmentFlyout_DisplayButton")
 end
