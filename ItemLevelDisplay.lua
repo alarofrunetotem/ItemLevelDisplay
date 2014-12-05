@@ -47,26 +47,28 @@ local gemcolors={
 	yellow=yellow,
 	meta=meta
 }
-
+local always=10000 -- Hope not to reach this item level....
+local never=-1
+local mop=600
 local slotsList={
-	HeadSlot={E=false},
-	NeckSlot={E=false},
-	ShoulderSlot={E=true},
-	BackSlot={E=true},
-	ChestSlot={E=true},
-	ShirtSlot={E=false},
-	TabardSlot={E=false},
-	WristSlot={E=true},
-	HandsSlot={E=true},
-	WaistSlot={E=false},
-	LegsSlot={E=true},
-	FeetSlot={E=true},
-	Finger0Slot={E=false},
-	Finger1Slot={E=false},
-	Trinket0Slot={E=false},
-	Trinket1Slot={E=false},
-	MainHandSlot={E=true},
-	SecondaryHandSlot={E=true},
+	HeadSlot={E=never},
+	NeckSlot={E=always},
+	ShoulderSlot={E=mop},
+	BackSlot={E=always},
+	ChestSlot={E=mop},
+	ShirtSlot={E=never},
+	TabardSlot={E=never},
+	WristSlot={E=mop},
+	HandsSlot={E=mop},
+	WaistSlot={E=never},
+	LegsSlot={E=mop},
+	FeetSlot={E=mop},
+	Finger0Slot={E=always},
+	Finger1Slot={E=always},
+	Trinket0Slot={E=never},
+	Trinket1Slot={E=never},
+	MainHandSlot={E=always},
+	SecondaryHandSlot={E=mop},
 }
 
 local stats={}
@@ -294,7 +296,6 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		local ilevel=GetItemInfo(itemlink,4)
 		local loc=GetItemInfo(itemlink,9)
 		local itemrarity=GetItemInfo(itemlink,3)
-		local enchval=self:checkLink(itemlink)
 		ilevel=ilevel or 1
 		--local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
 		local upvalue=GetItemInfo(itemlink,99) or 0
@@ -322,8 +323,13 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 				t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
 			end
 		end
-		if (enchantable and self:GetToggle("SHOWENCHANT") and  enchval<1) then
-			t.enc:SetText(L["E"])
+		if (enchantable > (ilevel+upvalue) and self:GetToggle("SHOWENCHANT") ) then
+			local enchval=self:checkLink(itemlink)
+			if (enchval<1) then
+				t.enc:SetText(L["E"])
+			else
+				t.enc:SetText("")
+			end
 		else
 			t.enc:SetText("")
 		end
@@ -332,8 +338,8 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		local gems=self:getNumGems(gem1,gem2,gem3,gem4)
 		if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
 			t.gem:SetFormattedText("%d",(sockets.s)-gems)
-		elseif (sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
-		t.gem:SetText("B")
+		elseif ((ilevel+upvalue)<601 and sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
+			t.gem:SetText("B")
 		else
 			t.gem:SetText("")
 		end

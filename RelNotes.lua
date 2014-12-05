@@ -14,6 +14,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,6,0,[[
+Feature: No longer shows old enchant requiremente for item 600+
+]])
 self:RelNotes(1,5,5,[[
 Fixed: Removes debug spam from chat
 Update: Will remove old enchant/buckles info in 1.6.0
