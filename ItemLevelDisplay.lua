@@ -21,6 +21,7 @@ local GetItemInfo=GetItemInfo
 local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
 local addonName="ILD"
+local EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION=EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION
 local range=8
 local average=1
 local markdirty
@@ -74,6 +75,7 @@ local slotsList={
 local stats={}
 local sockets={}
 local slots=false
+local useless={}
 local flyouts={}
 local gframe=false
 local gred=false
@@ -219,8 +221,11 @@ function addon:loadSlots(...)
 				slots[slotId]={
 					frame=self:addLayer(frame,slotId),
 					enchantable=slotsList[slotname]['E'],
-					special=slotsList[slotname]['S']
+					special=slotsList[slotname]['S'],
 				}
+				if (slotname=="TabardSlot" or slotname =="ShirtSlot") then
+					useless[slotId]=true
+				end
 			end
 		end
 	end
@@ -287,7 +292,7 @@ function addon:getGemColors(gem)
 	return gems[gem]
 end
 function addon:paintButton(t,slotId,itemlink,average,enchantable)
-		if (not itemlink) then
+		if (not itemlink or (useless[slotId] and not self:GetBoolean("SHOWUSELESS"))) then
 			t.gem:SetText("")
 			t.enc:SetText("")
 			t.ilevel:SetText('')
@@ -359,32 +364,34 @@ function addon:slotsCheck (...)
 		local itemlink=GetInventoryItemLink("player",slotId)
 		if (itemlink) then
 			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
-			if (self:GetToggle("SHOWGEMS")) then
-				local gg=self:getGemColors(gem1)
-				r=r+gg.r
-				b=b+gg.b
-				y=y+gg.y
-				p=p+gg.p
-				gg=self:getGemColors(gem2)
-				r=r+gg.r
-				b=b+gg.b
-				y=y+gg.y
-				p=p+gg.p
-				gg=self:getGemColors(gem3)
-				r=r+gg.r
-				b=b+gg.b
-				y=y+gg.y
-				p=p+gg.p
-				gg=self:getGemColors(gem4)
-				r=r+gg.r
-				b=b+gg.b
-				y=y+gg.y
-				p=p+gg.p
+			if (sockets) then
+				if (self:GetToggle("SHOWGEMS")) then
+					local gg=self:getGemColors(gem1)
+					r=r+gg.r
+					b=b+gg.b
+					y=y+gg.y
+					p=p+gg.p
+					gg=self:getGemColors(gem2)
+					r=r+gg.r
+					b=b+gg.b
+					y=y+gg.y
+					p=p+gg.p
+					gg=self:getGemColors(gem3)
+					r=r+gg.r
+					b=b+gg.b
+					y=y+gg.y
+					p=p+gg.p
+					gg=self:getGemColors(gem4)
+					r=r+gg.r
+					b=b+gg.b
+					y=y+gg.y
+					p=p+gg.p
+				end
+				tr=tr+sockets.r
+				tb=tb+sockets.b
+				ty=ty+sockets.y
+				tp=tp+sockets.p
 			end
-			tr=tr+sockets.r
-			tb=tb+sockets.b
-			ty=ty+sockets.y
-			tp=tp+sockets.p
 		end
 
 	end
@@ -416,7 +423,7 @@ end
 function addon:EquipmentFlyout_CreateButton(...)
 	local button=self.hooks.EquipmentFlyout_CreateButton(...)
 	local id=tonumber(button:GetName():sub(-1))
-	if (id and id > 1) then
+	if (id) then
 		flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
 	end
 end
@@ -425,10 +432,11 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 	if ( not location ) then
 		return;
 	end
+	local id=tonumber(button:GetName():sub(-1))
 	if ( location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION ) then
+		self:paintButton(flyouts[id].frame)
 		return
 	end
-	local id=tonumber(button:GetName():sub(-1))
 	local key=id..tostring(slot)
 	if (flyoutDrawn[key]) then return end
 	flyoutDrawn[key]=true
@@ -467,7 +475,8 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
 	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems']).width="full"
-	self:AddToggle('SHOWBUCKLE',true,L['Assume Buckle on waist']).width="full"
+	self:SetBoolean('SHOWBUCKLE',false)
+	self:AddToggle('SHOWUSELESSILEVEL',false,L['Show iLevel on shirt and tabard']).width='full'
 	self:AddLabel(L['Appearance'],L['Change colors and appearance'])
 	self:AddSelect('CORNER',"br",
 	{br=L['Bottom Right'],

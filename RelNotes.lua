@@ -14,6 +14,11 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,6,1,[[
+Feature: You can disable itemlevel for shirt and tabard
+Feature: Dropped buckle reference
+Fixed: Error "Message: ...terface\AddOns\ItemLevelDisplay\ItemLevelDisplay.lua:452 attempt to index field '?' (a nil value)" when opening a flyout at Trasmogrifier
+]])
 self:RelNotes(1,6,0,[[
 Feature: No longer shows old enchant requiremente for item 600+
 ]])
