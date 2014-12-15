@@ -7,12 +7,15 @@ self:HF_Paragraph("Description")
 self:HF_Pre([[
 ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll frame showing:
 
-		ItemLevel
-		Socket Status
-		Enchant Status
+ * ItemLevel
+ * Socket Status
+ * Enchant Status
 
 It also enriches your flyout equipment buttons
 
+]])
+self:RelNotes(1,6,2,[[
+Fixed: An error occurs when login: 1x ...terface\ItemLevelDisplay\ItemLevelDisplay-1.6.1.lua:310: bad argument #1 to 'gmatch' (string expected, got nil)
 ]])
 self:RelNotes(1,6,1,[[
 Feature: You can disable itemlevel for shirt and tabard

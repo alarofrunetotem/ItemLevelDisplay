@@ -22,6 +22,7 @@ local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
 local addonName="ILD"
 local EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION=EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION
+local ITEM_QUALITY_COLORS=ITEM_QUALITY_COLORS
 local range=8
 local average=1
 local markdirty
@@ -300,22 +301,18 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		end
 		local ilevel=GetItemInfo(itemlink,4)
 		local loc=GetItemInfo(itemlink,9)
-		local itemrarity=GetItemInfo(itemlink,3)
+		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
 		ilevel=ilevel or 1
 		--local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
 		local upvalue=GetItemInfo(itemlink,99) or 0
 		t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
 		-- Apply actual color scheme
 		if (self:GetVar('COLORSCHEME')=='qual') then
-			for token in string.gmatch((itemrarity), "[^%s]+") do
-				if tonumber(token) == 3 then
-					t.ilevel:SetTextColor(0.39,0.73,1.0,1.0)
-				elseif tonumber(token) == 4 then
-					t.ilevel:SetTextColor(0.8,0.6,1.0,1.0)
-				else
-					local r, g, b, hex = GetItemQualityColor(itemrarity)
-					t.ilevel:SetTextColor(r,g,b,1.0)
-				end
+			local q=ITEM_QUALITY_COLORS[itemrarity]
+			if (not q) then
+				t.ilevel:SetTextColor(1,1,1)
+			else
+				t.ilevel:SetTextColor(q.r,q.g,q.b)
 			end
 		elseif (self:GetVar("COLORSCHEME")=='plain') then
 			t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
