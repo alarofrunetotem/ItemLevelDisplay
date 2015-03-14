@@ -14,6 +14,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,7,0,[[
+Feature: Heirloom current level is now displayed
+]])
 self:RelNotes(1,6,2,[[
 Fixed: An error occurs when login: 1x ...terface\ItemLevelDisplay\ItemLevelDisplay-1.6.1.lua:310: bad argument #1 to 'gmatch' (string expected, got nil)
 ]])

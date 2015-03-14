@@ -299,13 +299,11 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 			t.ilevel:SetText('')
 			return
 		end
-		local ilevel=GetItemInfo(itemlink,4)
 		local loc=GetItemInfo(itemlink,9)
 		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
-		ilevel=ilevel or 1
-		--local upvalue=I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink))
-		local upvalue=GetItemInfo(itemlink,99) or 0
-		t.ilevel:SetFormattedText("%3d",ilevel+upvalue)
+		local ilevel=I:GetUpgradedItemLevel(itemlink)
+		t.ilevel:SetFormattedText("%3d",ilevel)
+
 		-- Apply actual color scheme
 		if (self:GetVar('COLORSCHEME')=='qual') then
 			local q=ITEM_QUALITY_COLORS[itemrarity]
@@ -318,14 +316,14 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 			t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
 		else
 			-- Only the two level based schemes are left
-			local g =(ilevel+upvalue-average)/(range*2)
+			local g =(ilevel-average)/(range*2)
 			if (self:GetVar("COLORSCHEME")=='lvup') then
 				t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
 			else
 				t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
 			end
 		end
-		if (enchantable > (ilevel+upvalue) and self:GetToggle("SHOWENCHANT") ) then
+		if (enchantable > (ilevel) and self:GetToggle("SHOWENCHANT") ) then
 			local enchval=self:checkLink(itemlink)
 			if (enchval<1) then
 				t.enc:SetText(L["E"])
@@ -340,7 +338,7 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		local gems=self:getNumGems(gem1,gem2,gem3,gem4)
 		if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
 			t.gem:SetFormattedText("%d",(sockets.s)-gems)
-		elseif ((ilevel+upvalue)<601 and sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
+		elseif ((ilevel)<601 and sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
 			t.gem:SetText("B")
 		else
 			t.gem:SetText("")
