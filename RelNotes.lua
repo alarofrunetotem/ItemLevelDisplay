@@ -14,6 +14,9 @@ ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll fram
 It also enriches your flyout equipment buttons
 
 ]])
+self:RelNotes(1,7,1,[[
+Fix: Message: ...temLevelDisplay\libs\LibItemUpgradeInfo-1.0\Core.lua:69: attempt to index local 'itemString' (a number value)
+]])
 self:RelNotes(1,7,0,[[
 Feature: Heirloom current level is now displayed
 ]])

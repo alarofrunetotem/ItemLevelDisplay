@@ -301,6 +301,7 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		end
 		local loc=GetItemInfo(itemlink,9)
 		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
+		if type(itemlink)=="number" then itemlink=GetItemInfo(itemlink,2) end
 		local ilevel=I:GetUpgradedItemLevel(itemlink)
 		t.ilevel:SetFormattedText("%3d",ilevel)
 
