@@ -346,6 +346,9 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		end
 	return sockets,gem1,gem2,gem3,gem4
 end
+--[[
+InspectPaperDollFrame or some thing like that
+--]]
 function addon:slotsCheck (...)
 	if (not dirty) then return end
 	if (not CharacterFrame:IsShown()) then return end

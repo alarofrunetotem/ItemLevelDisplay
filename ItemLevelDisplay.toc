@@ -1,10 +1,9 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: ItemLevelDisplay
 ## Notes: Displays item's levels in paperdoll
 ## Notes-itIT: Mostra il livello degli items nella schermata del personaggio
 ## Author: Alar of Daggerspine
-## Version: @project-version@ @project-abbreviated-hash@
-## X-Version: 1.7.1
+## Version: @project-version@ 6.2.0
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## RequiredDeps:
