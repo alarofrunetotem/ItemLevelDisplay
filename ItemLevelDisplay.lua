@@ -522,8 +522,15 @@ function addon:OnInitialized()
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) wipe(flyoutDrawn) end)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
 	self:SecureHook("EquipmentFlyout_DisplayButton")
+	self:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
 end
-
+function addon:ITEM_UPGRADE_MASTER_UPDATE()
+	self:slotsCheck()
+end
+function addon:TRANSMOGRIFY_SUCCESS(event,slot)
+	self:slotsCheck()
+	--ilevel doesnt change, keeping it around just in case
+end
 function addon:addGemLayer()
 	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame)
 	local alarframe=LibStub("AlarFrames-3.0",true)
@@ -640,14 +647,18 @@ function addon:cmdInfo()
 	wininfo=gui:Create("Frame")
 	wininfo:SetTitle("Please post this screenshot to curse, thanks")
 	wininfo:SetStatusText("Add the expected ilevel for upgraded items")
+	local rehide=true
 	if (not CharacterFrame:IsShown()) then
 		ToggleCharacter("PaperDollFrame")
 	else
-		debug("Already show")
+		rehide=false
 	end
-	ToggleCharacter("PaperDollFrame")
+	--ToggleCharacter("PaperDollFrame")
+	local gui=LibStub("AceGUI-3.0")
+	local e=gui:Create("EditBox")
+	local editable=""
+	local pattern="%02d.%s: %s  <%s>   %s"
 	for  slotId,data in pairs(slots) do
-		local gui=LibStub("AceGUI-3.0")
 		local l=gui:Create("Label")
 		local itemid=GetInventoryItemID("player",slotId)
 		if (itemid) then
@@ -656,16 +667,23 @@ function addon:cmdInfo()
 			local data=select(3,strsplit("|",itemlink or "|||||"))
 			local e=self:checkLink(itemlink)
 			l:SetFullWidth(true)
-			l:SetText(format("%02d.%s: %s  <%s>   %s",
+			local data=pattern:format(
 			slotId,
 			name,
 			C(ilevel,"green"),
 			C(I:GetItemLevelUpgrade(I:GetUpgradeID(itemlink)),"orange"),
 			data or "<empty>"
 			)
-			)
+			l:SetText(data)
+			editable=editable .. data .." @ "
 			wininfo:AddChild(l)
 		end
+	end
+	e:SetText(editable)
+	e:SetFullWidth(true)
+	wininfo:AddChild(e)
+	if rehide then
+		ToggleCharacter("PaperDollFrame")
 	end
 end
 function addon:cmdProfiles()
