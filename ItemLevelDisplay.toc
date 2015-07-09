@@ -5,6 +5,7 @@
 ## Author: Alar of Daggerspine
 ## Version: @project-version@ 6.2.0
 ## X-Revision: @project-abbreviated-hash@
+## X-Version: 1.8.1
 ## eMail: alar@aspide.it
 ## RequiredDeps:
 ## OptionalDeps: Ace3,AlarArtRemover,LibDebug
