@@ -597,7 +597,7 @@ local wininfo
 local profiles={}
 function addon:switchProfile(fromPanel)
 	local gui=LibStub("AceGUI-3.0")
-	wininfo=gui:Create("AlarConfig")
+	wininfo=gui:Create("Window")
 	wininfo:SetWidth(500)
 	wininfo:SetHeight(180)
 	wininfo:SetLayout('Flow')
@@ -634,12 +634,10 @@ function addon:switchProfile(fromPanel)
 			wininfo:SetUserData("newprofile",self.db.keys.char)
 		end
 	end)
-	wininfo:AddChild(l0)
-	wininfo:AddChild(l1)
-	wininfo:AddChild(l2)
-	wininfo:AddChild(g)
-	wininfo:SetCallback('OnSave',
-	function(widget)
+	local b=gui:Create("Button")
+	b:SetText(SAVE)
+	b:SetCallback('OnClick',
+	function(this)
 		if (wininfo:GetUserData("currentprofile") ~= wininfo:GetUserData("newprofile")) then
 			self.db:SetProfile(wininfo:GetUserData("newprofile"))
 		end
@@ -648,11 +646,22 @@ function addon:switchProfile(fromPanel)
 			self:Gui()
 		end
 		self:markDirty()
-		widget:Hide()
-		widget:Release()
+		local widget=this:GetUserData("Father")
 		self.db.char.choosen=true
+		widget:Release()
 	end
 	)
+	wininfo:SetCallback("OnClose",function(this) this:Release() end)
+	wininfo:AddChild(l0)
+	wininfo:AddChild(l1)
+	wininfo:AddChild(l2)
+	wininfo:AddChild(g)
+	wininfo:AddChild(b)
+	b:SetPoint("RIGHT")
+	b:SetUserData("Father",wininfo)
+	--@debug@
+	print(wininfo.frame,wininfo.frame:GetName())
+	--@end-debug@
 	wininfo:Show()
 end
 function addon:cmdInfo()
