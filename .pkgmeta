@@ -2,15 +2,17 @@ package-as: ItemLevelDisplay
 enable-nolib-creation: no
 
 externals:
+	libs/LibInit:
+		url: git://git.curseforge.net/wow/libinit/mainline.git/LibInit
+		tag: latest
+
 	libs/Ace3:
 		url: svn://svn.wowace.com/wow/ace3/mainline/trunk
 		tag: latest
+
 	libs/LibItemUpgradeInfo-1.0:
 		url: git://git.wowace.com/wow/libitemupgradeinfo-1-0/mainline.git
 		tag: latest
-	libs/AlarShared-3.0:
-		url: git://git.curseforge.net/wow/alar-art-remover/mainline.git/libs/AlarShared-3.0
-
 
 ignore:
 - .buildpath
