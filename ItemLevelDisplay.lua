@@ -2,9 +2,22 @@ local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- MUST BE LINE 1
 local toc=select(4,GetBuildInfo())
 local me, ns = ...
 local pp=print
-local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
-local C=LibStub("AlarCrayon-3.0"):GetColorTable()
-local addon=LibStub("AlarLoader-3.0")(__FILE__,me,ns):CreateAddon(me,true) --#Addon
+--local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
+--local C=LibStub("AlarCrayon-3.0"):GetColorTable()
+--local addon=LibStub("AlarLoader-3.0")(__FILE__,me,ns):CreateAddon(me,true) --#Addon
+--@debug@
+LoadAddOn("Blizzard_DebugTools")
+LoadAddOn("LibDebug")
+LoadAddOn("LibInit")
+LoadAddOn("LibItemUpgradeInfo-1.0")
+if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
+--@end-debug@
+--[===[@non-debug@
+ns.print=function() end
+--@end-non-debug@]===]
+local addon=LibStub("LibInit"):NewAddon(me,'AceHook-3.0','AceEvent-3.0') --#Addon
+local L=addon:GetLocale()
+local C=addon:GetColorTable()
 local print=ns.print or print
 local debug=ns.debug or print
 -----------------------------------------------------------------
@@ -465,7 +478,7 @@ function addon:OnInitialized()
 	self.OptionsTable.args.on=nil
 	self.OptionsTable.args.off=nil
 	self.OptionsTable.args.standby=nil
-	GetItemInfo=addon:GetCachingGetItemInfo()
+	GetItemInfo=I:GetCachingGetItemInfo()
 	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"

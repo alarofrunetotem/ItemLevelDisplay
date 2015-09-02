@@ -13,5 +13,6 @@
 	<Include file="libs\Ace3\AceDB-3.0\AceDB-3.0.xml"/>
 	<Include file="libs\Ace3\AceDBOptions-3.0\AceDBOptions-3.0.xml"/>
 	<Include file="libs\AlarShared-3.0\lib.xml"/>
-		<Include file="libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml"/>
+	<Include file="libs\LibInit\LibInit.xml"/>
+	<Include file="libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml"/>
 </Ui>
