@@ -193,7 +193,8 @@ local function corner2points(corner)
 		b="BOTTOM",
 		t="TOP",
 		r="RIGHT",
-		l="LEFT"
+		l="LEFT",
+		c=""
 	}
 	--debug(corner,corner:sub(1,1),corner:sub(2,2))
 	return positions[corner:sub(1,1)],positions[corner:sub(2,2)]
@@ -211,6 +212,7 @@ function addon:placeLayer(t,e,g)
 		additional="TOP"
 	end
 	t:SetPoint(v..h)
+	if h=="" then h="CENTER" end
 	t:SetJustifyH(h)
 	e:SetHeight(15)
 	e:SetWidth(30)
@@ -348,16 +350,21 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 			t.enc:SetText("")
 		end
 		local sockets=self:getSockets(itemlink)
-		local gem1,gem2,gem3,gem4=GetInventoryItemGems(slotId)
-		local gems=self:getNumGems(gem1,gem2,gem3,gem4)
-		if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
-			t.gem:SetFormattedText("%d",(sockets.s)-gems)
-		elseif ((ilevel)<601 and sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
-			t.gem:SetText("B")
+		if toc<70000 then
+			local gem1,gem2,gem3,gem4=GetInventoryItemGems(slotId)
+			local gems=self:getNumGems(gem1,gem2,gem3,gem4)
+			if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
+				t.gem:SetFormattedText("%d",(sockets.s)-gems)
+			elseif ((ilevel)<601 and sockets.s==0 and loc == "INVTYPE_WAIST" and self:GetToggle("SHOWBUCKLE")) then
+				t.gem:SetText("B")
+			else
+				t.gem:SetText("")
+			end
+			return sockets,gem1,gem2,gem3,gem4
 		else
-			t.gem:SetText("")
+			return sockets
 		end
-	return sockets,gem1,gem2,gem3,gem4
+
 end
 --[[
 InspectPaperDollFrame or some thing like that
@@ -494,7 +501,9 @@ function addon:OnInitialized()
 	{br=L['Bottom Right'],
 		tr=L['Top Right'],
 		tl=L['Top Left'],
-		bl=L['Bottom Left']
+		bl=L['Bottom Left'],
+		bc=L['Bottom Center'],
+		tc=L['Top Center']
 	},L['Level text aligned to'],L['Position']).width="full"
 	self:AddSelect('COLORSCHEME',"qual",
 	{
