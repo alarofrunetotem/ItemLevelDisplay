@@ -1,4 +1,4 @@
-## Interface: 60200
+## Interface: 70000
 ## Title: ItemLevelDisplay
 ## Notes: Displays item's levels in paperdoll
 ## Notes-itIT: Mostra il livello degli items nella schermata del personaggio
