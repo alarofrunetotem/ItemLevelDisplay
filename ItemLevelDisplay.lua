@@ -316,6 +316,11 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
 		if type(itemlink)=="number" then itemlink=GetItemInfo(itemlink,2) end
 		local ilevel=I:GetUpgradedItemLevel(itemlink)
+		if type(ilevel)~="number" then
+			ilevel=0
+			--print("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
+			--error("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
+		end
 		t.ilevel:SetFormattedText("%3d",ilevel)
 
 		-- Apply actual color scheme
