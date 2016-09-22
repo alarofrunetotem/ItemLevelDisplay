@@ -19,6 +19,10 @@ local C=addon:GetColorTable()
 local print=ns.print or print
 local debug=ns.debug or print
 -----------------------------------------------------------------
+---- ContainerFrameItem<n> (backpack
+-- 	ContainerFrame<2-5>Item<n> bagwww
+-- 	InspectPaperDollItemsFrame
+-- 	Inspect<name>Slot
 --------------------------------------
 local _G=_G
 local type=type
@@ -83,10 +87,15 @@ local slotsList={
 	MainHandSlot={E=always},
 	SecondaryHandSlot={E=mop},
 }
+local framesList={
+	Inspect="InspectPaperDollItemsFrame",
+	Character="PaperDollItemsFrame"
 
+}
 local stats={}
 local sockets={}
 local slots=false
+local islots=false
 local useless={}
 local flyouts={}
 local gframe=false
@@ -224,11 +233,14 @@ function addon:placeLayer(t,e,g)
 	g:SetTextColor(1,0,0)
 	g:SetJustifyH("RIGHT")
 end
-function addon:loadSlots(...)
-	slots={}
+function addon:loadSlots(prefix,...)
+	local slots={}
 	for i=1,select('#',...) do
 		local frame=select(i,...) -- Got SlotFrame
-		local slotname=frame:GetName():gsub('Character','')
+		local slotname=frame:GetName():gsub(prefix,'')
+		--@debug@
+		print(frame,frame:GetName(),slotname)
+		--@end-debug@
 		if (slotsList[slotname]) then
 			local slotId=GetInventorySlotInfo(slotname)
 			if (slotId) then
@@ -243,6 +255,7 @@ function addon:loadSlots(...)
 			end
 		end
 	end
+	return slots
 end
 function addon:checkLink(link)
 	local data=select(3,strsplit("|",link))
@@ -274,7 +287,7 @@ end
 function addon:Apply()
 	self:markDirty()
 end
-function addon:getGemColors(gem)
+function addon:removedgetGemColors(gem)
 	local empty={r=0,p=0,b=0,y=0}
 	if (not gem) then return empty end
 	if (false or not gems[gem]) then
@@ -372,11 +385,10 @@ end
 --[[
 InspectPaperDollFrame or some thing like that
 --]]
-function addon:slotsCheck (...)
+function addon:oldslotsCheck (...)
 	if (not dirty) then return end
 	if (not CharacterFrame:IsShown()) then return end
 	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
-	if (not gframe) then self:addGemLayer() end
 	average=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
 	local equippedCount=0
@@ -427,11 +439,48 @@ function addon:slotsCheck (...)
 		gframe:Hide()
 	end
 end
+--[[
+	Scans my slots
+--]]
+function addon:slotsCheck (...)
+	if (not dirty) then return end
+	if (not PaperDollItemsFrame:IsVisible()) then return end
+	if (not slots) then slots=self:loadSlots("Character",PaperDollItemsFrame:GetChildren()) end
+	average=GetAverageItemLevel()-range -- 1 tier up are full green
+	local trueAvg=0
+	for  slotId,data in pairs(slots) do
+		local itemlink=GetInventoryItemLink("player",slotId)
+		if (itemlink) then
+			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+		end
+	end
+end
+--[[
+	Scans inspect slots
+--]]
+function addon:inspectCheck (...)
+	--@debug@
+	print("Inspect")
+	--@end-debug@
+	if (not InspectPaperDollItemsFrame:IsVisible()) then return end
+	if (not islots) then islots=self:loadSlots("Inspect",InspectPaperDollItemsFrame:GetChildren()) end
+	average=GetAverageItemLevel()-range -- 1 tier up are full green
+	local trueAvg=0
+	for  slotId,data in pairs(islots) do
+		local itemlink=GetInventoryItemLink("target",slotId)
+		--@debug@
+		print("Checking",slotId,itemlink)
+		--@end-debug@
+		if (itemlink) then
+			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+		end
+	end
+end
 function addon:markDirty()
 	dirty=true
 	self:slotsCheck()
 end
-function addon:loadGemLocalizedStrings()
+function addon:removedloadGemLocalizedStrings()
 	Red_localized = select(7, GetItemInfo(Red_localized))
 	Blue_localized = select(7, GetItemInfo(Blue_localized))
 	Yellow_localized = select(7, GetItemInfo(Yellow_localized))
@@ -489,14 +538,12 @@ function addon:OnInitialized()
 	self.OptionsTable.args.off=nil
 	self.OptionsTable.args.standby=nil
 	GetItemInfo=I:GetCachingGetItemInfo()
-	self:RegisterEvent("PLAYER_LOGIN","loadGemLocalizedStrings")
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"
 	self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
 	self:AddLabel(L['Options'],L['Choose what is shown'])
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
-	self:AddToggle('SHOWGEMS',true,L['Shows total number of gems']).width="full"
 	self:SetBoolean('SHOWBUCKLE',false)
 	self:AddToggle('SHOWUSELESSILEVEL',false,L['Show iLevel on shirt and tabard']).width='full'
 	self:AddLabel(L['Appearance'],L['Change colors and appearance'])
@@ -526,8 +573,8 @@ function addon:OnInitialized()
 	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"]).width="full"
 	self:loadHelp()
 	if self:getEnchantLevel() >= 360 then
-		Finger0Slot.E=true
-		Finger1Slot.E=true
+		slotsList.Finger0Slot.E=true
+		slotsList.Finger1Slot.E=true
 	end
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
 	if (not self.db.global.hascommon) then
@@ -542,21 +589,32 @@ function addon:OnInitialized()
 	if (not self.db.char.choosen) then
 		self:switchProfile(false)
 	end
-	self:HookScript(CharacterFrame,"OnShow",function(...) self:slotsCheck(...) end)
+	self:HookScript(CharacterFrame,"OnShow","slotsCheck")
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) wipe(flyoutDrawn) end)
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) wipe(flyoutDrawn) end)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
 	self:SecureHook("EquipmentFlyout_DisplayButton")
 	self:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
+	self:RegisterEvent("ADDON_LOADED")
 end
 function addon:ITEM_UPGRADE_MASTER_UPDATE()
 	self:slotsCheck()
+end
+function addon:ADDON_LOADED(event,addonName)
+--@debug@
+	print(event,addonName)
+--@end-debug@
+	if addonName=="Blizzard_InspectUI" then
+		self:HookScript(InspectPaperDollItemsFrame,"OnShow","inspectCheck")
+		self:ScheduleTimer("inspectCheck",0.5)
+		self:UnregisterEvent("ADDON_LOADED")
+	end
 end
 function addon:TRANSMOGRIFY_SUCCESS(event,slot)
 	self:slotsCheck()
 	--ilevel doesnt change, keeping it around just in case
 end
-function addon:addGemLayer()
+function addon:removedaddGemLayer()
 	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame)
 	local alarframe=LibStub("AlarFrames-3.0",true)
 	gframe:SetHeight(75)
@@ -753,4 +811,4 @@ function addon:getEnchantLevel()
 	end
 	return 0
 end
-
+ILD=addon
