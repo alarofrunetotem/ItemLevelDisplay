@@ -9,7 +9,8 @@ externals:
 	libs/LibItemUpgradeInfo-1.0:
 		url: git://git.wowace.com/wow/libitemupgradeinfo-1-0/mainline.git
 		tag: latest
-
+move-folders:
+	ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
 ignore:
 - .buildpath
 - .project

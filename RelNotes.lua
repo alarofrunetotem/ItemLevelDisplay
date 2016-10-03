@@ -5,14 +5,21 @@ function hlp:loadHelp()
 self:HF_Title("Quick Item Level Display","RELNOTES")
 self:HF_Paragraph("Description")
 self:HF_Pre([[
-ItemLevelDisplay adds a tiny layer on each equipment slot in your paperdoll frame showing:
+ItemLevelDisplay adds a tiny layer on each item slot with the following information:
 
  * ItemLevel
  * Socket Status
  * Enchant Status
 
-It also enriches your flyout equipment buttons
-
+ItemLevelDisplay manages
+Paperdoll
+Inspect Frame
+Transmog
+Bags (if your bag addon is unsupporte, please let me know it)
+]])
+self:RelNotes(2,0,"0-Beta1",[[
+Feature: Added Inspect Frame
+Fix: Removed useless total gem count
 ]])
 self:RelNotes(1,7,1,[[
 Fix: Message: ...temLevelDisplay\libs\LibItemUpgradeInfo-1.0\Core.lua:69: attempt to index local 'itemString' (a number value)

@@ -2,9 +2,6 @@ local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- MUST BE LINE 1
 local toc=select(4,GetBuildInfo())
 local me, ns = ...
 local pp=print
---local L=LibStub("AceLocale-3.0"):GetLocale(me,true)
---local C=LibStub("AlarCrayon-3.0"):GetColorTable()
---local addon=LibStub("AlarLoader-3.0")(__FILE__,me,ns):CreateAddon(me,true) --#Addon
 --@debug@
 LoadAddOn("Blizzard_DebugTools")
 LoadAddOn("LibDebug")
@@ -13,17 +10,55 @@ if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
 --[===[@non-debug@
 ns.print=function() end
 --@end-non-debug@]===]
-local addon=LibStub("LibInit"):NewAddon(ns,me,'AceHook-3.0','AceEvent-3.0') --#Addon
+local INVSLOT_AMMO		= INVSLOT_AMMO
+local INVSLOT_HEAD 		= INVSLOT_HEAD
+local INVSLOT_NECK		= INVSLOT_NECK
+local INVSLOT_SHOULDER	= INVSLOT_SHOULDER
+local INVSLOT_BODY		= INVSLOT_BODY
+local INVSLOT_CHEST		= INVSLOT_CHEST
+local INVSLOT_WAIST		= INVSLOT_WAIST
+local INVSLOT_LEGS		= INVSLOT_LEGS
+local INVSLOT_FEET		= INVSLOT_FEET
+local INVSLOT_WRIST		= INVSLOT_WRIST
+local INVSLOT_HAND		= INVSLOT_HAND
+local INVSLOT_FINGER1	= INVSLOT_FINGER1
+local INVSLOT_FINGER2	= INVSLOT_FINGER2
+local INVSLOT_TRINKET1	= INVSLOT_TRINKET1
+local INVSLOT_TRINKET2	= INVSLOT_TRINKET2
+local INVSLOT_BACK		= INVSLOT_BACK
+local INVSLOT_MAINHAND	= INVSLOT_MAINHAND
+local INVSLOT_OFFHAND	= INVSLOT_OFFHAND
+local INVSLOT_RANGED		= INVSLOT_RANGED
+local INVSLOT_TABARD		= INVSLOT_TABARD
+local INVSLOT_FIRST_EQUIPPED = INVSLOT_FIRST_EQUIPPED;
+local INVSLOT_LAST_EQUIPPED = INVSLOT_LAST_EQUIPPED
+local addon=LibStub("LibInit"):NewAddon(ns,me,{noswitch=false,profile=true,enhancedProfile=true},'AceHook-3.0','AceEvent-3.0','AceTimer-3.0') --#Addon
 local L=addon:GetLocale()
 local C=addon:GetColorTable()
 local print=ns.print or print
 local debug=ns.debug or print
+local bagSlots={}
 -----------------------------------------------------------------
 ---- ContainerFrameItem<n> (backpack
 -- 	ContainerFrame<2-5>Item<n> bagwww
 -- 	InspectPaperDollItemsFrame
 -- 	Inspect<name>Slot
 --------------------------------------
+local baggers={
+	'adibags',
+	'arkinventory',
+	'baggins',
+	'bagnon',
+	'baudbag',
+	'combuctor',
+	'OneBag3',
+}
+local bagmanagerName="Blizzard Bags"
+local	bagmanager="blizzardbags"-- Baggers management function . Base definition is nop
+local function findItemButtons() end
+local function canDisplayLevel() end
+local function nop() end
+--
 local _G=_G
 local type=type
 local pairs=pairs
@@ -104,6 +139,7 @@ local gblue=false
 local gyellow=false
 local meta=false
 local tmp={}
+local dirtyBags={}
 local Red_localized = 52255
 local Blue_localized = 52235
 local Yellow_localized = 52267
@@ -119,9 +155,6 @@ function addon:getSockets(itemlink)
 		local b=0
 		local y=0
 		local p=0
-		--@debug@
-		debug ("ItemLink for gem",itemlink)
-		--@end-debug@
 		local tmp=GetItemStats(itemlink,tmp)
 		if (type(tmp)=="table") then
 			for k,v in pairs(tmp) do
@@ -142,9 +175,6 @@ function addon:getSockets(itemlink)
 		end
 		s=r+b+y+p
 		sockets[itemlink]={s=s,r=r,y=y,b=b,p=p}
-		--@debug@
-		debug("Gem List","T:",s,"R:",r,"Y:",y,"B:",b,"M:",p)
-		--@end-debug@
 	--end
 	return sockets[itemlink]
 end
@@ -178,20 +208,22 @@ function addon:colorGradient(perc, ...)
 	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
 	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 end
-function addon:addLayer(f,id)
+function addon:addLayer(f,id,bag)
 	local font="NumberFont_Outline_Med"
 	--local font="NumberFont_OutlineThick_Mono_Small"
 	--local font="NumberFontNormalYellow"
 	--local font="NumberFont_Outline_Large"
 	--local font="NumberFont_Outline_Huge"
-	local t=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font)
+	local t,e,g=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font),nil,nil
 	t:SetText()
-	font="NumberFont_OutlineThick_Mono_Small"
-	local e=f:CreateFontString(me .."enc"..id,"OVERLAY",font)
-	e:SetText("")
-	local g=f:CreateFontString(me..'gem'..id,"OVERLAY",font)
-	g:SetText("")
-	self:placeLayer(t,e,g)
+	if not bag then
+		font="NumberFont_OutlineThick_Mono_Small"
+		e=f:CreateFontString(me .."enc"..id,"OVERLAY",font)
+		e:SetText("")
+		g=f:CreateFontString(me..'gem'..id,"OVERLAY",font)
+		g:SetText("")
+	end
+	self:placeLayer(t,e,g,bag and "tr" or self:GetVar("CORNER"))
 	return {ilevel=t,gem=g,enc=e}
 end
 
@@ -207,40 +239,42 @@ local function corner2points(corner)
 	return positions[corner:sub(1,1)],positions[corner:sub(2,2)]
 end
 
-function addon:placeLayer(t,e,g)
-	t:ClearAllPoints()
-	e:ClearAllPoints()
-	g:ClearAllPoints()
-	t:SetHeight(15)
-	t:SetWidth(45)
-	local v,h=corner2points(self:GetVar("CORNER"))
+function addon:placeLayer(t,e,g,position)
+	local v,h=corner2points(position)
 	local additional="BOTTOM"
 	if (v=="BOTTOM") then
 		additional="TOP"
 	end
-	t:SetPoint(v..h)
 	if h=="" then h="CENTER" end
-	t:SetJustifyH(h)
-	e:SetHeight(15)
-	e:SetWidth(30)
-	e:SetPoint(additional .."LEFT")
-	e:SetJustifyH("LEFT")
-	e:SetTextColor(1,0,0)
-
-	g:SetHeight(15)
-	g:SetWidth(30)
-	g:SetPoint(additional .. "RIGHT")
-	g:SetTextColor(1,0,0)
-	g:SetJustifyH("RIGHT")
+	if t then
+		t:ClearAllPoints()
+		t:SetHeight(15)
+		t:SetWidth(45)
+		t:SetPoint(v..h)
+		t:SetJustifyH(h)
+	end
+	if e then
+		e:ClearAllPoints()
+		e:SetHeight(15)
+		e:SetWidth(30)
+		e:SetPoint(additional .."LEFT")
+		e:SetJustifyH("LEFT")
+		e:SetTextColor(1,0,0)
+	end
+	if g then
+		g:ClearAllPoints()
+		g:SetHeight(15)
+		g:SetWidth(30)
+		g:SetPoint(additional .. "RIGHT")
+		g:SetTextColor(1,0,0)
+		g:SetJustifyH("RIGHT")
+	end
 end
 function addon:loadSlots(prefix,...)
 	local slots={}
 	for i=1,select('#',...) do
 		local frame=select(i,...) -- Got SlotFrame
 		local slotname=frame:GetName():gsub(prefix,'')
-		--@debug@
-		print(frame,frame:GetName(),slotname)
-		--@end-debug@
 		if (slotsList[slotname]) then
 			local slotId=GetInventorySlotInfo(slotname)
 			if (slotId) then
@@ -267,18 +301,32 @@ function addon:checkLink(link)
 		return 0
 	end
 end
-function addon:ApplySHOWGEMS(value)
-	if (not gframe) then return end
-	if (value) then
-		gframe:Show()
+function addon:ApplyBAGS(value)
+	if value then
+		self:RegisterEvent("BAG_UPDATE_DELAYED")
+		self[bagmanager](self)
+		--print(pcall(self[bagmanager],self))
+
 	else
-		gframe:Hide()
+		self:UnregisterEvent("BAG_UPDATE_DELAYED")
+	end
+	self:BagRefresh()
+end
+function addon:ApplyBAGGER(value)
+	for k,v in pairs(baggers) do
+		if k==value then
+			self:Print("Enabling",v)
+			EnableAddOn(k)
+		else
+			self:Print("Disabling",v)
+			DisableAddOn(k)
+		end
 	end
 end
 function addon:ApplyCORNER(value)
 	if (not slots) then return end
 	for  slotId,data in pairs(slots) do
-		self:placeLayer(data.frame.ilevel,data.frame.enc,data.frame.gem)
+		self:placeLayer(data.frame.ilevel,data.frame.enc,data.frame.gem,value)
 	end
 end
 function addon:ApplyGEMCORNER(value)
@@ -318,6 +366,27 @@ function addon:removedgetGemColors(gem)
 	end
 	return gems[gem]
 end
+function addon:getColors(itemRarity,itemLevel)
+	-- Apply actual color scheme
+	if (self:GetVar('COLORSCHEME')=='qual') then
+		local q=ITEM_QUALITY_COLORS[itemRarity]
+		if (not q) then
+			return 1,1,1
+		else
+			return q.r,q.g,q.b
+		end
+	elseif (self:GetVar("COLORSCHEME")=='plain') then
+		return 1.0,1.0,1.0,1.0
+	else
+		-- Only the two level based schemes are left
+		local g =(itemLevel-average)/(range*2)
+		if (self:GetVar("COLORSCHEME")=='lvup') then
+			return self:colorGradient(g,0,1,0,1,1,0,1,0,0)
+		else
+			return self:colorGradient(g,1,0,0,1,1,0,0,1,0)
+		end
+	end
+end
 function addon:paintButton(t,slotId,itemlink,average,enchantable)
 		if (not itemlink or (useless[slotId] and not self:GetBoolean("SHOWUSELESS"))) then
 			t.gem:SetText("")
@@ -335,26 +404,7 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 			--error("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
 		end
 		t.ilevel:SetFormattedText("%3d",ilevel)
-
-		-- Apply actual color scheme
-		if (self:GetVar('COLORSCHEME')=='qual') then
-			local q=ITEM_QUALITY_COLORS[itemrarity]
-			if (not q) then
-				t.ilevel:SetTextColor(1,1,1)
-			else
-				t.ilevel:SetTextColor(q.r,q.g,q.b)
-			end
-		elseif (self:GetVar("COLORSCHEME")=='plain') then
-			t.ilevel:SetTextColor(1.0,1.0,1.0,1.0)
-		else
-			-- Only the two level based schemes are left
-			local g =(ilevel-average)/(range*2)
-			if (self:GetVar("COLORSCHEME")=='lvup') then
-				t.ilevel:SetTextColor(self:colorGradient(g,0,1,0,1,1,0,1,0,0))
-			else
-				t.ilevel:SetTextColor(self:colorGradient(g,1,0,0,1,1,0,0,1,0))
-			end
-		end
+		t.ilevel:SetTextColor(self:getColors(itemrarity,ilevel))
 		if (enchantable > (ilevel) and self:GetToggle("SHOWENCHANT") ) then
 			local enchval=self:checkLink(itemlink)
 			if (enchval<1) then
@@ -451,7 +501,15 @@ function addon:slotsCheck (...)
 	for  slotId,data in pairs(slots) do
 		local itemlink=GetInventoryItemLink("player",slotId)
 		if (itemlink) then
-			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+			if I:IsArtifact(itemlink) then
+				if slotId==INVSLOT_OFFHAND then
+					itemlink=GetInventoryItemLink("player",INVSLOT_MAINHAND)
+				end
+				print(slotId,itemlink)
+				self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
+			else
+				self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+			end
 		end
 	end
 end
@@ -468,11 +526,8 @@ function addon:inspectCheck (...)
 	local trueAvg=0
 	for  slotId,data in pairs(islots) do
 		local itemlink=GetInventoryItemLink("target",slotId)
-		--@debug@
-		print("Checking",slotId,itemlink)
-		--@end-debug@
 		if (itemlink) then
-			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,never)
 		end
 	end
 end
@@ -540,12 +595,13 @@ function addon:OnInitialized()
 	GetItemInfo=I:GetCachingGetItemInfo()
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"
-	self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
+	--self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
 	self:AddLabel(L['Options'],L['Choose what is shown'])
 	self:AddToggle('SHOWENCHANT',true,L['Shows missing enchants']).width="full"
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
 	self:SetBoolean('SHOWBUCKLE',false)
 	self:AddToggle('SHOWUSELESSILEVEL',false,L['Show iLevel on shirt and tabard']).width='full'
+	self:AddToggle('BAGS',true,L["Show iLevel in bags"],L['EXPERIMENTAL FEATURE, disable if you experience lag'])
 	self:AddLabel(L['Appearance'],L['Change colors and appearance'])
 	self:AddSelect('CORNER',"br",
 	{br=L['Bottom Right'],
@@ -592,22 +648,45 @@ function addon:OnInitialized()
 	self:HookScript(CharacterFrame,"OnShow","slotsCheck")
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) wipe(flyoutDrawn) end)
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) wipe(flyoutDrawn) end)
+	--self:HookScript("ContainerFrameTemplate","OnShow",print)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
 	self:SecureHook("EquipmentFlyout_DisplayButton")
 	self:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
+	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
+	local orig={}
+	local blizzard="ILD-Blizzard"
+	for i=1,5 do
+		local f=_G['ContainerFrame' .. i]
+		if f then
+			orig[i]=f:GetScript("OnShow")
+			f:SetScript("OnShow",function(...)
+				print("OnSHow",...)
+				LoadAddOn(blizzard)
+				if IsAddOnLoaded(blizzard) then
+					LibStub("LibInit"):GetAddon(blizzard):FirstBagDisplay(...)
+				end
+				for i=1,5 do
+					f:SetScript("OnShow",orig[i])
+				end
+				return orig[i](...)
+			end)
+		end
+	end
+
 end
+
 function addon:ITEM_UPGRADE_MASTER_UPDATE()
 	self:slotsCheck()
 end
+function addon:ARTIFACT_XP_UPDATE(event,...)
+	print(event,...)
+	self:slotsCheck()
+end
 function addon:ADDON_LOADED(event,addonName)
---@debug@
-	print(event,addonName)
---@end-debug@
 	if addonName=="Blizzard_InspectUI" then
 		self:HookScript(InspectPaperDollItemsFrame,"OnShow","inspectCheck")
 		self:ScheduleTimer("inspectCheck",0.5)
-		self:UnregisterEvent("ADDON_LOADED")
 	end
 end
 function addon:TRANSMOGRIFY_SUCCESS(event,slot)
@@ -793,8 +872,6 @@ function addon:cmdProfiles()
 		wininfo:AddChild(l)
 	end
 end
-
-
 function addon:getEnchantLevel()
 	local p1,p2=GetProfessions()
 	if (p1) then
@@ -811,4 +888,4 @@ function addon:getEnchantLevel()
 	end
 	return 0
 end
-ILD=addon
+_G.ILD=addon
