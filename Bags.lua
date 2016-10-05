@@ -22,7 +22,7 @@ if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
 --[===[@non-debug@
 ns.print=function() end
 --@end-non-debug@]===]
-local print=ns.print
+local print=ns.print or print
 print("Bags loaded from",me)
 LoadAddOn("ItemLevelDisplay")
 local addon=LibStub("AceAddon-3.0"):GetAddon("ItemLevelDisplay")
@@ -33,24 +33,31 @@ local toc=select(4,GetBuildInfo())
 local C=addon:GetColorTable()
 local L=addon:GetLocale()
 local hookedFrames={}
+local triggerFrames={}
 function module:OnInitialized()
 	self:Print(me,"loaded")
 end
 function module:SetTriggerFrame(frame)
-	if type(frame)=="string" and not _G[frame] then
-	--@debug@
-		print("Waiting to set trigger for",frame)
-	--@end-debug@
-		self:ScheduleTimer("SetTriggerFrame",1,frame)
-		return
-	else
-		frame=_G[frame]
+	if type(frame)=="string" then
+		if not _G[frame] then
+		--@debug@
+			print("Waiting to set trigger for",frame)
+		--@end-debug@
+			self:ScheduleTimer("SetTriggerFrame",1,frame)
+			return
+		else
+			frame=_G[frame]
+		end
 	end
 --@debug@
-	if not frame then return end
+	if not frame then
+		print("Passed a nil frame")
+		return
+	end
 	print("Trigger set for",frame:GetName())
 --@end-debug@
 	if not self:IsHooked(frame,"OnShow") then
+		triggerFrames[frame]=true
 		self:SecureHookScript(frame,"OnShow","FirstBagDisplay")
 	end
 end
@@ -64,8 +71,6 @@ function bagManagers:baggins()
 		self:scanForBagItemButtons('ContainerFrame%dItem')
 	end
 	self:SetTriggerFrame("BagginsBag1")
-	self:SetTriggerFrame("ContainerFrame1")
-	self:SetTriggerFrame("ContainerFrame2")
 end
 
 function bagManagers:arkinventory()
@@ -86,7 +91,9 @@ function module:IsOfflineBag()
 	return false
 end
 function module:FirstBagDisplay(this)
-	self:Unhook(this,"OnShow")
+	for frame,_ in pairs(triggerFrames) do
+		self:Unhook(frame,"OnShow")
+	end
 --	print("BagOpen",this:GetName(),this.isOffLine)
 	self:RegisterEvent("BAG_UPDATE_DELAYED")
 	return self:scanForBagItemButtons()
