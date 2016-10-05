@@ -654,6 +654,7 @@ function addon:OnInitialized()
 	self:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
 	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
+--[[
 	local orig={}
 	local blizzard="ILD-Blizzard"
 	for i=1,5 do
@@ -673,7 +674,7 @@ function addon:OnInitialized()
 			end)
 		end
 	end
-
+--]]
 end
 
 function addon:ITEM_UPGRADE_MASTER_UPDATE()
