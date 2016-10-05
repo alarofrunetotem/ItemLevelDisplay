@@ -1,0 +1,17 @@
+## Interface: 70000
+## Title: ItemLevelDisplay-ArkInventory
+## Notes: Displays item's levels in ArkInventory bags
+## Notes-itIT: Mostra il livello degli items nelle borse di ArkInventory
+## Author: Alar of Daggerspine
+## Version: @project-version@ 7.0.3
+## X-Revision: @project-abbreviated-hash@
+## eMail: alar@aspide.it
+## Dependencies: ItemLevelDisplay,ArkInventory
+## DefaultState: Enabled
+## X-Embeds:
+## X-Category: Bags and Inventory
+## X-License: GPL v3
+## X-eMail: alar@aspide.it
+## X-Date: @project-date-iso@
+..\ItemLevelDisplay\Bags.lua
+core.lua
