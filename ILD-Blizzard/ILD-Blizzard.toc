@@ -6,10 +6,9 @@
 ## Version: @project-version@ 7.0.3
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
-## LoadWith: ArkInventory
 ## X-Embeds:
+## Dependencies: ItemLevelDisplay
 ## DefaultState: Enabled
-## LoadOnDemand: 1
 ## X-Category: Bags and Inventory
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
