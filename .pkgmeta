@@ -11,6 +11,7 @@ externals:
 		tag: latest
 move-folders:
 	ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
+	ItemLevelDisplay/ILD-Arkinventory: ILD-Arkinventory
 ignore:
 - .buildpath
 - .project
