@@ -4,21 +4,36 @@ local hlp=LibStub("AceAddon-3.0"):GetAddon(me)
 function hlp:loadHelp()
 self:HF_Title("Quick Item Level Display","RELNOTES")
 self:HF_Paragraph("Description")
-self:HF_Pre([[
-ItemLevelDisplay adds a tiny layer on each item slot with the following information:
+self:Wiki([[
+=ItemLevelDisplay adds a tiny layer on each item slot with the following information:=
 
  * ItemLevel
  * Socket Status
  * Enchant Status
 
-ItemLevelDisplay manages
-Paperdoll
-Inspect Frame
-Transmog
-Bags (if your bag addon is unsupporte, please let me know it)
+
+==ItemLevelDisplay manages==
+* Paperdoll
+* Inspect Frame
+* Transmog
+* Bags (if your bag addon is unsupported, please let me know it)
+
+
+==Bag manager list:==
+Blizzard: implemented
+ArkInventory: implemented
+Baggins: on the way
+Bagnon: implemented (with bank)
+Baud Bag: planned
+Combuctor: planned
+Litebag: planned
+Onebag3: planned
+
 ]])
-self:RelNotes(2,0,"0-Beta1",[[
+self:RelNotes(2,0,0,[[
 Feature: Added Inspect Frame
+Feature: Blizzard bags support
+Feature: Arkinventory bags support
 Fix: Removed useless total gem count
 ]])
 self:RelNotes(1,7,1,[[
