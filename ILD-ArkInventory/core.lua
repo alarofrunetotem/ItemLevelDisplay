@@ -4,8 +4,6 @@ local module=ns.module
 function module:OnInitialized()
 	local frame=ArkInventory.Frame_Main_Get(ArkInventory.Const.Location.Bag)
 	self:SetTriggerFrame(frame)
-	frame=ArkInventory.Frame_Main_Get(ArkInventory.Const.Location.Bank)
-	self:SetTriggerFrame(frame)
 end
 function module:IsItemButton(name)
 	local bagFrame=("ARKINV_Frame%dScrollContainerBag"):format(ArkInventory.Const.Location.Bag)
