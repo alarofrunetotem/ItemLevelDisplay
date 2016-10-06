@@ -12,6 +12,7 @@ externals:
 move-folders:
 	ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
 	ItemLevelDisplay/ILD-Arkinventory: ILD-Arkinventory
+	ItemLevelDisplay/ILD-Bagnon: ILD-Bagnon
 ignore:
 - .buildpath
 - .project
