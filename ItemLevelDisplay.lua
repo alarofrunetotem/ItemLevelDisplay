@@ -301,16 +301,20 @@ function addon:checkLink(link)
 		return 0
 	end
 end
+local modules={} -- Adon list
+function addon:PushModule(module,name)
+	modules[module]=name
+end
 function addon:ApplyBAGS(value)
-	if value then
-		self:RegisterEvent("BAG_UPDATE_DELAYED")
-		self[bagmanager](self)
-		--print(pcall(self[bagmanager],self))
-
-	else
-		self:UnregisterEvent("BAG_UPDATE_DELAYED")
+	local msg=value and ENABLE or DISABLE
+	for module,name in pairs(modules) do
+		self:Print(module,":",msg)
+		if value then
+			EnableAddOn(name)
+		else
+			DisableAddOn(name)
+		end
 	end
-	self:BagRefresh()
 end
 function addon:ApplyBAGGER(value)
 	for k,v in pairs(baggers) do
@@ -601,7 +605,8 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
 	self:SetBoolean('SHOWBUCKLE',false)
 	self:AddToggle('SHOWUSELESSILEVEL',false,L['Show iLevel on shirt and tabard']).width='full'
-	self:AddToggle('BAGS',true,L["Show iLevel in bags"],L['EXPERIMENTAL FEATURE, disable if you experience lag'])
+	self:AddToggle('BAGS',true,L["Show iLevel in bags"],L['Will have full effect on NEXT reload'])
+	self:AddToggle('GEARBAGS',true,L["Show iLevel in bags only for gear"],L['Non gear items will be ignored'])
 	self:AddLabel(L['Appearance'],L['Change colors and appearance'])
 	self:AddSelect('CORNER',"br",
 	{br=L['Bottom Right'],
