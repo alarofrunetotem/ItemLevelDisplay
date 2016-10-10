@@ -38,21 +38,29 @@ local C=addon:GetColorTable()
 local print=ns.print or print
 local debug=ns.debug or print
 local bagSlots={}
+local NUM_LE_ITEM_CLASSES=_G.NUM_LE_ITEM_CLASSES or _G.NUM_LE_ITEM_CLASSS
+local LE_ITEM_CLASS_ARMOR=LE_ITEM_CLASS_ARMOR
+local LE_ITEM_CLASS_WEAPON=LE_ITEM_CLASS_WEAPON
 -----------------------------------------------------------------
 ---- ContainerFrameItem<n> (backpack
 -- 	ContainerFrame<2-5>Item<n> bagwww
 -- 	InspectPaperDollItemsFrame
 -- 	Inspect<name>Slot
 --------------------------------------
-local baggers={
-	'adibags',
-	'arkinventory',
-	'baggins',
-	'bagnon',
-	'baudbag',
-	'combuctor',
-	'OneBag3',
-}
+local l=GetNumAddOns()
+local baggers={"Blizzard"}
+for i=1,l do
+	local name, title, notes, loadable, reason, security, newVersion = GetAddOnInfo(i)
+	if name:find('ILD-')==1 then
+		local dep1,dep2=GetAddOnDependencies(i)
+		if dep1=="ItemLevelDisplay" then
+			tinsert(baggers,dep2)
+		else
+			tinsert(baggers,dep1)
+		end
+	end
+end
+local class2sort={}
 local bagmanagerName="Blizzard Bags"
 local	bagmanager="blizzardbags"-- Baggers management function . Base definition is nop
 local function findItemButtons() end
@@ -214,6 +222,7 @@ function addon:addLayer(f,id,bag)
 	--local font="NumberFontNormalYellow"
 	--local font="NumberFont_Outline_Large"
 	--local font="NumberFont_Outline_Huge"
+	id = id or tostring(f)
 	local t,e,g=f:CreateFontString(me.."ilevel"..id, "OVERLAY", font),nil,nil
 	t:SetText()
 	if not bag then
@@ -224,7 +233,7 @@ function addon:addLayer(f,id,bag)
 		g:SetText("")
 	end
 	self:placeLayer(t,e,g,bag and "tr" or self:GetVar("CORNER"))
-	return {ilevel=t,gem=g,enc=e}
+	return {ilevel=t,gem=g,enc=e,itemlink='new'}
 end
 
 local function corner2points(corner)
@@ -301,31 +310,21 @@ function addon:checkLink(link)
 		return 0
 	end
 end
-local modules={} -- Adon list
-function addon:PushModule(module,name)
-	modules[module]=name
-end
 function addon:ApplyBAGS(value)
-	local msg=value and ENABLE or DISABLE
-	for module,name in pairs(modules) do
-		self:Print(module,":",msg)
+	local ace=LibStub("AceAddon-3.0")
+	CloseAllBags()
+	for _,name in pairs(baggers) do
+		local modname="ILD-" .. name
+		local module=ace:GetAddon(modname,true)
 		if value then
-			EnableAddOn(name)
+			if module then self:Print("Enabling",name) module:Enable() end
 		else
-			DisableAddOn(name)
+			if module then self:Print("Disabling",name) module:Disable() end
 		end
 	end
 end
-function addon:ApplyBAGGER(value)
-	for k,v in pairs(baggers) do
-		if k==value then
-			self:Print("Enabling",v)
-			EnableAddOn(k)
-		else
-			self:Print("Disabling",v)
-			DisableAddOn(k)
-		end
-	end
+function addon:ApplyCLASSES(value)
+	print("CLASSES",value)
 end
 function addon:ApplyCORNER(value)
 	if (not slots) then return end
@@ -592,6 +591,10 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 		debug("Item",itemid , "not found")
 	end
 end
+function addon:IsClassEnabled(class)
+	if type(class)~="number" then return false end
+	return self:GetVar("CLASSES")[class2sort[class]]
+end
 function addon:OnInitialized()
 	self.OptionsTable.args.on=nil
 	self.OptionsTable.args.off=nil
@@ -605,8 +608,30 @@ function addon:OnInitialized()
 	self:AddToggle('SHOWSOCKETS',true,L['Shows number of empty socket']).width="full"
 	self:SetBoolean('SHOWBUCKLE',false)
 	self:AddToggle('SHOWUSELESSILEVEL',false,L['Show iLevel on shirt and tabard']).width='full'
+	self:AddLabel(L['Bags'],L['Manages itemlevel in bags'])
 	self:AddToggle('BAGS',true,L["Show iLevel in bags"],L['Will have full effect on NEXT reload'])
-	self:AddToggle('GEARBAGS',true,L["Show iLevel in bags only for gear"],L['Non gear items will be ignored'])
+	local iclasses=self:NewTable()
+	local sorted=self:NewTable()
+	local classes={}
+	for i=0,NUM_LE_ITEM_CLASSES-1 do
+		local name=GetItemClassInfo(i)
+		if name and not name:find('%(')  then
+			iclasses[name]=i
+			tinsert(sorted,name)
+		end
+	end
+	table.sort(sorted)
+	for i,v in ipairs(sorted) do
+		class2sort[iclasses[v]]=i
+		classes[i]=v
+	end
+	self:DelTable(iclasses)
+	self:DelTable(sorted)
+	local default={
+		[class2sort[LE_ITEM_CLASS_ARMOR]]=true,
+		[class2sort[LE_ITEM_CLASS_WEAPON]]=true
+	}
+	local c=self:AddMultiSelect("CLASSES",default,classes,'Only show iLevel for selected classes')
 	self:AddLabel(L['Appearance'],L['Change colors and appearance'])
 	self:AddSelect('CORNER',"br",
 	{br=L['Bottom Right'],
@@ -646,9 +671,6 @@ function addon:OnInitialized()
 			self.db:SetProfile(myprofile)
 		end
 		self.db.global.hascommon=true
-	end
-	if (not self.db.char.choosen) then
-		self:switchProfile(false)
 	end
 	self:HookScript(CharacterFrame,"OnShow","slotsCheck")
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) wipe(flyoutDrawn) end)
@@ -895,3 +917,26 @@ function addon:getEnchantLevel()
 	return 0
 end
 _G.ILD=addon
+--@do-not-package@
+_G.SLASH_IBAGS1="/ibags"
+SlashCmdList['IBAGS'] = function(args,chatframe)
+	addon:Print("ibags:")
+	local choosen=tonumber(args) or nil
+	if type(choosen)=="number" then
+		choosen=choosen+1
+		for i=1,#baggers do
+			if i==choosen then
+				EnableAddOn(baggers[i])
+			else
+				DisableAddOn(baggers[i])
+			end
+			ReloadUI()
+		end
+	else
+		for i=1,#baggers do
+			pp(format("%d. %s",i-1,baggers[i]))
+		end
+	end
+end
+--@do-not-package@
+

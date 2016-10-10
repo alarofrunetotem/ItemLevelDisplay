@@ -1,15 +1,24 @@
 local me,ns=...
 local addon=ns.addon
 local module=ns.module
+local _G=_G
+local ArkInventory
+if LibDebug then LibDebug() end
 function module:OnInitialized()
-	local frame=ArkInventory.Frame_Main_Get(ArkInventory.Const.Location.Bag)
-	self:SetTriggerFrame(frame)
+	ArkInventory=LibStub("AceAddon-3.0"):GetAddon("ArkInventory",true)
 end
-function module:IsItemButton(name)
-	local bagFrame=("ARKINV_Frame%dScrollContainerBag"):format(ArkInventory.Const.Location.Bag)
-	local bankFrame=("ARKINV_Frame%dScrollContainerBag"):format(ArkInventory.Const.Location.Bank)
-	return name:find(bagFrame) or name:find(bankFrame)
+function module:OnEnable()
+	self:SecureHook(ArkInventory,"SetItemButtonTexture","Display")
 end
-function module:IsOfflineBag()
-	return ArkInventory.Global.Location[ArkInventory.Const.Location.Bag].isOffline
+function module:Display(frame)
+	local i=ArkInventory.Frame_Item_GetDB(frame)
+	if i and i.h then
+		local rc,message=pcall(self.DrawItem,self,frame,i.q,i.h,4)
+		if not rc then
+			print(message)
+			DevTools_Dump(i)
+		end
+	else
+		self:DrawItem(frame)
+	end
 end

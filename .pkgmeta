@@ -13,6 +13,11 @@ move-folders:
 	ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
 	ItemLevelDisplay/ILD-Arkinventory: ILD-Arkinventory
 	ItemLevelDisplay/ILD-Bagnon: ILD-Bagnon
+	ItemLevelDisplay/ILD-Baggins: ILD-Baggins
+	ItemLevelDisplay/ILD-Bagbaud: ILD-Bagbaud
+	ItemLevelDisplay/ILD-Combuctor: ILD-Combuctor
+	ItemLevelDisplay/ILD-Litebag: ILD-Litebag
+	ItemLevelDisplay/ILD-Onebag3: ILD-Onebag3
 ignore:
 - .buildpath
 - .project

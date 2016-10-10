@@ -18,17 +18,23 @@ self:Wiki([[
 * Transmog
 * Bags (if your bag addon is unsupported, please let me know it)
 
+Bags management is implemented via separated addon!! (ILD-something)
+
 
 ==Bag manager list:==
 Blizzard: implemented
 ArkInventory: implemented
-Baggins: on the way
+Baggins: implemented (with bank)
 Bagnon: implemented (with bank)
+Litebag: imp0lemented
 Baud Bag: planned
 Combuctor: planned
-Litebag: planned
 Onebag3: planned
 
+]])
+self:RelNotes(2,0,1,[[
+Fix: added switch to only display itemlevel on gear
+Fix: added switch to completely disable itemlevel
 ]])
 self:RelNotes(2,0,0,[[
 Feature: Added Inspect Frame
