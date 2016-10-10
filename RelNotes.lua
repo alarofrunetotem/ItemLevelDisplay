@@ -16,25 +16,26 @@ self:Wiki([[
 * Paperdoll
 * Inspect Frame
 * Transmog
-* Bags (if your bag addon is unsupported, please let me know it)
+* Bags and Bank (if your bag addon is unsupported, please let me know it)
 
 Bags management is implemented via separated addon!! (ILD-something)
 
 
 ==Bag manager list:==
-Blizzard: implemented
-ArkInventory: implemented
+Blizzard: implemented (with bank)
+ArkInventory: implemented (with bank)
 Baggins: implemented (with bank)
 Bagnon: implemented (with bank)
-Litebag: imp0lemented
-Baud Bag: planned
-Combuctor: planned
-Onebag3: planned
+Baud Bag: impemented (with bank)
+Combuctor: implemented (with bank)
+Litebag: implemented (with bank)
+Onebag3: implemented (with bank)
 
 ]])
 self:RelNotes(2,0,1,[[
-Fix: added switch to only display itemlevel on gear
+Feature: you can choose for which items' classes show the itemlevel
 Fix: added switch to completely disable itemlevel
+
 ]])
 self:RelNotes(2,0,0,[[
 Feature: Added Inspect Frame
