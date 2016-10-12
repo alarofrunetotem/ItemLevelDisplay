@@ -254,12 +254,12 @@ function addon:placeLayer(t,e,g,position)
 	if (v=="BOTTOM") then
 		additional="TOP"
 	end
-	if h=="" then h="CENTER" end
 	if t then
 		t:ClearAllPoints()
 		t:SetHeight(15)
 		t:SetWidth(45)
 		t:SetPoint(v..h)
+		if h=="" then h="CENTER" end
 		t:SetJustifyH(h)
 	end
 	if e then
