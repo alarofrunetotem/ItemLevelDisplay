@@ -34,7 +34,8 @@ Onebag3: implemented (with bank)
 ]])
 self:RelNotes(2,0,1,[[
 Feature: you can choose for which items' classes show the itemlevel
-Fix: added switch to completely disable itemlevel
+Feature: item scanning is now much faster for all addons
+Fix: added switch to completely disable itemlevel in bags
 
 ]])
 self:RelNotes(2,0,0,[[
