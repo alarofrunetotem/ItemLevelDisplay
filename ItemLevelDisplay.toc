@@ -1,13 +1,13 @@
 ## Interface: 70000
 ## Title: ItemLevelDisplay
-## Notes: Displays item's levels in paperdoll
-## Notes-itIT: Mostra il livello degli items nella schermata del personaggio
-## Author: Alar of Daggerspine
-## Version: @project-version@ 6.2.2
+## Notes: Displays item's levels in paperdoll and optionally bags
+## Notes-itIT: Mostra il livello degli items nella schermata del personaggio e opzionalmente nelle borse
+## Author: Alar of Runetotem
+## Version: @project-version@ 7.0.3
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## RequiredDeps:
-## OptionalDeps: Ace3,AlarArtRemover,LIbInit,LibItemUpgradeInfo-1.0,LibDebug
+## OptionalDeps: LibInit,LibItemUpgradeInfo-1.0
 ## X-Embeds:
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
