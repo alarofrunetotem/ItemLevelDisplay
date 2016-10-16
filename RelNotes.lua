@@ -15,21 +15,21 @@ self:Wiki([[
 ==ItemLevelDisplay manages==
 * Paperdoll
 * Inspect Frame
-* Transmog
+* Transmogrifier
 * Bags and Bank (if your bag addon is unsupported, please let me know it)
 
-Bags management is implemented via separated addon!! (ILD-something)
+Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 
 
 ==Bag manager list:==
-Blizzard: implemented (with bank)
-ArkInventory: implemented (with bank)
-Baggins: implemented (with bank)
-Bagnon: implemented (with bank)
-Baud Bag: impemented (with bank)
-Combuctor: implemented (with bank)
-Litebag: implemented (with bank)
-Onebag3: implemented (with bank)
+* ILD-Blizzard: Blizzard (with bank)
+* ILD-Arkinventory: ArkInventory (with bank)
+* ILD-Baggins: Baggins (with bank)
+* ILD-Bagnon: Bagnon (with bank)
+* ILD-Baudbag: Baud Bag (with bank)
+* ILD-Combuctor: Combuctor (with bank)
+* ILD-Litebag: LiteBag (with bank)
+* ILD-Onebag3: Onebag3 (with bank)
 
 ]])
 self:RelNotes(2,0,2,[[
