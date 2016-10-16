@@ -3,7 +3,9 @@ local addon=ns.addon
 local module=ns.module
 local _G=_G
 local ArkInventory
+--@debug@
 if LibDebug then LibDebug() end
+--@end-debug@
 function module:OnInitialized()
 	ArkInventory=LibStub("AceAddon-3.0"):GetAddon("ArkInventory",true)
 end
@@ -13,11 +15,12 @@ end
 function module:Display(frame)
 	local i=ArkInventory.Frame_Item_GetDB(frame)
 	if i and i.h then
-		local rc,message=pcall(self.DrawItem,self,frame,i.q,i.h,4)
+		local rc,message=pcall(self.DrawItem,self,frame,i.q,i.h)
+--@debug@
 		if not rc then
-			print(message)
-			DevTools_Dump(i)
+			print(message,i)
 		end
+--@end-debug@
 	else
 		self:DrawItem(frame)
 	end
