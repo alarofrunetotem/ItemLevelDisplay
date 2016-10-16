@@ -15,6 +15,9 @@ local tonumber=tonumber
 local type=type
 local LoadAddOn=LoadAddOn
 local pp=print
+local select=select
+local font
+local corner
 --@debug@
 LoadAddOn("Blizzard_DebugTools")
 LoadAddOn("LibDebug")
@@ -28,18 +31,22 @@ LoadAddOn("ItemLevelDisplay")
 local addon=LibStub("LibInit"):GetAddon("ItemLevelDisplay")
 local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.0','AceEvent-3.0','AceTimer-3.0') --#Module
 local I=LibStub("LibItemUpgradeInfo-1.0")
+local LSM=LibStub("LibSharedMedia-3.0")
 local GetItemInfo=I:GetCachingGetItemInfo()
 --local module=addon:NewSubModule(me,"AceHook-3.0","AceEvent-3.0") --#module
 local toc=select(4,GetBuildInfo())
 local C=addon:GetColorTable()
 local L=addon:GetLocale()
-local hookedFrames={}
-local priorityFrames={}
-local triggerFrames={}
+local fontObject=CreateFont(me .. "font")
+do
+	fontObject:CopyFontObject(Game11Font)
+	local a,b,c=fontObject:GetFont()
+	fontObject:SetFont(a,b,"OUTLINE,THICKOUTLINE")
+end
 local frameLayers=setmetatable({},
 {
 	__index=function(t,frame)
-		local f=addon:addLayer(frame,frame:GetName(),true)
+		local f=addon:addLayer(frame,frame:GetName(),true,fontObject)
 		t[frame]=f
 		return f
 	end
@@ -47,7 +54,28 @@ local frameLayers=setmetatable({},
 function module:OnInitialize()
 	self:Print("Loaded",me)
 	self:SetEnabledState(addon:GetBoolean('BAGS'))
+	corner = addon:GetVar("BAGSCORNER")
+	local a,b,c=fontObject:GetFont()
+	a=LSM:Fetch("font",addon:GetVar("BAGSFONT"))
+	b=addon:GetNumber("BAGSFONTSIZE")
+	fontObject:SetFont(a,b,c)
+	self:RegisterMessage("ILD_APPLY")
 	return self:OnInitialized()
+end
+function module:ILD_APPLY(event,key,value)
+	if key=="CORNER" then
+		corner=value
+		self:RefreshCorners(value)
+	elseif key=="FONT" or key=="FONTSIZE" then
+		local a,b,c=fontObject:GetFont()
+		if key=="FONT" then
+			a=LSM:Fetch("font",value)
+		else
+			b=value
+		end
+		fontObject:SetFont(a,b,c)
+		self:RefreshFonts()
+	end
 end
 function module:OnInitialized()
 end
@@ -82,6 +110,18 @@ function module:BagShow()
 		self:DrawItem(frame,data.quality,data.itemlink,data.class,true)
 	end
 end
+function module:RefreshFonts()
+	for frame,data in pairs(frameLayers) do
+		local t=data.ilevel
+		t:SetFont(fontObject:GetFont())
+	end
+end
+function module:RefreshCorners(value)
+	for frame,data in pairs(frameLayers) do
+		local t=data.ilevel
+		addon:placeLayer(t,nil,nil,value)
+	end
+end
 function module:BagHide()
 	for _,data in pairs(frameLayers) do
 		data.ilevel:Hide()
@@ -93,18 +133,20 @@ function module:DrawItem(frame,quality,itemlink,class)
 	if not frame:IsVisible() then return end
 	local layer=frameLayers[frame]
 	local t=layer.ilevel
+	if itemlink and not class then
+		class=GetItemInfo(itemlink,12)
+	end
 	if not addon:IsClassEnabled(class) then t:Hide() return end -- Class check. Empty slots also have class invalid
 	if layer.itemlink==itemlink then return end -- Already drawn
 	layer.itemlink=itemlink -- cache update
 	layer.quality=quality
 	layer.class=class
-	--local font="NumberFont_OutlineThick_Mono_Small"
-	--local font="NumberFontNormalYellow"
-	--local font="NumberFont_Outline_Large"
-	--local font="NumberFont_Outline_Huge"
 	local ilevel=I:GetUpgradedItemLevel(itemlink)
+	if ilevel < addon:GetNumber("BAGSLEVELS") then t:Hide() return end
+	addon:placeLayer(t,nil,nil,addon:GetVar("BAGSCORNER"))
 	t:SetFormattedText("%3d",ilevel)
 	t:SetTextColor(addon:getColors(quality,ilevel))
+	t:SetFont(fontObject:GetFont())
 	t:Show()
 end
 ns.addon=addon

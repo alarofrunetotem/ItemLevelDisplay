@@ -9,6 +9,13 @@ externals:
 	libs/LibItemUpgradeInfo-1.0:
 		url: git://git.wowace.com/wow/libitemupgradeinfo-1-0/mainline.git
 		tag: latest
+    lib/AceGUI-3.0-SharedMediaWidgets:
+        url: svn://svn.wowace.com/wow/ace-gui-3-0-shared-media-widgets/mainline/trunk
+        tag: latest
+    lib/LibSharedMedia-3.0:
+        url: svn://svn.wowace.com/wow/libsharedmedia-3-0/mainline/trunk
+        tag: latest
+		
 move-folders:
 	ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
 	ItemLevelDisplay/ILD-Arkinventory: ILD-Arkinventory

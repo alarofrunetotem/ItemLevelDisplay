@@ -32,11 +32,16 @@ Litebag: implemented (with bank)
 Onebag3: implemented (with bank)
 
 ]])
+self:RelNotes(2,0,2,[[
+Feature: font type and font size are now totally customizable
+Feature: itemlevel display in bags can be disabled under a customizable itemlevel
+Fix: Socket status is back: a "S" means you have an empty socket
+Fix: Arkinventory was always showing itemelevel regardless enabled itemclasses
+]])
 self:RelNotes(2,0,1,[[
 Feature: you can choose for which items' classes show the itemlevel
 Feature: item scanning is now much faster for all addons
 Fix: added switch to completely disable itemlevel in bags
-
 ]])
 self:RelNotes(2,0,0,[[
 Feature: Added Inspect Frame
