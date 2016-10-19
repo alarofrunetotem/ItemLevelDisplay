@@ -12,6 +12,7 @@ function module:OnEnabled()
 
 end
 function module:Display(...)
+	print(...)
 
 end
 function module:DisplayBank(button,...)

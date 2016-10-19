@@ -66,12 +66,14 @@ function module:ILD_APPLY(event,key,value)
 	if key=="CORNER" then
 		corner=value
 		self:RefreshCorners(value)
-	elseif key=="FONT" or key=="FONTSIZE" then
+	elseif key=="FONT" or key=="FONTSIZE" or key=="FONTOUTLINE" then
 		local a,b,c=fontObject:GetFont()
 		if key=="FONT" then
 			a=LSM:Fetch("font",value)
-		else
+		elseif key=="FONTSIZE" then
 			b=value
+		else
+			c=value
 		end
 		fontObject:SetFont(a,b,c)
 		self:RefreshFonts()

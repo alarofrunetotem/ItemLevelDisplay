@@ -44,6 +44,7 @@ local LE_ITEM_CLASS_ARMOR=LE_ITEM_CLASS_ARMOR
 local LE_ITEM_CLASS_WEAPON=LE_ITEM_CLASS_WEAPON
 local modules={}
 local fontObject=CreateFont(me .. "font")
+local offset=0
 do
 	fontObject:CopyFontObject(Game11Font)
 	local a,b,c=fontObject:GetFont()
@@ -87,6 +88,11 @@ local bagPositionScheme={
 	tr=L['Top Right'],
 	tl=L['Top Left'],
 	bl=L['Bottom Left']
+}
+local outlineScheme={
+	[""]=L["No shadow"],
+	["OUTLINE"]=L["Light shadow"],
+	["OUTLINE,THICKOUTLINE"]=L["Strong shadow"]
 }
 local class2sort={}
 local function classList(self)
@@ -291,8 +297,8 @@ function addon:placeLayer(t,e,g,position)
 	if t then
 		t:ClearAllPoints()
 		t:SetHeight(15)
-		t:SetPoint(v.."LEFT",0,0)
-		t:SetPoint(v.."RIGHT",5,0)
+		t:SetPoint(v.."LEFT",offset*-1,0)
+		t:SetPoint(v.."RIGHT",offset*1,0)
 		if h=="" then h="CENTER" end
 		t:SetJustifyH(h)
 	end
@@ -355,6 +361,19 @@ function addon:ApplyFONTSIZE(value)
 	fontObject:SetFont(a,value,c)
 	self:markDirty()
 end
+function addon:ApplyFONTOUTLINE(value)
+	local a,b,c=fontObject:GetFont()
+	fontObject:SetFont(a,b,value)
+	if value=="" then
+		offset=0
+	elseif value=="OUTLINE" then
+		offset=3
+	else
+		offset=6
+	end
+	self:markDirty()
+	self:ApplyCORNER(self:GetString("CORNER"))
+end
 function addon:ApplyBAGSCORNER(value)
 	self:SendMessage("ILD_APPLY","CORNER",value)
 end
@@ -363,6 +382,9 @@ function addon:ApplyBAGSFONT(value)
 end
 function addon:ApplyBAGSFONTSIZE(value)
 	self:SendMessage("ILD_APPLY","FONTSIZE",value)
+end
+function addon:ApplyBAGSFONTOUTLINE(value)
+	self:SendMessage("ILD_APPLY","FONTOUTLINE",value)
 end
 function addon:ApplyBAGS(value)
 	local ace=LibStub("AceAddon-3.0")
@@ -569,6 +591,7 @@ function addon:slotsCheck (...)
 end
 --[[
 	Scans inspect slots
+	It stays fake until Inspect Frame gets loaded
 --]]
 function addon:inspectCheck()
 end
@@ -589,6 +612,7 @@ function addon:realinspectCheck (...)
 		end
 	end
 end
+local scheduled
 function addon:markDirty()
 	dirty=true
 	self:slotsCheck()
@@ -672,6 +696,7 @@ function addon:OnInitialized()
 	self:AddSelect('COLORSCHEME',"qual",colorScheme,L['Colorize level text by'],	L['Choose a color scheme']	).width="full"
 	self:AddSelect('FONT',"Fritz Quadrata TT",LSM:HashTable('font'),L["Choose a font"]).dialogControl="LSM30_Font"
 	self:AddRange('FONTSIZE',11,9,15,L["Choose a font size"])
+	self:AddSelect('FONTOUTLINE',outlineScheme[1],outlineScheme,L["Choose a shadow"])
 
 	self:AddLabel(L['Bags'],L['Manages itemlevel in bags'])
 	self:AddToggle('BAGS',true,L["Show iLevel in bags"],L['Will have full effect on NEXT reload'])
@@ -679,6 +704,7 @@ function addon:OnInitialized()
 	self:AddSelect('BAGSCORNER',"tr",bagPositionScheme,L['Level text aligned to'],L['Position']).width="full"
 	self:AddSelect('BAGSFONT',"Fritz Quadrata TT",LSM:HashTable('font'),L["Choose a font"]).dialogControl="LSM30_Font"
 	self:AddRange('BAGSFONTSIZE',11,9,15,L["Choose a font size"])
+	self:AddSelect('BAGSFONTOUTLINE',outlineScheme[1],outlineScheme,L["Choose a shadow"])
 	local default, classes=classList(self)
 	self:AddMultiSelect("CLASSES",default,classes,L['Only show iLevel for selected classes'])
 	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"]).width="full"
