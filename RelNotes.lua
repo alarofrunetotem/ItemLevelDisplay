@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,0,3,[[
+Fix: ItemLevelDisplay\ItemLevelDisplay-2.0.2.lua:269: attempt to index local 'font' (a nil value)
+]])
 self:RelNotes(2,0,2,[[
 Feature: font type and font size are now totally customizable
 Feature: itemlevel display in bags can be disabled under a customizable itemlevel

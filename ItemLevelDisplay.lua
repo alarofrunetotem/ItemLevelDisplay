@@ -633,7 +633,7 @@ function addon:EquipmentFlyout_CreateButton(...)
 	local button=self.hooks.EquipmentFlyout_CreateButton(...)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id) then
-		flyouts[id]={frame=self:addLayer(button,"fly" .. id)}
+		flyouts[id]={frame=self:addLayer(button,"fly" .. id,false,fontObject)}
 	end
 end
 function addon:EquipmentFlyout_DisplayButton(button,slot)
