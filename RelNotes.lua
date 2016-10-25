@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,0,4,[[
+Toc: 7.1.0 compatible
+]])
 self:RelNotes(2,0,3,[[
 Fix: ItemLevelDisplay\ItemLevelDisplay-2.0.2.lua:269: attempt to index local 'font' (a nil value)
 ]])
