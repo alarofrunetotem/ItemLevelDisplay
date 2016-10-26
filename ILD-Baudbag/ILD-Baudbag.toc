@@ -1,9 +1,9 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: ItemLevelDisplay-Baudbag
 ## Notes: Displays item's levels in Baudbag bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Baudbag
 ## Author: Alar of Daggerspine
-## Version: @project-version@ 7.0.3
+## Version: @project-version@ 7.1.0
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## Dependencies: ItemLevelDisplay,Baudbag

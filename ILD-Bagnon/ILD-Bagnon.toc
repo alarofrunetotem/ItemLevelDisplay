@@ -1,9 +1,9 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: ItemLevelDisplay-Bagnon
 ## Notes: Displays item's levels in Bagnon bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Bagnon
 ## Author: Alar of Daggerspine
-## Version: @project-version@ 7.0.3
+## Version: @project-version@ 7.1.0
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## Dependencies: ItemLevelDisplay,Bagnon
