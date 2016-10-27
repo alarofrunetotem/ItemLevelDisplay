@@ -32,7 +32,7 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
-self:RelNotes(2,0,5,[[
+self:RelNotes(2,0,6,[[
 Fix: ItemLevel in Blizzard bags is now back
 ]])
 self:RelNotes(2,0,4,[[
