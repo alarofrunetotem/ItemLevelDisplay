@@ -568,26 +568,40 @@ end
 	Scans my slots
 --]]
 function addon:slotsCheck (...)
-	if (not dirty) then return end
-	if (not PaperDollItemsFrame:IsVisible()) then return end
-	if (not slots) then slots=self:loadSlots("Character",PaperDollItemsFrame:GetChildren()) end
-	average=GetAverageItemLevel()-range -- 1 tier up are full green
-	local trueAvg=0
-	for  slotId,data in pairs(slots) do
-		local itemlink=GetInventoryItemLink("player",slotId)
-		if (itemlink) then
-			if I:IsArtifact(itemlink) then
-				if slotId==INVSLOT_OFFHAND then
-					itemlink=GetInventoryItemLink("player",INVSLOT_MAINHAND)
+		if (not dirty) then return end
+		if (not PaperDollItemsFrame:IsVisible()) then return end
+		if (not slots) then slots=self:loadSlots("Character",PaperDollItemsFrame:GetChildren()) end
+		average=GetAverageItemLevel()-range -- 1 tier up are full green
+		local trueAvg=0
+		for  slotId,data in pairs(slots) do
+				local itemlink=GetInventoryItemLink("player",slotId)
+				if (itemlink) then
+						if I:IsArtifact(itemlink) then
+								local ilvl=I:GetUpgradedItemLevel(itemlink)
+--[[
+								if slotId==INVSLOT_OFFHAND then
+										local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
+										if ilvl < mainilvl then
+												itemlink=GetInventoryItemLink("player",INVSLOT_MAINHAND)
+										end
+								else
+										local offhand=GetInventoryItemLink("player",INVSLOT_OFFHAND)
+										if (offhand) then
+												local offilvl=I:GetUpgradedItemLevel(offhand)
+												if ilvl < offilvl then
+														itemlink=offhand
+												end
+										end
+								end
+--]]
+								self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
+						else
+								self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+						end
+				else
+						self:paintButton(data.frame,slotId)
 				end
-				self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
-			else
-				self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
-			end
-		else
-			self:paintButton(data.frame,slotId)
 		end
-	end
 end
 --[[
 	Scans inspect slots
