@@ -476,6 +476,7 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 			t.ilevel:Hide()
 			return
 		end
+		t.ilevel:Show()
 		local loc=GetItemInfo(itemlink,9)
 		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
 		if type(itemlink)=="number" then itemlink=GetItemInfo(itemlink,2) end
@@ -582,7 +583,6 @@ function addon:slotsCheck (...)
 				if (itemlink) then
 						if I:IsArtifact(itemlink) then
 								local ilvl=I:GetUpgradedItemLevel(itemlink)
---[[
 								if slotId==INVSLOT_OFFHAND then
 										local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
 										if ilvl < mainilvl then
@@ -597,7 +597,6 @@ function addon:slotsCheck (...)
 												end
 										end
 								end
---]]
 								self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
 						else
 								self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
