@@ -37,12 +37,16 @@ local GetItemInfo=I:GetCachingGetItemInfo()
 local toc=select(4,GetBuildInfo())
 local C=addon:GetColorTable()
 local L=addon:GetLocale()
-local fontObject=CreateFont(me .. "font")
-do
-	fontObject:CopyFontObject(Game11Font)
-	local a,b,c=fontObject:GetFont()
-	fontObject:SetFont(a,b,"OUTLINE,THICKOUTLINE")
+local fontObject={}
+function fontObject:SetFont(a,b,c)
+	self.a=a
+	self.b=b
+	self.c=c
 end
+function fontObject:GetFont(a,b,c)
+	return self.a,self.b,self.c
+end
+fontObject:SetFont(Game11Font:GetFont())
 local frameLayers=setmetatable({},
 {
 	__index=function(t,frame)

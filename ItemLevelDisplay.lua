@@ -43,13 +43,17 @@ local NUM_LE_ITEM_CLASSES=_G.NUM_LE_ITEM_CLASSES or _G.NUM_LE_ITEM_CLASSS
 local LE_ITEM_CLASS_ARMOR=LE_ITEM_CLASS_ARMOR
 local LE_ITEM_CLASS_WEAPON=LE_ITEM_CLASS_WEAPON
 local modules={}
-local fontObject=CreateFont(me .. "font")
+local fontObject={}
 local offset=0
-do
-	fontObject:CopyFontObject(Game11Font)
-	local a,b,c=fontObject:GetFont()
-	fontObject:SetFont(a,b,"OUTLINE,THICKOUTLINE")
+function fontObject:SetFont(a,b,c)
+	self.a=a
+	self.b=b
+	self.c=c
 end
+function fontObject:GetFont(a,b,c)
+	return self.a,self.b,self.c
+end
+fontObject:SetFont(Game11Font:GetFont())
 
 -----------------------------------------------------------------
 ---- ContainerFrameItem<n> (backpack
