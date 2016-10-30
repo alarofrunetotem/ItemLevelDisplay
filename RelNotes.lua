@@ -34,6 +34,7 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 ]])
 self:RelNotes(2,0,10,[[
 Fix: Bag shadow was not remembered
+Fix: Upgraded Item level library
 ]])
 self:RelNotes(2,0,9,[[
 Fix: Crash on logout
