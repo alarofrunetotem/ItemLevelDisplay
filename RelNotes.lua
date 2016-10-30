@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,0,10,[[
+Fix: Bag shadow was not remembered
+]])
 self:RelNotes(2,0,9,[[
 Fix: Crash on logout
 ]])
