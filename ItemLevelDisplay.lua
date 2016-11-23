@@ -623,7 +623,26 @@ function addon:realinspectCheck (...)
 	for  slotId,data in pairs(islots) do
 		local itemlink=GetInventoryItemLink("target",slotId)
 		if (itemlink) then
-			self:paintButton(data.frame,slotId,itemlink,average,never)
+			if I:IsArtifact(itemlink) then
+					local ilvl=I:GetUpgradedItemLevel(itemlink)
+					if slotId==INVSLOT_OFFHAND then
+							local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
+							if ilvl < mainilvl then
+									itemlink=GetInventoryItemLink("target",INVSLOT_MAINHAND)
+							end
+					else
+							local offhand=GetInventoryItemLink("target",INVSLOT_OFFHAND)
+							if (offhand) then
+									local offilvl=I:GetUpgradedItemLevel(offhand)
+									if ilvl < offilvl then
+											itemlink=offhand
+									end
+							end
+					end
+					self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
+			else
+					self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
+			end
 		else
 			self:paintButton(data.frame,slotId)
 		end
