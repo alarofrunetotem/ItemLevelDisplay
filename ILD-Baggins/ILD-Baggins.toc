@@ -1,9 +1,9 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: ItemLevelDisplay-Baggins
 ## Notes: Displays item's levels in Baggins bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Baggins
 ## Author: Alar of Daggerspine
-## Version: @project-version@ 7.1-0
+## Version: @project-version@ 70200
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## Dependencies: ItemLevelDisplay,Baggins
