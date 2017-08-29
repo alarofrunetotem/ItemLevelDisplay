@@ -13,7 +13,7 @@ function module:OnInitialized()
 	_G.Combuctor=Combuctor
 end
 function module:OnEnabled()
-	self:SecureHook(Combuctor.ItemFrame,"UpdateSlot","Display")
+	self:SecureHook(Combuctor.ItemFrame,"Update","Display")
 end
 function module:Display(frame,bag,slot)
 	local index = ToIndex(bag, slot)
