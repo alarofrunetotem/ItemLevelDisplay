@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,0,18,[[
+Fix: Small fixes to ArkInventory and Combuctor
+]])
 self:RelNotes(2,0,14,[[
 Fix: Some localizations (non latin ones) were broken
 ]])
