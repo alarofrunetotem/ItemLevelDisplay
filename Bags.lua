@@ -49,12 +49,16 @@ end
 fontObject:SetFont(Game11Font:GetFont())
 local frameLayers=setmetatable({},
 {
-	__index=function(t,frame)
-		local f=addon:addLayer(frame,frame:GetName(),true,fontObject)
-		t[frame]=f
-		return f
-	end
+	__index=function(t,parent)
+		local layer=addon:addLayer(parent,parent:GetName(),true,fontObject)
+	  module:CustomLayer(layer,parent)
+		t[parent]=layer
+		return layer
+	end,
+	__mode="k"
 })
+function module:CustomLayer(layer,parent)
+end
 function module:OnInitialize()
 	self:Print("Loaded",me)
 	self:SetEnabledState(addon:GetBoolean('BAGS'))
@@ -125,8 +129,7 @@ function module:RefreshFonts()
 end
 function module:RefreshCorners(value)
 	for frame,data in pairs(frameLayers) do
-		local t=data.ilevel
-		addon:placeLayer(t,nil,nil,value)
+		addon:placeLayer(frame,value)
 	end
 end
 function module:BagHide()
@@ -135,26 +138,39 @@ function module:BagHide()
 		data.itemlink="new"
 	end
 end
+function module:ShadowItem(frame,grey)
+  local layer=frameLayers[frame]
+  if layer then layer:SetAlpha(grey and 0.4 or 1) end
+end
+function module:RefreshItem(layer)
+  if not layer then return end
+  local t=layer.ilevel
+  local itemlink=layer.itemlink
+  if not itemlink then layer:Hide() end
+  local class=layer.class
+  local quality=layer.quality
+  if itemlink and not class then
+    class=GetItemInfo(itemlink,12)
+  end
+  addon:Print("RefreshItem",layer:GetName(),layer.itemlink,class)
+  if not addon:IsClassEnabled(class) then layer:Hide() return end -- Class check. Empty slots also have class invalid
+  local ilevel=I:GetUpgradedItemLevel(itemlink)
+  if ilevel < addon:GetNumber("BAGSLEVELS") then t:Hide() return end
+  addon:placeLayer(layer,addon:GetVar("BAGSCORNER"))
+  t:SetFormattedText("%3d",ilevel)
+  t:SetTextColor(addon:getColors(quality,ilevel))
+  t:SetFont(fontObject:GetFont())
+  layer:Show()
+end
 function module:DrawItem(frame,quality,itemlink,class)
-	--pp("DrawItem",quality,itemlink,class)
-	if not frame:IsVisible() then return end
-	local layer=frameLayers[frame]
-	local t=layer.ilevel
-	if itemlink and not class then
-		class=GetItemInfo(itemlink,12)
-	end
-	if not addon:IsClassEnabled(class) then t:Hide() return end -- Class check. Empty slots also have class invalid
-	if layer.itemlink==itemlink then return end -- Already drawn
-	layer.itemlink=itemlink -- cache update
-	layer.quality=quality
-	layer.class=class
-	local ilevel=I:GetUpgradedItemLevel(itemlink)
-	if ilevel < addon:GetNumber("BAGSLEVELS") then t:Hide() return end
-	addon:placeLayer(t,nil,nil,addon:GetVar("BAGSCORNER"))
-	t:SetFormattedText("%3d",ilevel)
-	t:SetTextColor(addon:getColors(quality,ilevel))
-	t:SetFont(fontObject:GetFont())
-	t:Show()
+  local layer=frameLayers[frame]
+  if frame.searchOverlay and frame.searchOverlay.IsVisible then
+    self:ShadowItem(frame,frame.searchOverlay:IsVisible())
+  end 
+  layer.itemlink=itemlink -- cache update
+  layer.quality=quality
+  layer.class=class
+  return layer
 end
 ns.addon=addon
 ns.module=module
