@@ -11,10 +11,6 @@ function module:OnInitialized()
 end
 function module:OnEnable()
 	self:SecureHook(ArkInventory,"SetItemButtonTexture","Display")
-	self:SecureHook(ArkInventory,"Frame_Item_Update_Fade","SearchShadow")
-end
-function module:CustomLayer(layer,parent)
-    addon.HookScript(module,parent,"OnShow","RefreshItem")
 end
 function module:Display(frame)
 	local i=ArkInventory.Frame_Item_GetDB(frame)
@@ -23,14 +19,10 @@ function module:Display(frame)
 --@debug@
 		if not rc then
 			print(message,i)
+		  return
 		end
 --@end-debug@
 	else
 		self:DrawItem(frame)
 	end
 end
-function module:SearchShadow(frame)
-  if frame.searchOverlay and frame.searchOverlay.IsVisible then
-    self:ShadowItem(frame,frame.searchOverlay:IsVisible())
-  end
-end 

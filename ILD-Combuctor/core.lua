@@ -10,7 +10,6 @@ end
 
 function module:OnInitialized()
 	Combuctor=LibStub("AceAddon-3.0"):GetAddon("Combuctor",true)
-	_G.Combuctor=Combuctor
 end
 function module:OnEnabled()
   self:SecureHook(Combuctor.ItemSlot,"Update","Display")
@@ -18,7 +17,5 @@ end
 function module:Display(frame)
   if not frame then return end --Cant update
   local icon, count, locked, quality, readable, lootable, itemlink = frame:GetInfo()
-  print(frame:GetName(),frame:GetInfo())
-	local layer=self:DrawItem(frame,quality,itemlink)
-	self:RefreshItem(layer)
+	self:DrawItem(frame,quality,itemlink)
 end
