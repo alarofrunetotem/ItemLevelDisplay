@@ -267,20 +267,31 @@ function addon:colorGradient(perc, ...)
 	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
 	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 end
+local i=0
 function addon:addLayer(f,id,bag,font)
 	id = id or tostring(f)
-	local t,e,g=f:CreateFontString(me.."ilevel"..id, "OVERLAY"),nil,nil
+	i=i+1
+	local layer=CreateFrame("Frame", ("ILD_%04d"):format(i) , f)
+	layer:SetAllPoints()
+	local t,e,g=layer:CreateFontString(nil, "OVERLAY"),nil,nil
 	t:SetFont(font:GetFont())
 	t:SetText("")
+	t:Show()
 	if not bag then
 		font="NumberFont_OutlineThick_Mono_Small"
-		e=f:CreateFontString(me .."enc"..id,"OVERLAY",font)
+		e=layer:CreateFontString(nil,"OVERLAY",font)
 		e:SetText("")
-		g=f:CreateFontString(me..'gem'..id,"OVERLAY",font)
+		e:Show()
+		g=layer:CreateFontString(nil,"OVERLAY",font)
 		g:SetText("")
+		g:Show()
 	end
-	self:placeLayer(t,e,g,bag and "tr" or self:GetVar("CORNER"))
-	return {ilevel=t,gem=g,enc=e,itemlink='new'}
+	layer.ilevel=t
+	layer.gem=g
+	layer.enc=e
+	layer.itemlink='new'
+	self:placeLayer(layer,bag and "tr" or self:GetVar("CORNER"))
+	return layer
 end
 
 local function corner2points(corner)
@@ -295,7 +306,8 @@ local function corner2points(corner)
 	return positions[corner:sub(1,1)],positions[corner:sub(2,2)]
 end
 
-function addon:placeLayer(t,e,g,position)
+function addon:placeLayer(layer,position)
+  local t,e,g = layer.ilevel,layer.enc,layer.gem
 	local v,h=corner2points(position)
 	local additional=v=="BOTTOM" and "TOP" or "BOTTOM"
 	if t then
@@ -407,7 +419,7 @@ function addon:ApplyCORNER(value)
 	self:SendMessage("ILD_APPLY","CORNER",value)
 	if (not slots) then return end
 	for  slotId,data in pairs(slots) do
-		self:placeLayer(data.frame.ilevel,data.frame.enc,data.frame.gem,value)
+		self:placeLayer(data.frame,value)
 	end
 end
 function addon:ApplyGEMCORNER(value)
