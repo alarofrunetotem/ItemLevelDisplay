@@ -5,7 +5,6 @@ externals:
 	libs/LibInit:
 		url: https://github.com/alarofrunetotem/LibInit.git/LibInit
 		tag: latest
-
 	libs/LibItemUpgradeInfo-1.0:
 		url: git://git.wowace.com/wow/libitemupgradeinfo-1-0/mainline.git
 		tag: latest
