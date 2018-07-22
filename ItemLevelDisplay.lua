@@ -327,20 +327,25 @@ function addon:loadSlots(prefix,...)
 	local slots={}
 	for i=1,select('#',...) do
 		local frame=select(i,...) -- Got SlotFrame
-		local slotname=frame:GetName():gsub(prefix,'')
-		if (slotsList[slotname]) then
-			local slotId=GetInventorySlotInfo(slotname)
-			if (slotId) then
-				slots[slotId]={
-					frame=self:addLayer(frame,slotId,false,fontObject),
-					enchantable=slotsList[slotname]['E'],
-					special=slotsList[slotname]['S'],
-				}
-				if (slotname=="TabardSlot" or slotname =="ShirtSlot") then
-					useless[slotId]=true
-				end
-			end
-		end
+		if frame then
+		  local name=frame:GetName()
+		  if name then
+    		local slotname=name:gsub(prefix,'')
+    		if (slotsList[slotname]) then
+    			local slotId=GetInventorySlotInfo(slotname)
+    			if (slotId) then
+    				slots[slotId]={
+    					frame=self:addLayer(frame,slotId,false,fontObject),
+    					enchantable=slotsList[slotname]['E'],
+    					special=slotsList[slotname]['S'],
+    				}
+    				if (slotname=="TabardSlot" or slotname =="ShirtSlot") then
+    					useless[slotId]=true
+    				end
+    			end
+    		end
+    	end
+    end
 	end
 	return slots
 end
@@ -514,62 +519,7 @@ function addon:paintButton(t,slotId,itemlink,average,enchantable)
 end
 --[[
 InspectPaperDollFrame or some thing like that
---]]
-function addon:oldslotsCheck (...)
-	if (not dirty) then return end
-	if (not CharacterFrame:IsShown()) then return end
-	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
-	average=GetAverageItemLevel()-range -- 1 tier up are full green
-	local trueAvg=0
-	local equippedCount=0
-	local r,y,b,p=0,0,0,0
-	local tr,ty,tb,tp=0,0,0,0
-	for  slotId,data in pairs(slots) do
-		local itemlink=GetInventoryItemLink("player",slotId)
-		if (itemlink) then
-			local sockets,gem1,gem2,gem3,gem4=self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
-			if (sockets) then
-				if (self:GetToggle("SHOWGEMS")) then
-					local gg=self:getGemColors(gem1)
-					r=r+gg.r
-					b=b+gg.b
-					y=y+gg.y
-					p=p+gg.p
-					gg=self:getGemColors(gem2)
-					r=r+gg.r
-					b=b+gg.b
-					y=y+gg.y
-					p=p+gg.p
-					gg=self:getGemColors(gem3)
-					r=r+gg.r
-					b=b+gg.b
-					y=y+gg.y
-					p=p+gg.p
-					gg=self:getGemColors(gem4)
-					r=r+gg.r
-					b=b+gg.b
-					y=y+gg.y
-					p=p+gg.p
-				end
-				tr=tr+sockets.r
-				tb=tb+sockets.b
-				ty=ty+sockets.y
-				tp=tp+sockets.p
-			end
-		end
-
-	end
-	if (self:GetToggle("SHOWGEMS")) then
-		self["buttonmeta"].text:SetFormattedText("%d/%d",p,tp)
-		self["buttonred"].text:SetFormattedText("%d/%d",r,tr)
-		self["buttonblue"].text:SetFormattedText("%d/%d",b,tb)
-		self["buttonyellow"].text:SetFormattedText("%d/%d",y,ty)
-		gframe:Show()
-	else
-		gframe:Hide()
-	end
-end
---[[
+--]]--[[
 	Scans my slots
 --]]
 function addon:slotsCheck (...)
