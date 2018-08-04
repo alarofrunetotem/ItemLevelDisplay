@@ -172,7 +172,8 @@ local gemcolors={
 }
 local always=10000 -- Hope not to reach this item level....
 local never=-1
-local mop=600
+--local mop=600
+local mop=136
 local slotsList={
 	HeadSlot={E=never},
 	NeckSlot={E=always},

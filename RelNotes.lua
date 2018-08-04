@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,1,1,[[
+Fix: Should again show missing enchants
+]])
 self:RelNotes(2,0,18,[[
 Fix: Small fixes to ArkInventory and Combuctor
 ]])
