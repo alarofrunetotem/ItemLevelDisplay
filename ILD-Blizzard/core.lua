@@ -1,7 +1,6 @@
 local me,ns=...
 local addon=ns.addon
 local module=ns.module
-local toc=select(4,GetBuildInfo())
 function module:OnEnabled()
 	self:SecureHook("BankFrameItemButton_Update","Display")
 	self:SecureHook("ContainerFrameItemButton_UpdateItemUpgradeIcon","Display")

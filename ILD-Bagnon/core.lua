@@ -11,9 +11,12 @@ function module:OnEnabled()
 	self:SecureHook(Bagnon.ItemFrame.Button,"Update","Display")
 end
 function module:Display(frame,...)
-	local _,_,_,quality,_,_,itemlink,class=frame:GetInfo()
-	if itemlink then
-		class =self:GetItemInfo(itemlink,12)
-	end
-	return self:DrawItem(frame,quality,itemlink,class)
+	local info=frame:GetInfo()
+  local class
+	if info and info.link then
+	  if info.link then
+		  class =self:GetItemInfo(info.link,12)
+    end
+  end
+  return self:DrawItem(frame,info.quality,info.link,class)
 end

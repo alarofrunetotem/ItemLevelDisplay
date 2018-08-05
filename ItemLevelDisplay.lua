@@ -687,7 +687,7 @@ function addon:OnInitialized()
 
 	self:AddLabel(L['Bags'],L['Manages itemlevel in bags'])
 	self:AddToggle('BAGS',true,L["Show iLevel in bags"],L['Will have full effect on NEXT reload'])
-	self:AddSlider('BAGSLEVELS',100,1,1000,L["Minimum shown iLevel"],L["Items under this iLevel will not have the iLevel shown"])
+	self:AddSlider('BAGSLEVELS',1,1,1000,L["Minimum shown iLevel"],L["Items under this iLevel will not have the iLevel shown"])
 	self:AddSelect('BAGSCORNER',"tr",bagPositionScheme,L['Level text aligned to'],L['Position']).width="full"
 	self:AddSelect('BAGSFONT',"Fritz Quadrata TT",LSM:HashTable('font'),L["Choose a font"]).dialogControl="LSM30_Font"
 	self:AddRange('BAGSFONTSIZE',11,9,15,L["Choose a font size"])
@@ -701,7 +701,12 @@ function addon:OnInitialized()
 		slotsList.Finger1Slot.E=true
 	end
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
-	if (not self.db.global.hascommon) then
+  local toc=select(4,GetBuildInfo())
+	if not self.db.char.toc or self.db.char.toc < toc then
+	   self:SetVar("BAGSLEVELS",1)
+	   self.db.char.toc=toc
+	end
+	if not self.db.global.hascommon then
 		local myprofile=self.db:GetCurrentProfile()
 		if (myprofile~='Default') then
 			self.db:SetProfile('Default')

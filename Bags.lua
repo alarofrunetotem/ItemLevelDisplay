@@ -136,15 +136,14 @@ function module:BagHide()
 	end
 end
 function module:DrawItem(frame,quality,itemlink,class)
-	--pp("DrawItem",quality,itemlink,class)
 	--if not frame:IsVisible() then return end
 	local layer=frameLayers[frame]
 	local t=layer.ilevel
 	if itemlink and not class then
 		class=GetItemInfo(itemlink,12)
 	end
-	if not addon:IsClassEnabled(class) then t:Hide() return end -- Class check. Empty slots also have class invalid
-	if layer.itemlink==itemlink then return end -- Already drawn
+  if not addon:IsClassEnabled(class) then t:Hide() return end -- Class check. Empty slots also have class invalid
+	if layer.itemlink==itemlink then t:Show() return end -- Already drawn
 	layer.itemlink=itemlink -- cache update
 	layer.quality=quality
 	layer.class=class

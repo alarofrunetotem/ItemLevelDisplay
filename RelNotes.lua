@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,1,2,[[
+Fix: Works again with Bagnon
+]])
 self:RelNotes(2,1,1,[[
 Fix: Should again show missing enchants
 ]])
