@@ -1,4 +1,4 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: ItemLevelDisplay-Bagnon
 ## Notes: Displays item's levels in Bagnon bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Bagnon
