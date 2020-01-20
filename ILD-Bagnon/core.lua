@@ -3,12 +3,12 @@ local addon=ns.addon
 local module=ns.module
 local pp=print
 if LibDebug then LibDebug() end
-local Bagnon
+local Bagnon=Bagnon
 function module:OnInitialized()
-	Bagnon=LibStub("AceAddon-3.0"):GetAddon("Bagnon",true)
+	Bagnon=_G['Bagnon']
 end
 function module:OnEnabled()
-	self:SecureHook(Bagnon.ItemFrame.Button,"Update","Display")
+	self:SecureHook(Bagnon.ItemSlot,"Update","Display")
 end
 function module:Display(frame,...)
 	local info=frame:GetInfo()
