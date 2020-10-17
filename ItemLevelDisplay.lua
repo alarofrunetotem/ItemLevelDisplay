@@ -745,7 +745,7 @@ function addon:TRANSMOGRIFY_SUCCESS(event,slot)
 	--ilevel doesnt change, keeping it around just in case
 end
 function addon:removedaddGemLayer()
-	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame)
+	gframe=CreateFrame("frame",addonName .. "main",PaperDollFrame,"BackdropTemplate")
 	local alarframe=LibStub("AlarFrames-3.0",true)
 	gframe:SetHeight(75)
 	gframe:SetWidth(50)
