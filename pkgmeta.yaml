@@ -2,31 +2,32 @@ package-as: ItemLevelDisplay
 enable-nolib-creation: no
 
 externals:
-	libs/LibInit:
-		url: https://github.com/alarofrunetotem/LibInit.git/LibInit
-		tag: latest
-	libs/LibItemUpgradeInfo-1.0:
-		url: git://git.wowace.com/wow/libitemupgradeinfo-1-0/mainline.git
-		tag: latest
-    libs/AceGUI-3.0-SharedMediaWidgets:
-        url: svn://svn.wowace.com/wow/ace-gui-3-0-shared-media-widgets/mainline/trunk/AceGUI-3.0-SharedMediaWidgets
-        tag: latest
-    libs/LibSharedMedia-3.0:
-        url: svn://svn.wowace.com/wow/libsharedmedia-3-0/mainline/trunk
-        tag: latest
-		
+   libs/LibInit:
+      url: https://github.com/alarofrunetotem/LibInit.git/LibInit
+      tag: latest
+   libs/LibItemUpgradeInfo-1.0:
+      url: git://git.wowace.com/wow/libitemupgradeinfo-1-0/mainline.git
+      tag: latest
+   libs/AceGUI-3.0-SharedMediaWidgets:
+      url: svn://svn.wowace.com/wow/ace-gui-3-0-shared-media-widgets/mainline/trunk/AceGUI-3.0-SharedMediaWidgets
+      tag: latest
+   libs/LibSharedMedia-3.0:
+      url: svn://svn.wowace.com/wow/libsharedmedia-3-0/mainline/trunk
+      tag: latest
+
 move-folders:
-	ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
-	ItemLevelDisplay/ILD-Arkinventory: ILD-Arkinventory
-	ItemLevelDisplay/ILD-Bagnon: ILD-Bagnon
-	ItemLevelDisplay/ILD-Baggins: ILD-Baggins
-	ItemLevelDisplay/ILD-Bagbaud: ILD-Bagbaud
-	ItemLevelDisplay/ILD-Combuctor: ILD-Combuctor
-	ItemLevelDisplay/ILD-Litebag: ILD-Litebag
-	ItemLevelDisplay/ILD-Onebag3: ILD-Onebag3
+   ItemLevelDisplay/ILD-Blizzard: ILD-Blizzard
+   ItemLevelDisplay/ILD-Arkinventory: ILD-Arkinventory
+   ItemLevelDisplay/ILD-Bagnon: ILD-Bagnon
+   ItemLevelDisplay/ILD-Baggins: ILD-Baggins
+   ItemLevelDisplay/ILD-Baudbag: ILD-Baudbag
+   ItemLevelDisplay/ILD-Combuctor: ILD-Combuctor
+   ItemLevelDisplay/ILD-Litebag: ILD-Litebag
+   ItemLevelDisplay/ILD-Onebag3: ILD-Onebag3
 ignore:
-- .buildpath
-- .project
-- .settings
-- .gitignore
+   .buildpath
+   .project
+   .settings
+   .gitignore
+   .settings
 
