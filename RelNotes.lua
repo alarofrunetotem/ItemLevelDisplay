@@ -32,6 +32,15 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,2,2,[[
+Fix: LiteBag works again
+]])
+self:RelNotes(2,2,1,[[
+Fix: Enables baudbag
+]])
+self:RelNotes(2,2,0,[[
+Toc: 9.0.1
+]])
 self:RelNotes(2,1,6,[[
 Fix: Bagnon related error thanks to Fauxfox
 ]])
