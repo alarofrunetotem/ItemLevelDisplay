@@ -32,7 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
-self:RelNotes(2,2,2,[[
+self:RelNotes(2,2,3,[[
+Fix: Repackaged to pull the right MSADropdown version
+]])self:RelNotes(2,2,2,[[
 Fix: LiteBag works again
 ]])
 self:RelNotes(2,2,1,[[
