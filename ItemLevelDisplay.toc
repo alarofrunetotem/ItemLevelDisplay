@@ -19,6 +19,8 @@
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
 ## X-Date: @project-date-iso@
+## X-Curse-Project-ID: 30899
+## X-WoWI-ID: 21914
 embeds.xml
 localization.lua
 ItemLevelDisplay.lua
