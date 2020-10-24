@@ -173,7 +173,13 @@ local gemcolors={
 local always=10000 -- Hope not to reach this item level....
 local never=-1
 --local mop=600
-local mop=136
+local vanilla=30
+local bc=34
+local wotlk=35
+local cata=38
+local mop=45
+local drenor=47
+local legion=54
 local slotsList={
 	HeadSlot={E=never},
 	NeckSlot={E=always},
