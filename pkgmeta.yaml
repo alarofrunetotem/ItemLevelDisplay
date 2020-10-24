@@ -25,9 +25,9 @@ move-folders:
    ItemLevelDisplay/ILD-Litebag: ILD-Litebag
    ItemLevelDisplay/ILD-Onebag3: ILD-Onebag3
 ignore:
-   .buildpath
-   .project
-   .settings
-   .gitignore
-   .settings
+   - .buildpath
+   - .project
+   - .settings
+   - .gitignore
+   - .settings
 
