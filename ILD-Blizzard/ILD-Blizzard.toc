@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90005
 ## Title: ItemLevelDisplay-Blizzard
 ## Notes: Displays item's levels in Blizzard bags
 ## Notes-itIT: Mostra il livello degli items nelle borse standard
