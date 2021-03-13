@@ -185,14 +185,14 @@ local slotsList={
 	NeckSlot={E=always},
 	ShoulderSlot={E=mop},
 	BackSlot={E=always},
-	ChestSlot={E=mop},
+	ChestSlot={E=always},
 	ShirtSlot={E=never},
 	TabardSlot={E=never},
-	WristSlot={E=mop},
+	WristSlot={E=always},
 	HandsSlot={E=mop},
 	WaistSlot={E=never},
-	LegsSlot={E=mop},
-	FeetSlot={E=mop},
+	LegsSlot={E=always},
+	FeetSlot={E=always},
 	Finger0Slot={E=always},
 	Finger1Slot={E=always},
 	Trinket0Slot={E=never},
@@ -702,10 +702,6 @@ function addon:OnInitialized()
 	self:AddMultiSelect("CLASSES",default,classes,L['Only show iLevel for selected classes'])
 	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"]).width="full"
 	self:loadHelp()
-	if self:getEnchantLevel() >= 360 then
-		slotsList.Finger0Slot.E=true
-		slotsList.Finger1Slot.E=true
-	end
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
   local toc=select(4,GetBuildInfo())
 	if not self.db.char.toc or self.db.char.toc < toc then
