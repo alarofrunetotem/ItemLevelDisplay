@@ -724,12 +724,12 @@ function addon:OnInitialized()
 	--self:HookScript("ContainerFrameTemplate","OnShow",print)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
 	self:SecureHook("EquipmentFlyout_DisplayButton")
-	self:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
+	self:RegisterEvent("ITEM_UPGRADE_FAILED")
 	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
 end
 
-function addon:ITEM_UPGRADE_MASTER_UPDATE()
+function addon:ITEM_UPGRADE_FAILED()
 	self:slotsCheck()
 end
 function addon:ARTIFACT_XP_UPDATE(event,...)
