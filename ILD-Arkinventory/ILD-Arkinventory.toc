@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 100000
 ## Title: ItemLevelDisplay-ArkInventory
 ## Notes: Displays item's levels in ArkInventory bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di ArkInventory
