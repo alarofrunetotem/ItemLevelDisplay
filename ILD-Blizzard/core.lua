@@ -3,7 +3,7 @@ local addon=ns.addon
 local module=ns.module
 function module:OnEnabled()
 	self:SecureHook("BankFrameItemButton_Update","Display")
-	self:SecureHook("ContainerFrameItemButton_UpdateItemUpgradeIcon","Display")
+	--self:SecureHook("ContainerFrameItemButton_UpdateItemUpgradeIcon","Display")
 
 end
 function module:Display(button,...)

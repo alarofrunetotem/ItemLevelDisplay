@@ -40,8 +40,8 @@ local print=ns.print or print
 local debug=ns.debug or print
 local bagSlots={}
 local NUM_LE_ITEM_CLASSES=_G.NUM_LE_ITEM_CLASSES or _G.NUM_LE_ITEM_CLASSS or 19
-local LE_ITEM_CLASS_ARMOR=LE_ITEM_CLASS_ARMOR
-local LE_ITEM_CLASS_WEAPON=LE_ITEM_CLASS_WEAPON
+local LE_ITEM_CLASS_ARMOR=_G.Enum.ItemClass.Armor
+local LE_ITEM_CLASS_WEAPON=_G.Enum.ItemClass.Weapon
 local modules={}
 local fontObject={}
 local offset=0
@@ -724,14 +724,10 @@ function addon:OnInitialized()
 	--self:HookScript("ContainerFrameTemplate","OnShow",print)
 	self:RawHook("EquipmentFlyout_CreateButton",true)
 	self:SecureHook("EquipmentFlyout_DisplayButton")
-	self:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
 	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
 end
 
-function addon:ITEM_UPGRADE_MASTER_UPDATE()
-	self:slotsCheck()
-end
 function addon:ARTIFACT_XP_UPDATE(event,...)
 	self:slotsCheck()
 end
