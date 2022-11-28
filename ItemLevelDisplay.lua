@@ -652,7 +652,7 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 	if (voidStorage and voidSlot) then
 		itemid=GetVoidItemInfo(tab,voidSlot)
 	elseif (bags and slot) then
-		itemid=GetContainerItemLink(bag,slot)
+		itemid=C_Container.GetContainerItemLink(bag,slot)
 	elseif (player and slot) then
 		itemid=GetInventoryItemLink("player",slot)
 	else

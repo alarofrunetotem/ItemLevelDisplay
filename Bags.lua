@@ -90,7 +90,8 @@ function module:GetInfo(frame,bag,slot)
 	if frame then
 		bag,slot=frame:GetParent():GetID(), frame:GetID()
 	end
-	local q,_,_,h=select(4,GetContainerItemInfo(bag,slot))
+  local t=C_Container.GetContainerItemInfo(bag,slot)
+	local qh=t.quality,t.hyperlink
 	local c=h and GetItemInfo(h,12) or nil
 	return q,h,c
 
