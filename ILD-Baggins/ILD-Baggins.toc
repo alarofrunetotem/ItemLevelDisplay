@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100107
 ## Title: ItemLevelDisplay-Baggins
 ## Notes: Displays item's levels in Baggins bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Baggins
