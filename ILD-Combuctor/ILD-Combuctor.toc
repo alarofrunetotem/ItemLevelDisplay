@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100200
 ## Title: ItemLevelDisplay-Combuctor
 ## Notes: Displays item's levels in Combuctor bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Combuctor
