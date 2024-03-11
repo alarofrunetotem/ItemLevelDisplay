@@ -1,4 +1,4 @@
-## Interface: 100200
+## Interface: 100250
 ## Title: ItemLevelDisplay-Onebag3
 ## Notes: Displays item's levels in Onebag3 bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Onebag3
