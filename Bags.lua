@@ -29,10 +29,10 @@ ns.print=function() end
 --local print=ns.print or print
 LoadAddOn("ItemLevelDisplay")
 local addon=LibStub("LibInit"):GetAddon("ItemLevelDisplay")
-local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.0','AceEvent-3.0','AceTimer-3.0') --#Module
-local I=LibStub("LibItemUpgradeInfo-1.0")
+local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.0','AceEvent-3.0','AceTimer-3.0') ---@class module
+--local I=LibStub("LibItemUpgradeInfo-1.0")
 local LSM=LibStub("LibSharedMedia-3.0")
-local GetItemInfo=I:GetCachingGetItemInfo()
+--local GetItemInfo=I:GetCachingGetItemInfo()
 --local module=addon:NewSubModule(me,"AceHook-3.0","AceEvent-3.0") --#module
 local toc=select(4,GetBuildInfo())
 local C=addon:GetColorTable()

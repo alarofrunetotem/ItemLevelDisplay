@@ -34,6 +34,10 @@ local INVSLOT_TABARD		= INVSLOT_TABARD
 local INVSLOT_FIRST_EQUIPPED = INVSLOT_FIRST_EQUIPPED;
 local INVSLOT_LAST_EQUIPPED = INVSLOT_LAST_EQUIPPED
 local addon=LibStub("LibInit"):NewAddon(ns,me,{noswitch=false,profile=true,enhancedProfile=true},'AceHook-3.0','AceEvent-3.0','AceTimer-3.0') --#Addon
+--@debug@
+addon.debug = true
+addon:Debug("Started with debug enabled")
+--@end-debug@
 local L=addon:GetLocale()
 local C=addon:GetColorTable()
 local print=ns.print or print
@@ -138,8 +142,8 @@ local GetInventoryItemGems=_G.GetInventoryItemGems
 local GetAverageItemLevel=GetAverageItemLevel
 local GetItemQualityColor=GetItemQualityColor
 local GetItemInfo=GetItemInfo
-local I=LibStub("LibItemUpgradeInfo-1.0")
 local LSM=LibStub("LibSharedMedia-3.0")
+--local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
 local addonName="ILD"
 local EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION=EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION
@@ -481,18 +485,19 @@ function addon:getColors(itemRarity,itemLevel)
 	end
 end
 
-function addon:paintButton(t,slotId,itemlink,average,enchantable)
-		if (not itemlink or (useless[slotId] and not self:GetBoolean("SHOWUSELESS"))) then
+function addon:paintButton(t,slotId,itemLocation,average,enchantable)
+		if (not itemLocation or (useless[slotId] and not self:GetBoolean("SHOWUSELESS"))) then
 			t.gem:Hide()
 			t.enc:Hide()
 			t.ilevel:Hide()
 			return
 		end
+		local itemlink=C_Item.GetItemLink(itemLocation)
 		t.ilevel:Show()
 		local loc=GetItemInfo(itemlink,9)
 		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
 		if type(itemlink)=="number" then itemlink=GetItemInfo(itemlink,2) end
-		local ilevel=I:GetUpgradedItemLevel(itemlink)
+		local ilevel=C_Item.GetCurrentItemLevel(itemLocation)
 		if type(ilevel)~="number" then
 			ilevel=0
 			--print("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
@@ -536,28 +541,29 @@ function addon:slotsCheck (...)
 		average=GetAverageItemLevel()-range -- 1 tier up are full green
 		local trueAvg=0
 		for  slotId,data in pairs(slots) do
-				local itemlink=GetInventoryItemLink("player",slotId)
-				if (itemlink) then
-						if I:IsArtifact(itemlink) then
-								local ilvl=I:GetUpgradedItemLevel(itemlink)
-								if slotId==INVSLOT_OFFHAND then
-										local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
-										if ilvl < mainilvl then
-												itemlink=GetInventoryItemLink("player",INVSLOT_MAINHAND)
-										end
-								else
-										local offhand=GetInventoryItemLink("player",INVSLOT_OFFHAND)
-										if (offhand) then
-												local offilvl=I:GetUpgradedItemLevel(offhand)
-												if ilvl < offilvl then
-														itemlink=offhand
-												end
-										end
-								end
-								self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
-						else
-								self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
-						end
+				local itemLocation=ItemLocation:CreateFromEquipmentSlot(slotId)
+				self:Print(itemLocation:GetEquipmentSlot())
+				if (itemLocation) then
+					-- if C_ArtifactUI.IsArtifactItem(itemLocation) then
+						-- local ilvl=C_Item.GetCurrentItemLevel(itemLocation)
+						-- if slotId==INVSLOT_OFFHAND then
+						-- 	local mainilvl=C_Item.GetCurrentItemLevel(ItemLocation:CreateFromEquipmentSlot(INVSLOT_MAINHAND))
+						-- 	if ilvl < mainilvl then
+						-- 		itemLocation=ItemLocation:CreateFromEquipmentSlot(INVSLOT_MAINHAND)
+						-- 	end
+						-- else
+						-- 	local offHand=ItemLocation:CreateFromEquipmentSlot(INVSLOT_MAINHAND)
+						-- 	if (offHand) then
+						-- 		local offilvl=C_Item.GetCurrentItemLevel(offHand)
+						-- 		if ilvl < offilvl then
+						-- 				itemLocation=offHand
+						-- 		end
+						-- 	end
+						-- end
+						self:paintButton(data.frame,slotId,itemLocation,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
+					-- else
+						self:paintButton(data.frame,slotId,itemLocation,average,data.enchantable)
+					-- end
 				else
 						self:paintButton(data.frame,slotId)
 				end
@@ -623,12 +629,16 @@ function addon:removedloadGemLocalizedStrings()
 	debug(Meta_localized)
 end
 function addon:EquipmentFlyout_CreateButton(...)
+	self:Debug(...)
+	--[[
 	local button=self.hooks.EquipmentFlyout_CreateButton(...)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id) then
 		flyouts[id]={frame=self:addLayer(button,"fly" .. id,false,fontObject)}
 	end
+	--]]
 end
+
 function addon:EquipmentFlyout_DisplayButton(button,slot)
 	local location,itemid,level = button.location,nil,0;
 	if ( not location ) then
@@ -669,12 +679,14 @@ function addon:IsClassEnabled(class)
 	return self:GetVar("CLASSES")[class2sort[class]]
 end
 
-
+local function wipefly() 
+	wipe(flyoutDrawn)
+end
 function addon:OnInitialized()
 	self.OptionsTable.args.on=nil
 	self.OptionsTable.args.off=nil
 	self.OptionsTable.args.standby=nil
-	GetItemInfo=I:GetCachingGetItemInfo()
+	-- GetItemInfo=I:GetCachingGetItemInfo()
 	profilelabel=self:AddText(L['Current profile is: '] .. C(self.db:GetCurrentProfile(),'green'))
 	profilelabel.fontSize="large"
 	--self:AddAction('switchProfile',L['Choose profile'],L['Switch between global and per character profile'])
@@ -703,7 +715,7 @@ function addon:OnInitialized()
 	self:AddOpenCmd('showinfo',"cmdInfo",L["Debug info"],L["Show raw item info.Please post the screenshot to Curse Forum"]).width="full"
 	self:loadHelp()
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED","markDirty")
-  local toc=select(4,GetBuildInfo())
+  	local toc=select(4,GetBuildInfo())
 	if not self.db.char.toc or self.db.char.toc < toc then
 	   self:SetVar("BAGSLEVELS",1)
 	   self.db.char.toc=toc
@@ -719,17 +731,24 @@ function addon:OnInitialized()
 	end
 	self:ApplySettings()
 	self:HookScript(CharacterFrame,"OnShow","slotsCheck")
-	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",function(...) wipe(flyoutDrawn) end)
-	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",function(...) wipe(flyoutDrawn) end)
-	--self:HookScript("ContainerFrameTemplate","OnShow",print)
-	self:RawHook("EquipmentFlyout_CreateButton",true)
+	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",wipefly)
+	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",wipefly)
+
+
+	self:SecureHook("EquipmentFlyout_CreateButton")
 	self:SecureHook("EquipmentFlyout_DisplayButton")
+
 	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
+	self:RegisterEvent("ADDON_ACTION_FORBIDDEN")
 end
 
 function addon:ARTIFACT_XP_UPDATE(event,...)
 	self:slotsCheck()
+end
+function addon:ADDON_ACTION_FORBIDDEN(...)
+	self:Debug(...)
+	self:Debug(debugstack())
 end
 function addon:ADDON_LOADED(event,addonName)
 	if addonName=="Blizzard_InspectUI" then

@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 100206
 ## Title: ItemLevelDisplay-LiteBag
 ## Notes: Displays item's levels in LiteBag bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di LiteBag

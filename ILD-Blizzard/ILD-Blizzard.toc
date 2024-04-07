@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 100206
 ## Title: ItemLevelDisplay-Blizzard
 ## Notes: Displays item's levels in Blizzard bags
 ## Notes-itIT: Mostra il livello degli items nelle borse standard
@@ -14,4 +14,4 @@
 ## X-eMail: alar@aspide.it
 ## X-Date: @project-date-iso@
 ..\ItemLevelDisplay\Bags.lua
-core.lua
+..\ItemLevelDisplay\Bags.Blizzard.lua
