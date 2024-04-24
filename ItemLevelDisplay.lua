@@ -542,30 +542,10 @@ function addon:slotsCheck (...)
 		local trueAvg=0
 		for  slotId,data in pairs(slots) do
 				local itemLocation=ItemLocation:CreateFromEquipmentSlot(slotId)
-				self:Print(itemLocation:GetEquipmentSlot())
-				if (itemLocation) then
-					-- if C_ArtifactUI.IsArtifactItem(itemLocation) then
-						-- local ilvl=C_Item.GetCurrentItemLevel(itemLocation)
-						-- if slotId==INVSLOT_OFFHAND then
-						-- 	local mainilvl=C_Item.GetCurrentItemLevel(ItemLocation:CreateFromEquipmentSlot(INVSLOT_MAINHAND))
-						-- 	if ilvl < mainilvl then
-						-- 		itemLocation=ItemLocation:CreateFromEquipmentSlot(INVSLOT_MAINHAND)
-						-- 	end
-						-- else
-						-- 	local offHand=ItemLocation:CreateFromEquipmentSlot(INVSLOT_MAINHAND)
-						-- 	if (offHand) then
-						-- 		local offilvl=C_Item.GetCurrentItemLevel(offHand)
-						-- 		if ilvl < offilvl then
-						-- 				itemLocation=offHand
-						-- 		end
-						-- 	end
-						-- end
-						self:paintButton(data.frame,slotId,itemLocation,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
-					-- else
-						self:paintButton(data.frame,slotId,itemLocation,average,data.enchantable)
-					-- end
+				if itemLocation and itemLocation:IsValid() then
+					self:paintButton(data.frame,slotId,itemLocation,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
 				else
-						self:paintButton(data.frame,slotId)
+					self:paintButton(data.frame,slotId)
 				end
 		end
 end
@@ -669,6 +649,7 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 		itemid=nil
 	end
 	if (itemid) then
+		pp('Paint button',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
 		self:paintButton(flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
 	else
 		debug("Item",itemid , "not found")

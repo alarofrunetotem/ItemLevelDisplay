@@ -21,6 +21,7 @@
 ## X-Date: @project-date-iso@
 ## X-Curse-Project-ID: 30899
 ## X-WoWI-ID: 21014
+## IconTexture: 132757
 embeds.xml
 localization.lua
 ItemLevelDisplay.lua

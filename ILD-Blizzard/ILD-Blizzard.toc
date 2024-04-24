@@ -7,6 +7,7 @@
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## X-Embeds:
+## IconTexture: 132757
 ## Dependencies: ItemLevelDisplay
 ## DefaultState: Enabled
 ## X-Category: Bags and Inventory
@@ -14,4 +15,4 @@
 ## X-eMail: alar@aspide.it
 ## X-Date: @project-date-iso@
 ..\ItemLevelDisplay\Bags.lua
-..\ItemLevelDisplay\Bags.Blizzard.lua
+..\ItemLevelDisplay\Bags-Blizzard.lua

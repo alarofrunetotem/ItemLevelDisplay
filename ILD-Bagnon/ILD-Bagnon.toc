@@ -6,6 +6,7 @@
 ## Version: @project-version@ 70200
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
+## IconTexture: 132757
 ## Dependencies: ItemLevelDisplay,Bagnon
 ## DefaultState: Enabled
 ## X-Embeds:
