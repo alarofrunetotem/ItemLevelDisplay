@@ -9,10 +9,10 @@
 ## Dependencies: ItemLevelDisplay,Baudbag
 ## DefaultState: Enabled
 ## X-Embeds:
-## IconTexture: 132757
+## IconAtlas: bag-main
 ## X-Category: Bags and Inventory
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
 ## X-Date: @project-date-iso@
 ..\ItemLevelDisplay\Bags.lua
-core.lua
+..\ItemLevelDisplay\Bags-Baudbag.lua

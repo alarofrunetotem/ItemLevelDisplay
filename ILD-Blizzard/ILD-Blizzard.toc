@@ -7,7 +7,7 @@
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
 ## X-Embeds:
-## IconTexture: 132757
+## IconTexture: 133633
 ## Dependencies: ItemLevelDisplay
 ## DefaultState: Enabled
 ## X-Category: Bags and Inventory

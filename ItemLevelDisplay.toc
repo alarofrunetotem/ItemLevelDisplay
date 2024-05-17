@@ -14,6 +14,7 @@
 ## SavedVariables: dbILD
 ## SavedVariablesPerCharacter: localdbILD
 ## X-ID: ILD
+## IconTexture: 1063300
 ## X-Database: dbILD
 ## X-Category: Bags and Inventory
 ## X-License: GPL v3
@@ -21,7 +22,6 @@
 ## X-Date: @project-date-iso@
 ## X-Curse-Project-ID: 30899
 ## X-WoWI-ID: 21014
-## IconTexture: 132757
 embeds.xml
 localization.lua
 ItemLevelDisplay.lua

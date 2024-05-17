@@ -8,7 +8,7 @@
 ## eMail: alar@aspide.it
 ## Dependencies: ItemLevelDisplay,ArkInventory
 ## DefaultState: Enabled
-## IconTexture: 132757
+## IconTexture: Interface\Icons\INV_Misc_Bag_07_Green
 ## X-Embeds:
 ## X-Category: Bags and Inventory
 ## X-License: GPL v3
