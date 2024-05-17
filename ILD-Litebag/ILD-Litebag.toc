@@ -1,3 +1,4 @@
+## Interface: 10000
 ## Title: Z Deleted Addon
 ## Notes: Please Remove ILD-Litebag folder
 ## Author: Alar of Daggerspine
