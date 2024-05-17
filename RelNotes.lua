@@ -32,6 +32,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
+self:RelNotes(2,7,3,[[
+Toc: Version 10.2.7
+]])
 self:RelNotes(2,7,2,[[
 Fix: Removed chat spam
 Fix: Removed getItemlink error

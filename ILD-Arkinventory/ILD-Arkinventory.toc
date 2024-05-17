@@ -1,4 +1,4 @@
-## Interface: 100206
+## Interface: 100207
 ## Title: ItemLevelDisplay-ArkInventory
 ## Notes: Displays item's levels in ArkInventory bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di ArkInventory
