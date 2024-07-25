@@ -1,4 +1,4 @@
-## Interface: 10000
+## Interface: 110002
 ## Title: Z Deleted Addon
 ## Notes: Please Remove ILD-Onebag3 folder
 ## Author: Alar of Daggerspine

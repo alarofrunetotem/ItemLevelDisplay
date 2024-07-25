@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110002
 ## Title: ItemLevelDisplay-Baudbag
 ## Notes: Displays item's levels in Baudbag bags
 ## Notes-itIT: Mostra il livello degli items nelle borse di Baudbag

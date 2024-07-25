@@ -32,7 +32,10 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Onebag3: Onebag3 (with bank)
 
 ]])
-self:RelNotes(2,8,0,[[
+self:RelNotes(2,9,0,[[
+Toc: Version 11.0.2
+)
+self:RelNotes(2,8,1,[[
 Toc: Version 10.2.7
 Feature: Removed Bagnon support, use Bagnon ItemLevel
 Feature: Removed Combuctor support, use Bagnon ItemLevel
