@@ -25,22 +25,20 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Blizzard: Blizzard (with bank)
 * ILD-Arkinventory: ArkInventory (with bank)
 * ILD-Baggins: Baggins (with bank)
-* ILD-Bagnon: Bagnon (with bank)
 * ILD-Baudbag: Baud Bag (with bank)
-* ILD-Combuctor: Combuctor (with bank)
-* ILD-Litebag: LiteBag (with bank)
-* ILD-Onebag3: Onebag3 (with bank)
 
 ]])
-self:RelNotes(2,9,0,[[
+self:RelNotes(2,9,1,[[
 Toc: Version 11.0.2
+Fix: Relnotes Error
+]]
 )
 self:RelNotes(2,8,1,[[
 Toc: Version 10.2.7
 Feature: Removed Bagnon support, use Bagnon ItemLevel
 Feature: Removed Combuctor support, use Bagnon ItemLevel
 Feature: Removed LiteBag support, use LiteBag Item Level
-Feature: Reomved Onebag3 suport
+Feature: Reomved Onebag3 support
 ]])
 self:RelNotes(2,7,2,[[
 Fix: Removed chat spam
