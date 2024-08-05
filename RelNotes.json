@@ -1,0 +1,748 @@
+{
+    "NOTES": {
+        "k020901": {
+            "major": "2",
+            "minor": "9",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "Version 11.0.2"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Relnotes Error"
+                }
+            ]
+        },
+        "k020801": {
+            "major": "2",
+            "minor": "8",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "Version 10.2.7"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Removed Bagnon support, use Bagnon ItemLevel"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Removed Combuctor support, use Bagnon ItemLevel"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Removed LiteBag support, use LiteBag Item Level"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Reomved Onebag3 support"
+                }
+            ]
+        },
+        "k020702": {
+            "major": "2",
+            "minor": "7",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Removed chat spam"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Removed getItemlink error"
+                }
+            ]
+        },
+        "k020700": {
+            "major": "2",
+            "minor": "7",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "Version 10.2.5"
+                }
+            ]
+        },
+        "k020203": {
+            "major": "2",
+            "minor": "2",
+            "patch": "3",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Repackaged to pull the right MSADropdown version"
+                }
+            ]
+        },
+        "k020202": {
+            "major": "2",
+            "minor": "2",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "LiteBag works again"
+                }
+            ]
+        },
+        "k020201": {
+            "major": "2",
+            "minor": "2",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Enables baudbag"
+                }
+            ]
+        },
+        "k020200": {
+            "major": "2",
+            "minor": "2",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "9.0.1"
+                }
+            ]
+        },
+        "k020106": {
+            "major": "2",
+            "minor": "1",
+            "patch": "6",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Bagnon related error thanks to Fauxfox"
+                }
+            ]
+        },
+        "k020105": {
+            "major": "2",
+            "minor": "1",
+            "patch": "5",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "8.3.0"
+                }
+            ]
+        },
+        "k020104": {
+            "major": "2",
+            "minor": "1",
+            "patch": "4",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "8.2.0"
+                }
+            ]
+        },
+        "k020102": {
+            "major": "2",
+            "minor": "1",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Works again with Bagnon"
+                }
+            ]
+        },
+        "k020101": {
+            "major": "2",
+            "minor": "1",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Should again show missing enchants"
+                }
+            ]
+        },
+        "k020018": {
+            "major": "2",
+            "minor": "0",
+            "patch": "18",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Small fixes to ArkInventory and Combuctor"
+                }
+            ]
+        },
+        "k020014": {
+            "major": "2",
+            "minor": "0",
+            "patch": "14",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Some localizations (non latin ones) were broken"
+                }
+            ]
+        },
+        "k020012": {
+            "major": "2",
+            "minor": "0",
+            "patch": "12",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Correct itemlevel for artifacts hopefully shown in inspect window, too"
+                }
+            ]
+        },
+        "k020010": {
+            "major": "2",
+            "minor": "0",
+            "patch": "10",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Bag shadow was not remembered"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Upgraded Item level library"
+                }
+            ]
+        },
+        "k020009": {
+            "major": "2",
+            "minor": "0",
+            "patch": "9",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Crash on logout"
+                }
+            ]
+        },
+        "k020006": {
+            "major": "2",
+            "minor": "0",
+            "patch": "6",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "ItemLevel in Blizzard bags is now back"
+                }
+            ]
+        },
+        "k020004": {
+            "major": "2",
+            "minor": "0",
+            "patch": "4",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "7.1.0 compatible"
+                }
+            ]
+        },
+        "k020003": {
+            "major": "2",
+            "minor": "0",
+            "patch": "3",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "ItemLevelDisplay\\ItemLevelDisplay-2.0.2.lua"
+                }
+            ]
+        },
+        "k020002": {
+            "major": "2",
+            "minor": "0",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "font type and font size are now totally customizable"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "itemlevel display in bags can be disabled under a customizable itemlevel"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Socket status is back"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Arkinventory was always showing itemelevel regardless enabled itemclasses"
+                }
+            ]
+        },
+        "k020001": {
+            "major": "2",
+            "minor": "0",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "you can choose for which items' classes show the itemlevel"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "item scanning is now much faster for all addons"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "added switch to completely disable itemlevel in bags"
+                }
+            ]
+        },
+        "k020000": {
+            "major": "2",
+            "minor": "0",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Added Inspect Frame"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Blizzard bags support"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Arkinventory bags support"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Removed useless total gem count"
+                }
+            ]
+        },
+        "k010701": {
+            "major": "1",
+            "minor": "7",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Message"
+                }
+            ]
+        },
+        "k010700": {
+            "major": "1",
+            "minor": "7",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Heirloom current level is now displayed"
+                }
+            ]
+        },
+        "k010602": {
+            "major": "1",
+            "minor": "6",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "An error occurs when login"
+                }
+            ]
+        },
+        "k010601": {
+            "major": "1",
+            "minor": "6",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "You can disable itemlevel for shirt and tabard"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Dropped buckle reference"
+                },
+                {
+                    "tag": "Fixed",
+                    "info": "Error \"Message"
+                }
+            ]
+        },
+        "k010600": {
+            "major": "1",
+            "minor": "6",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "No longer shows old enchant requiremente for item 600+"
+                }
+            ]
+        },
+        "k010505": {
+            "major": "1",
+            "minor": "5",
+            "patch": "5",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Removes debug spam from chat"
+                },
+                {
+                    "tag": "Update",
+                    "info": "Will remove old enchant\/buckles info in 1.6.0"
+                }
+            ]
+        },
+        "k010504": {
+            "major": "1",
+            "minor": "5",
+            "patch": "4",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Error when opening equipmentset flyout with nore than one equipment set"
+                }
+            ]
+        },
+        "k010503": {
+            "major": "1",
+            "minor": "5",
+            "patch": "3",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Opening a flyout in trasmogrification panel, when no flyout was ever open in the standard paperdoll raised"
+                }
+            ]
+        },
+        "k010502": {
+            "major": "1",
+            "minor": "5",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "In some cases, opening the flyout caused error spamming (signaled by Phosphoros)"
+                }
+            ]
+        },
+        "k010501": {
+            "major": "1",
+            "minor": "5",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "No longer gives error when opening tabard or shirt flyout."
+                }
+            ]
+        },
+        "k010500": {
+            "major": "1",
+            "minor": "5",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Equipment in flyout equipment manager buttons are now taken in consideration and ilevel added to them."
+                }
+            ]
+        },
+        "k010405": {
+            "major": "1",
+            "minor": "4",
+            "patch": "5",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "now accounts for bonus level due to difficulty in raid dropped items. With this release upgrade for Wod should be now complete"
+                }
+            ]
+        },
+        "k010404": {
+            "major": "1",
+            "minor": "4",
+            "patch": "4",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "when you install ItemLevelDisplay for tha absolute first time, it raises an error if you choose \"Common profile for all characters\" at the one time profile type request."
+                }
+            ]
+        },
+        "k010403": {
+            "major": "1",
+            "minor": "4",
+            "patch": "3",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "For level based coloring, upgrade value was not taken in account."
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Thanks to Mergele for sending the fix"
+                }
+            ]
+        },
+        "k010402": {
+            "major": "1",
+            "minor": "4",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Upgraded items are back!!"
+                }
+            ]
+        },
+        "k010401": {
+            "major": "1",
+            "minor": "4",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Upgrade",
+                    "info": "libItemUpgradeInfo upgraded to 1.0.7"
+                }
+            ]
+        },
+        "k010302": {
+            "major": "1",
+            "minor": "3",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Configuration can now be global.(i.e. all characters share the same settings)"
+                },
+                {
+                    "tag": "Fixed",
+                    "info": "Best green and best red were swapped"
+                }
+            ]
+        },
+        "k010301": {
+            "major": "1",
+            "minor": "3",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Refined configuration panel"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Added enchantable rings for enchanter"
+                },
+                {
+                    "tag": "Fixed",
+                    "info": "gem mini panel is now always updated"
+                }
+            ]
+        },
+        "k010300": {
+            "major": "1",
+            "minor": "3",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Refactored appearance with now 4 color schemes"
+                },
+                {
+                    "tag": "* Quality",
+                    "info": "based on item quality from poor to Heirloom"
+                },
+                {
+                    "tag": "* Plain",
+                    "info": "no color at all"
+                },
+                {
+                    "tag": "* Level green",
+                    "info": "based on relative level (green are best)"
+                },
+                {
+                    "tag": "* Level red",
+                    "info": "based on relative level (red are best)"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Thanks to KVLtv for donating the code"
+                }
+            ]
+        },
+        "k010207": {
+            "major": "1",
+            "minor": "2",
+            "patch": "7",
+            "description": [
+                {
+                    "tag": "Upgrade",
+                    "info": "Accounts for 5.4.8 item upgrades"
+                }
+            ]
+        },
+        "k010206": {
+            "major": "1",
+            "minor": "2",
+            "patch": "6",
+            "description": [
+                {
+                    "tag": "Upgrade",
+                    "info": "Accounts for 5.4 item upgrades"
+                }
+            ]
+        },
+        "k010204": {
+            "major": "1",
+            "minor": "2",
+            "patch": "4",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "More localization"
+                }
+            ]
+        },
+        "k010102": {
+            "major": "1",
+            "minor": "1",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Upgrade",
+                    "info": "Accounts for 5.3 item upgrades"
+                }
+            ]
+        },
+        "k010100": {
+            "major": "1",
+            "minor": "1",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Upgrade",
+                    "info": "Accounts for 5.1 item upgrades"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Level text can now be moved via \/ild gui"
+                }
+            ]
+        },
+        "k010008": {
+            "major": "1",
+            "minor": "0",
+            "patch": "8",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Head slot is no longer enchantable"
+                }
+            ]
+        },
+        "k010005": {
+            "major": "1",
+            "minor": "0",
+            "patch": "5",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Now you can reverse color (red itemes are better)"
+                }
+            ]
+        },
+        "k010003": {
+            "major": "1",
+            "minor": "0",
+            "patch": "3",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Removed chat spam  18 [Name of item in slot 18] item type"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "Config menu via blizzard menu or \/ild gui"
+                }
+            ]
+        },
+        "k010002": {
+            "major": "1",
+            "minor": "0",
+            "patch": "2",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Waist slot no longer display -1 when you have a belt buckle filled"
+                },
+                {
+                    "tag": "Fixed",
+                    "info": "Now only guns\/bows\/crossbows should check for enchants"
+                }
+            ]
+        },
+        "k010001": {
+            "major": "1",
+            "minor": "0",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Fixed",
+                    "info": "Waist slot was ignored"
+                }
+            ]
+        },
+        "k010000": {
+            "major": "1",
+            "minor": "0",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Initial release"
+                }
+            ]
+        }
+    },
+    "PARAGRAPHS": [
+        "Description"
+    ],
+    "TITLE": {
+        "addon": "Quick Item Level Display",
+        "title": "RELNOTES"
+    },
+    "WIKI": [
+        "=ItemLevelDisplay adds a tiny layer on each item slot with the following information:=",
+        "",
+        " * ItemLevel",
+        " * Socket Status",
+        " * Enchant Status",
+        "",
+        "",
+        "==ItemLevelDisplay manages==",
+        "* Paperdoll",
+        "* Inspect Frame",
+        "* Transmogrifier",
+        "* Bags and Bank (if your bag addon is unsupported, please let me know it)",
+        "",
+        "Bags management is implemented via separated addon!! (ILD-<bagmanager name>)",
+        "",
+        "",
+        "==Bag manager list:==",
+        "* ILD-Blizzard: Blizzard (with bank)",
+        "* ILD-Arkinventory: ArkInventory (with bank)",
+        "* ILD-Baggins: Baggins (with bank)",
+        "* ILD-Baudbag: Baud Bag (with bank)"
+    ]
+}
