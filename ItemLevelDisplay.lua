@@ -3,8 +3,8 @@ local toc=select(4,GetBuildInfo())
 local me, ns = ...
 local pp=print
 --@debug@
-LoadAddOn("Blizzard_DebugTools")
-LoadAddOn("LibDebug")
+C_AddOns.LoadAddOn("Blizzard_DebugTools")
+C_AddOns.LoadAddOn("LibDebug")
 if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
 --@end-debug@
 --[===[@non-debug@
@@ -65,12 +65,12 @@ fontObject:SetFont(Game11Font:GetFont())
 -- 	InspectPaperDollItemsFrame
 -- 	Inspect<name>Slot
 --------------------------------------
-local l=GetNumAddOns()
+local l=C_AddOns.GetNumAddOns()
 local baggers={"Blizzard"}
 for i=1,l do
-	local name, title, notes, loadable, reason, security, newVersion = GetAddOnInfo(i)
+	local name, title, notes, loadable, reason, security, newVersion = C_AddOns.GetAddOnInfo(i)
 	if name:find('ILD-')==1 then
-		local dep1,dep2=GetAddOnDependencies(i)
+		local dep1,dep2=C_AddOns.GetAddOnDependencies(i)
 		if dep1=="ItemLevelDisplay" then
 			tinsert(baggers,dep2)
 		else
@@ -136,7 +136,7 @@ local function nop() end
 local _G=_G
 local type=type
 local pairs=pairs
-local GetItemStats=GetItemStats
+local GetItemStats=C_Item.GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
 local GetInventoryItemGems=_G.GetInventoryItemGems
 local GetAverageItemLevel=GetAverageItemLevel
