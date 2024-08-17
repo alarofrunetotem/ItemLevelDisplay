@@ -19,18 +19,19 @@ local select=select
 local font
 local corner
 --@debug@
-LoadAddOn("Blizzard_DebugTools")
-LoadAddOn("LibDebug")
+C_AddOns.LoadAddOn("Blizzard_DebugTools")
+C_AddOns.LoadAddOn("LibDebug")
 if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
 --@end-debug@
 --[===[@non-debug@
 ns.print=function() end
 --@end-non-debug@]===]
 --local print=ns.print or print
-LoadAddOn("ItemLevelDisplay")
+C_AddOns.LoadAddOn("ItemLevelDisplay")
 local addon=LibStub("LibInit"):GetAddon("ItemLevelDisplay")
 local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.0','AceEvent-3.0','AceTimer-3.0') ---@class module
 --local I=LibStub("LibItemUpgradeInfo-1.0")
+---@class LibSharedMedia-3.0
 local LSM=LibStub("LibSharedMedia-3.0")
 --local GetItemInfo=I:GetCachingGetItemInfo()
 --local module=addon:NewSubModule(me,"AceHook-3.0","AceEvent-3.0") --#module
@@ -91,7 +92,7 @@ function module:GetInfo(frame,bag,slot)
 		bag,slot=frame:GetParent():GetID(), frame:GetID()
 	end
   local t=C_Container.GetContainerItemInfo(bag,slot)
-	local qh=t.quality,t.hyperlink
+	local q,h=t.quality,t.hyperlink
 	local c=h and GetItemInfo(h,12) or nil
 	return q,h,c
 
