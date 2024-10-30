@@ -1,23 +1,10 @@
 local me,ns=...
 local _G=_G
 local setmetatable=setmetatable
-local next=next
 local pairs=pairs
-local wipe=wipe
-local GetChatFrame=GetChatFrame
-local format=format
-local GetTime=GetTime
-local strjoin=strjoin
-local strspilit=strsplit
-local tostringall=tostringall
-local tostring=tostring
-local tonumber=tonumber
-local type=type
-local LoadAddOn=LoadAddOn
+---@diagnostic disable-next-line: unused-local
 local pp=print
 local select=select
-local font
-local corner
 --@debug@
 C_AddOns.LoadAddOn("Blizzard_DebugTools")
 C_AddOns.LoadAddOn("LibDebug")
@@ -33,7 +20,10 @@ local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.
 --local I=LibStub("LibItemUpgradeInfo-1.0")
 ---@class LibSharedMedia-3.0
 local LSM=LibStub("LibSharedMedia-3.0")
---local GetItemInfo=I:GetCachingGetItemInfo()
+local function GetItemInfo(item,index)
+	return select(index,C_Item.GetItemInfo(item))
+end
+
 --local module=addon:NewSubModule(me,"AceHook-3.0","AceEvent-3.0") --#module
 local toc=select(4,GetBuildInfo())
 local C=addon:GetColorTable()
@@ -59,7 +49,6 @@ local frameLayers=setmetatable({},
 function module:OnInitialize()
 	self:Print("Loaded",me)
 	self:SetEnabledState(addon:GetBoolean('BAGS'))
-	corner = addon:GetVar("BAGSCORNER")
 	local a,b,c=fontObject:GetFont()
 	a=LSM:Fetch("font",addon:GetVar("BAGSFONT"))
 	b=addon:GetNumber("BAGSFONTSIZE")
@@ -70,7 +59,6 @@ function module:OnInitialize()
 end
 function module:ILD_APPLY(event,key,value)
 	if key=="CORNER" then
-		corner=value
 		self:RefreshCorners(value)
 	elseif key=="FONT" or key=="FONTSIZE" or key=="FONTOUTLINE" then
 		local a,b,c=fontObject:GetFont()

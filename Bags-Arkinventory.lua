@@ -2,12 +2,12 @@ local me,ns=...
 local addon=ns.addon
 local module=ns.module
 local _G=_G
-local ArkInventory
+--local ArkInventory
 --@debug@
 if LibDebug then LibDebug() end
 --@end-debug@
 function module:OnInitialized()
-	ArkInventory=LibStub("AceAddon-3.0"):GetAddon("ArkInventory",true)
+	-- ArkInventory=LibStub("AceAddon-3.0"):GetAddon("ArkInventory",true)
 end
 function module:OnEnable()
 	self:SecureHook(ArkInventory,"SetItemButtonTexture","Display")
