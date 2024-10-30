@@ -4,6 +4,7 @@ local module=ns.module
 local bagManagers={} --#_bags
 if LibDebug then LibDebug() end
 function module:OnEnabled()
+---@diagnostic disable-next-line: undefined-global
 	self:SecureHook(Baggins,"UpdateItemButton","Display")
 end
 function module:Display(baggins,bagframe,button,bag,slot)

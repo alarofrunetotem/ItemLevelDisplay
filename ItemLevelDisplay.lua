@@ -138,10 +138,11 @@ local type=type
 local pairs=pairs
 local GetItemStats=C_Item.GetItemStats
 local GetInventorySlotInfo=GetInventorySlotInfo
-local GetInventoryItemGems=_G.GetInventoryItemGems
 local GetAverageItemLevel=GetAverageItemLevel
-local GetItemQualityColor=GetItemQualityColor
-local GetItemInfo=GetItemInfo
+local GetItemQualityColor=C_Item.GetItemQualityColor
+local function GetItemInfo(item,index)
+	return select(index,C_Item.GetItemInfo(item))
+end
 local LSM=LibStub("LibSharedMedia-3.0")
 --local I=LibStub("LibItemUpgradeInfo-1.0")
 --------------------------------------
