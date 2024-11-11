@@ -104,7 +104,7 @@ function module:OnEnabled()
 end
 function module:BagShow()
 	for frame,data in pairs(frameLayers) do
-		self:DrawItem(frame,data.quality,data.itemlink,data.class,true)
+		self:DrawItem(frame,data.quality,data.itemlink,data.class)
 	end
 end
 function module:RefreshFonts()
@@ -137,7 +137,7 @@ function module:DrawItem(frame,quality,itemlink,class)
 	layer.itemlink=itemlink -- cache update
 	layer.quality=quality
 	layer.class=class
-	local ilevel=I:GetUpgradedItemLevel(itemlink)
+	local ilevel=C_Item.GetDetailedItemLevelInfo(itemlink) 
 	if ilevel < addon:GetNumber("BAGSLEVELS") then t:Hide() return end
 	addon:placeLayer(t,nil,nil,addon:GetVar("BAGSCORNER"))
 	t:SetFormattedText("%3d",ilevel)
