@@ -30,4 +30,5 @@ ignore:
    - .settings
    - .gitignore
    - .settings
+   - RelNotes.json
 
