@@ -43,7 +43,9 @@ local C=addon:GetColorTable()
 local print=ns.print or print
 local debug=ns.debug or print
 local bagSlots={}
-local NUM_LE_ITEM_CLASSES=_G.NUM_LE_ITEM_CLASSES or _G.NUM_LE_ITEM_CLASSS or 19
+local NUM_LE_ITEM_CLASSES=19
+addon:Debug("NUM_LE_ITEM_CLASSES",NUM_LE_ITEM_CLASSES)
+
 local LE_ITEM_CLASS_ARMOR=_G.Enum.ItemClass.Armor
 local LE_ITEM_CLASS_WEAPON=_G.Enum.ItemClass.Weapon
 local modules={}
@@ -141,6 +143,8 @@ local GetInventorySlotInfo=GetInventorySlotInfo
 local GetAverageItemLevel=GetAverageItemLevel
 local GetItemQualityColor=C_Item.GetItemQualityColor
 local function GetItemInfo(item,index)
+	addon:Debug("GetItemInfo",item,index)
+	addon:Debug("GetItemInfo",C_Item.GetItemInfo(item))
 	return select(index,C_Item.GetItemInfo(item))
 end
 local LSM=LibStub("LibSharedMedia-3.0")
@@ -207,8 +211,8 @@ local slotsList={
 }
 local stats={}
 local sockets={}
-local slots=false
-local islots=false
+local slots
+local islots
 local useless={}
 local flyouts={}
 local gframe=false
@@ -231,8 +235,7 @@ function addon:getSockets(itemlink)
 		local b=0
 		local y=0
 		local p=0
-		local tmp=self:NewTable()
-		GetItemStats(itemlink,tmp)
+		local tmp=GetItemStats(itemlink)
 		for k,v in pairs(tmp) do
 			--debug(k,v)
 			if (k=="EMPTY_SOCKET_RED") then
@@ -486,29 +489,34 @@ function addon:getColors(itemRarity,itemLevel)
 	end
 end
 
-function addon:paintButton(t,slotId,itemLocation,average,enchantable)
-		if (not itemLocation or (useless[slotId] and not self:GetBoolean("SHOWUSELESS"))) then
+function addon:paintButton(target,t,slotId,itemLink,average,enchantable)
+		local itemLocation=target=='player' and ItemLocation:CreateFromEquipmentSlot(slotId) or nil
+		if not itemLink then
 			t.gem:Hide()
 			t.enc:Hide()
 			t.ilevel:Hide()
 			return
 		end
-		local itemlink=C_Item.GetItemLink(itemLocation)
 		t.ilevel:Show()
-		local loc=GetItemInfo(itemlink,9)
-		local itemrarity=tonumber(GetItemInfo(itemlink,3) or -1)
-		if type(itemlink)=="number" then itemlink=GetItemInfo(itemlink,2) end
-		local ilevel=C_Item.GetCurrentItemLevel(itemLocation)
+		DevTools_Dump(itemLink)
+		self:Debug(itemLink)
+
+		--local loc=GetItemInfo(itemlink,9)
+		local itemRarity=tonumber(GetItemInfo(itemLink,3) or -1)
+		if type(itemLink)=="number" then itemLink=GetItemInfo(itemLink,2) end
+		local ilevel=itemLocation and C_Item.GetCurrentItemLevel(itemLocation) or C_Item.GetDetailedItemLevelInfo(itemLink)
+		self:Debug("paintButton",target,slotId,ilevel,average,enchantable)
+
 		if type(ilevel)~="number" then
 			ilevel=0
 			--print("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
 			--error("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
 		end
 		t.ilevel:SetFormattedText("%3d",ilevel)
-		t.ilevel:SetTextColor(self:getColors(itemrarity,ilevel))
+		t.ilevel:SetTextColor(self:getColors(itemRarity,ilevel))
 		t.ilevel:SetFont(fontObject:GetFont())
 		if (enchantable > (ilevel) and self:GetToggle("SHOWENCHANT") ) then
-			local enchval=self:checkLink(itemlink)
+			local enchval=self:checkLink(itemLink)
 			if (enchval<1) then
 				t.enc:SetText(L["E"])
 				t.enc:Show()
@@ -518,8 +526,9 @@ function addon:paintButton(t,slotId,itemLocation,average,enchantable)
 		else
 			t.enc:Hide()
 		end
-		local sockets=self:getSockets(itemlink)
-		local gems=self:getNumGems(strsplit(':',itemlink))
+		local sockets=self:getSockets(itemLink)
+		local gems=self:getNumGems(strsplit(':',itemLink))
+		local loc=GetItemInfo(itemLink,9) 
 		if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
 			t.gem:SetText("S")
 			t.gem:Show()
@@ -542,12 +551,16 @@ function addon:slotsCheck (...)
 		average=GetAverageItemLevel()-range -- 1 tier up are full green
 		local trueAvg=0
 		for  slotId,data in pairs(slots) do
-				local itemLocation=ItemLocation:CreateFromEquipmentSlot(slotId)
-				if itemLocation and itemLocation:IsValid() then
-					self:paintButton(data.frame,slotId,itemLocation,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
+			if (data.frame) then
+				local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotId)
+				self:Debug(itemLocation:IsEquipmentSlot())
+				local itemLink = itemLocation and itemLocation:IsValid() and C_Item.GetItemLink(itemLocation) or nil 
+				if itemLink then
+					self:paintButton('player',data.frame,slotId,itemLink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
 				else
-					self:paintButton(data.frame,slotId)
+					self:paintButton('player',data.frame,slotId)
 				end
+			end
 		end
 end
 --[[
@@ -565,30 +578,31 @@ function addon:realinspectCheck (...)
 	average=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
 	for  slotId,data in pairs(islots) do
-		local itemlink=GetInventoryItemLink("target",slotId)
-		if (itemlink) then
-			if I:IsArtifact(itemlink) then
-					local ilvl=I:GetUpgradedItemLevel(itemlink)
-					if slotId==INVSLOT_OFFHAND then
-							local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
-							if ilvl < mainilvl then
-									itemlink=GetInventoryItemLink("target",INVSLOT_MAINHAND)
-							end
-					else
-							local offhand=GetInventoryItemLink("target",INVSLOT_OFFHAND)
-							if (offhand) then
-									local offilvl=I:GetUpgradedItemLevel(offhand)
-									if ilvl < offilvl then
-											itemlink=offhand
-									end
+		local itemLink=GetInventoryItemLink("target",slotId)
+		self:Debug(slotId,itemLink)
+		if (itemLink) then
+			local itemLocation=ItemLocation:CreateFromEquipmentSlot(slotId)
+			local ilvl=C_Item.GetDetailedItemLevelInfo(itemLink)
+			self:Debug(itemLink,ilvl)
+			if slotId==INVSLOT_OFFHAND then
+					-- local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
+					local mainilvl=C_Item.GetDetailedItemLevelInfo(itemLink)
+					if ilvl < mainilvl then
+							itemLink=GetInventoryItemLink("target",INVSLOT_MAINHAND)
+					end
+			else
+					local offhand=GetInventoryItemLink("target",INVSLOT_OFFHAND)
+					if (offhand) then
+							-- local offilvl=I:GetUpgradedItemLevel(offhand)
+							local offilvl=C_Item.GetDetailedItemLevelInfo(itemLink)
+							if ilvl < offilvl then
+									itemLink=offhand
 							end
 					end
-					self:paintButton(data.frame,slotId,itemlink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
-			else
-					self:paintButton(data.frame,slotId,itemlink,average,data.enchantable)
 			end
+			self:paintButton('target',data.frame,slotId,itemLink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
 		else
-			self:paintButton(data.frame,slotId)
+			self:paintButton('target',data.frame,slotId)
 		end
 	end
 end
@@ -627,7 +641,7 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 	end
 	local id=tonumber(button:GetName():sub(-1))
 	if ( location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION ) then
-		self:paintButton(flyouts[id].frame)
+		self:paintButton('player',flyouts[id].frame)
 		return
 	end
 	local key=id..tostring(slot)
@@ -650,8 +664,8 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 		itemid=nil
 	end
 	if (itemid) then
-		pp('Paint button',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
-		self:paintButton(flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
+		self:Debug('Paint button',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
+		self:paintButton('player',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
 	else
 		debug("Item",itemid , "not found")
 	end
