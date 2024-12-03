@@ -1,5 +1,24 @@
 {
     "NOTES": {
+        "k021400": {
+            "major": "2",
+            "minor": "14",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Removed baggins and BaudBag"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "removed no longer usefull Ild-Arkinventory"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "No Longer use LibItemUpgradeInfo"
+                }
+            ]
+        },
         "k020901": {
             "major": "2",
             "minor": "9",
