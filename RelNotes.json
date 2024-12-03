@@ -1,5 +1,16 @@
 {
     "NOTES": {
+        "k021300": {
+            "major": "2",
+            "minor": "13",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "Removed baggins and BaudBag"
+                }
+            ]
+        },
         "k021200": {
             "major": "2",
             "minor": "12",

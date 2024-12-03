@@ -29,6 +29,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Baudbag: Baud Bag (with bank)
 ]])
 self:HF_Paragraph('Release Notes')
+self:RelNotes(2,13,0,[[
+Fix: Removed baggins and BaudBag
+]])
 self:RelNotes(2,12,0,[[
 Fix: removed no longer usefull Ild-Arkinventory
 Fix: No Longer use LibItemUpgradeInfo
