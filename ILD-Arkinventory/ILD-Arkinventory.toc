@@ -1,4 +1,4 @@
-## Interface: 110005,110005
+## Interface: 110007, 110100
 ## Title: Z Deleted Addon
 ## Notes: Please Remove ILD-Arkinvenory folder or Bags-Arkinventory.lua file
 ## Author: Alar of Daggerspine

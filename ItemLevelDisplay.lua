@@ -215,7 +215,7 @@ local slots
 local islots
 local useless={}
 local flyouts={}
-local gframe=false
+local gframe
 local gred=false
 local gblue=false
 local gyellow=false
@@ -634,7 +634,7 @@ function addon:EquipmentFlyout_CreateButton(...)
 	--]]
 end
 
-function addon:EquipmentFlyout_DisplayButton(button,slot)
+function addon:EquipmentFlyout_DisplayButton(button,s)
 	local location,itemid,level = button.location,nil,0;
 	if ( not location ) then
 		return;
@@ -644,7 +644,7 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 		self:paintButton('player',flyouts[id].frame)
 		return
 	end
-	local key=id..tostring(slot)
+	local key=id..tostring(s)
 	if (flyoutDrawn[key]) then return end
 	flyoutDrawn[key]=true
 	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
@@ -654,10 +654,11 @@ function addon:EquipmentFlyout_DisplayButton(button,slot)
 		return;
 	end
 	local rc
+	itemid=nil
 	if (voidStorage and voidSlot) then
-		itemid=GetVoidItemInfo(tab,voidSlot)
+		if (tab) then itemid=GetVoidItemInfo(tab,voidSlot) end
 	elseif (bags and slot) then
-		itemid=C_Container.GetContainerItemLink(bag,slot)
+		if bag then itemid=C_Container.GetContainerItemLink(bag,slot) end
 	elseif (player and slot) then
 		itemid=GetInventoryItemLink("player",slot)
 	else
