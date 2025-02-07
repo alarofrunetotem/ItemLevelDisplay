@@ -31,4 +31,5 @@ ignore:
    - .gitignore
    - .settings
    - RelNotes.json
+   - RelNotes-legacy.lua
 
