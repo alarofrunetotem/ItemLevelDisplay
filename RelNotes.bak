@@ -29,9 +29,6 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Baudbag: Baud Bag (with bank)
 ]])
 self:HF_Paragraph('Release Notes')
-self:RelNotes(2,14,1,[[
-Toc: 11.0.7
-]])
 self:RelNotes(2,14,0,[[
 Fix: Removed baggins and BaudBag
 Fix: removed no longer usefull Ild-Arkinventory
@@ -46,7 +43,7 @@ Toc: Version 10.2.7
 Feature: Removed Bagnon support, use Bagnon ItemLevel
 Feature: Removed Combuctor support, use Bagnon ItemLevel
 Feature: Removed LiteBag support, use LiteBag Item Level
-Feature: Removed Onebag3 support
+Feature: Reomved Onebag3 support
 ]])
 self:RelNotes(2,7,2,[[
 Fix: Removed chat spam
@@ -228,7 +225,5 @@ Fixed: Waist slot was ignored
 ]])
 self:RelNotes(1,0,0,[[
 Feature: Initial release
-]])
-self:RelNotes(0,14,1,[[
 ]])
 end

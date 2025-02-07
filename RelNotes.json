@@ -1,5 +1,16 @@
 {
     "NOTES": {
+        "k021401": {
+            "major": "2",
+            "minor": "14",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Toc",
+                    "info": "11.0.7"
+                }
+            ]
+        },
         "k021400": {
             "major": "2",
             "minor": "14",
@@ -57,7 +68,7 @@
                 },
                 {
                     "tag": "Feature",
-                    "info": "Reomved Onebag3 support"
+                    "info": "Removed Onebag3 support"
                 }
             ]
         },
@@ -732,10 +743,22 @@
                     "info": "Initial release"
                 }
             ]
+        },
+        "k001401": {
+            "major": "0",
+            "minor": "14",
+            "patch": "1",
+            "description": [
+                {
+                    "tag": "Loc",
+                    "info": "ignores RelNotes.legacy.lua"
+                }
+            ]
         }
     },
     "PARAGRAPHS": [
-        "Description"
+        "Description",
+        "Release Notes"
     ],
     "TITLE": {
         "addon": "Quick Item Level Display",
