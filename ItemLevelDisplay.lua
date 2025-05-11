@@ -95,9 +95,12 @@ local positionScheme={
 	tc=L['Top Center']
 }
 local bagPositionScheme={
+	br=L['Bottom Right'],
 	tr=L['Top Right'],
 	tl=L['Top Left'],
-	bl=L['Bottom Left']
+	bl=L['Bottom Left'],
+	bc=L['Bottom Center'],
+	tc=L['Top Center']
 }
 local outlineScheme={
 	[""]=L["No shadow"],
