@@ -1,5 +1,16 @@
 {
     "NOTES": {
+        "k021403": {
+            "major": "2",
+            "minor": "14",
+            "patch": "3",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Removed old stubs"
+                }
+            ]
+        },
         "k021402": {
             "major": "2",
             "minor": "14",
