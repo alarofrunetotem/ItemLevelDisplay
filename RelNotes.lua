@@ -29,6 +29,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Baudbag: Baud Bag (with bank)
 ]])
 self:HF_Paragraph('Release Notes')
+self:RelNotes(2,15,0,[[
+Fix: work in progress
+]])
 self:RelNotes(2,14,3,[[
 Feature: Removed old stubs
 ]])
