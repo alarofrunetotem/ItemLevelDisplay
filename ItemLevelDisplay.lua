@@ -146,8 +146,6 @@ local GetInventorySlotInfo=GetInventorySlotInfo
 local GetAverageItemLevel=GetAverageItemLevel
 local GetItemQualityColor=C_Item.GetItemQualityColor
 local function GetItemInfo(item,index)
-	addon:Debug("GetItemInfo",item,index)
-	addon:Debug("GetItemInfo",C_Item.GetItemInfo(item))
 	return select(index,C_Item.GetItemInfo(item))
 end
 local LSM=LibStub("LibSharedMedia-3.0")
@@ -501,12 +499,17 @@ function addon:paintButton(target,t,slotId,itemLink,average,enchantable)
 			return
 		end
 		t.ilevel:Show()
-		DevTools_Dump(itemLink)
 		self:Debug(itemLink)
 
 		--local loc=GetItemInfo(itemlink,9)
 		local itemRarity=tonumber(GetItemInfo(itemLink,3) or -1)
 		if type(itemLink)=="number" then itemLink=GetItemInfo(itemLink,2) end
+		self:Debug(itemLocation:GetBagAndSlot())		
+		self:Debug(itemLocation:GetEquipmentSlot())		
+		if (not itemLocation:IsValid()) then
+			self:Debug("Invalid item location")
+			return
+		end
 		local ilevel=itemLocation and C_Item.GetCurrentItemLevel(itemLocation) or C_Item.GetDetailedItemLevelInfo(itemLink)
 		self:Debug("paintButton",target,slotId,ilevel,average,enchantable)
 
@@ -626,33 +629,32 @@ function addon:removedloadGemLocalizedStrings()
 	Meta_localized = select(7,GetItemInfo(Meta_localized))
 	debug(Meta_localized)
 end
-function addon:EquipmentFlyout_CreateButton(...)
-	self:Debug(...)
-	--[[
-	local button=self.hooks.EquipmentFlyout_CreateButton(...)
+local lastitemid=nil
+function addon:EquipmentFlyout_DisplayButton(button,s)
+	local location,itemid = button.location,nil;
+	local itemID, name, textureName, count, durability, maxDurability, invType, locked, start, duration, enable, setTooltip, quality, isUpgrade, isBound = EquipmentManager_GetItemInfoByLocation(location);
+	if (itemID==lastitemid) then return end
+	lastitemid=itemID
+	self:Debug(itemID,name,textureName,count,durability,maxDurability,invType,locked,start,duration,enable,setTooltip,quality,isUpgrade,isBound)
+	DevTools_Dump(setTooltip)
 	local id=tonumber(button:GetName():sub(-1))
 	if (id) then
-		flyouts[id]={frame=self:addLayer(button,"fly" .. id,false,fontObject)}
+		if (not flyouts[id]) then
+			flyouts[id]={frame=self:addLayer(button,"fly" .. id,false,fontObject)}
+		end
 	end
-	--]]
-end
-
-function addon:EquipmentFlyout_DisplayButton(button,s)
-	local location,itemid,level = button.location,nil,0;
-	if ( not location ) then
-		return;
-	end
-	local id=tonumber(button:GetName():sub(-1))
 	if ( location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION ) then
+		self:Debug("Special button")
 		self:paintButton('player',flyouts[id].frame)
 		return
 	end
 	local key=id..tostring(s)
-	if (flyoutDrawn[key]) then return end
+	if (flyoutDrawn[key]) then self:Debug("Button already drawn",key) return end
 	flyoutDrawn[key]=true
 	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
-	if (not slots[button.id]) then return end
+	if (not slots[button.id]) then self:Debug("No slot",button.id) return end
 	local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
+	self:Debug(player,bank,bags,voidStorage,slot,bag,tab,voidSlot)
 	if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
 		return;
 	end
@@ -668,10 +670,7 @@ function addon:EquipmentFlyout_DisplayButton(button,s)
 		itemid=nil
 	end
 	if (itemid) then
-		self:Debug('Paint button',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
 		self:paintButton('player',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
-	else
-		debug("Item",itemid , "not found")
 	end
 end
 function addon:IsClassEnabled(class)
@@ -735,8 +734,7 @@ function addon:OnInitialized()
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",wipefly)
 
 
-	self:SecureHook("EquipmentFlyout_CreateButton")
-	self:SecureHook("EquipmentFlyout_DisplayButton")
+	-- self:SecureHook("EquipmentFlyout_DisplayButton")
 
 	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
