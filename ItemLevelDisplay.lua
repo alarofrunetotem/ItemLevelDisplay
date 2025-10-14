@@ -1,7 +1,6 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- MUST BE LINE 1
 local toc=select(4,GetBuildInfo())
-local me, ns = ...
-local pp=print
+local me, ns = ...local pp=print
 --@debug@
 C_AddOns.LoadAddOn("Blizzard_DebugTools")
 C_AddOns.LoadAddOn("LibDebug")
@@ -33,6 +32,27 @@ local INVSLOT_RANGED		= INVSLOT_RANGED
 local INVSLOT_TABARD		= INVSLOT_TABARD
 local INVSLOT_FIRST_EQUIPPED = INVSLOT_FIRST_EQUIPPED;
 local INVSLOT_LAST_EQUIPPED = INVSLOT_LAST_EQUIPPED
+
+local slots={
+	head='HeadSlot',
+	neck='NeckSlot',
+	shoulder='ShoulderSlot',
+	back='BackSlot',
+	chest='ChestSlot',
+	shirt='ShirtSlot',
+	tabard='TabardSlot',
+	wrist='WristSlot',
+	hands='HandsSlot',
+	waist='WaistSlot',
+	legs='LegsSlot',
+	feet='FeetSlot',
+	finger0='Finger0Slot',
+	finger1='Finger1Slot',
+	trinket0='Trinket0Slot',
+	trinket1='Trinket1Slot',
+	mainhand='MainHandSlot',
+	secondaryhand='SecondaryHandSlot',
+}
 local addon=LibStub("LibInit"):NewAddon(ns,me,{noswitch=false,profile=true,enhancedProfile=true},'AceHook-3.0','AceEvent-3.0','AceTimer-3.0') --#Addon
 --@debug@
 addon.debug = true
@@ -499,24 +519,12 @@ function addon:paintButton(target,t,slotId,itemLink,average,enchantable)
 			return
 		end
 		t.ilevel:Show()
-		self:Debug(itemLink)
-
-		--local loc=GetItemInfo(itemlink,9)
 		local itemRarity=tonumber(GetItemInfo(itemLink,3) or -1)
 		if type(itemLink)=="number" then itemLink=GetItemInfo(itemLink,2) end
-		self:Debug(itemLocation:GetBagAndSlot())		
-		self:Debug(itemLocation:GetEquipmentSlot())		
-		if (not itemLocation:IsValid()) then
-			self:Debug("Invalid item location")
-			return
-		end
 		local ilevel=itemLocation and C_Item.GetCurrentItemLevel(itemLocation) or C_Item.GetDetailedItemLevelInfo(itemLink)
-		self:Debug("paintButton",target,slotId,ilevel,average,enchantable)
 
 		if type(ilevel)~="number" then
 			ilevel=0
-			--print("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
-			--error("Cant extract ilevel from " .. tostring(itemlink).. ' ' .. tostring(slotId))
 		end
 		t.ilevel:SetFormattedText("%3d",ilevel)
 		t.ilevel:SetTextColor(self:getColors(itemRarity,ilevel))
@@ -534,7 +542,7 @@ function addon:paintButton(target,t,slotId,itemLink,average,enchantable)
 		end
 		local sockets=self:getSockets(itemLink)
 		local gems=self:getNumGems(strsplit(':',itemLink))
-		local loc=GetItemInfo(itemLink,9) 
+		local loc=GetItemInfo(itemLink,9)
 		if (sockets.s > gems and self:GetToggle("SHOWSOCKETS")) then
 			t.gem:SetText("S")
 			t.gem:Show()
@@ -559,8 +567,7 @@ function addon:slotsCheck (...)
 		for  slotId,data in pairs(slots) do
 			if (data.frame) then
 				local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotId)
-				self:Debug(itemLocation:IsEquipmentSlot())
-				local itemLink = itemLocation and itemLocation:IsValid() and C_Item.GetItemLink(itemLocation) or nil 
+				local itemLink = itemLocation and itemLocation:IsValid() and C_Item.GetItemLink(itemLocation) or nil
 				if itemLink then
 					self:paintButton('player',data.frame,slotId,itemLink,average,self:Is("DEATHKNIGHT") and data.enchantable or never)
 				else
@@ -576,20 +583,15 @@ end
 function addon:inspectCheck()
 end
 function addon:realinspectCheck (...)
-	--@debug@
-	print("Inspect")
-	--@end-debug@
 	if (not InspectPaperDollItemsFrame:IsVisible()) then return end
 	if (not islots) then islots=self:loadSlots("Inspect",InspectPaperDollItemsFrame:GetChildren()) end
 	average=GetAverageItemLevel()-range -- 1 tier up are full green
 	local trueAvg=0
 	for  slotId,data in pairs(islots) do
 		local itemLink=GetInventoryItemLink("target",slotId)
-		self:Debug(slotId,itemLink)
 		if (itemLink) then
 			local itemLocation=ItemLocation:CreateFromEquipmentSlot(slotId)
 			local ilvl=C_Item.GetDetailedItemLevelInfo(itemLink)
-			self:Debug(itemLink,ilvl)
 			if slotId==INVSLOT_OFFHAND then
 					-- local mainilvl=I:GetUpgradedItemLevel(GetInventoryItemLink("player",INVSLOT_MAINHAND))
 					local mainilvl=C_Item.GetDetailedItemLevelInfo(itemLink)
@@ -631,46 +633,44 @@ function addon:removedloadGemLocalizedStrings()
 end
 local lastitemid=nil
 function addon:EquipmentFlyout_DisplayButton(button,s)
-	local location,itemid = button.location,nil;
-	local itemID, name, textureName, count, durability, maxDurability, invType, locked, start, duration, enable, setTooltip, quality, isUpgrade, isBound = EquipmentManager_GetItemInfoByLocation(location);
-	if (itemID==lastitemid) then return end
-	lastitemid=itemID
-	self:Debug(itemID,name,textureName,count,durability,maxDurability,invType,locked,start,duration,enable,setTooltip,quality,isUpgrade,isBound)
-	DevTools_Dump(setTooltip)
-	local id=tonumber(button:GetName():sub(-1))
-	if (id) then
-		if (not flyouts[id]) then
-			flyouts[id]={frame=self:addLayer(button,"fly" .. id,false,fontObject)}
+	local location,itemLink = button.location,nil;
+	local sa = button:GetName()
+	local where=sa:find('%d+$')
+	local id=tonumber(sa:sub(where))
+	if id > 1 then
+		local itemID, name, textureName, count, durability, maxDurability, invType, locked, start, duration, enable, setTooltip, quality, isUpgrade, isBound = EquipmentManager_GetItemInfoByLocation(location);
+		if (itemID==lastitemid) then return end
+		lastitemid=itemID
+			if (not flyouts[id]) then
+				flyouts[id]={frame=self:addLayer(button,"fly" .. id,false,fontObject)}
+			end
+		if ( location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION ) then
+			self:paintButton('player',flyouts[id].frame)
+			return
 		end
-	end
-	if ( location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION ) then
-		self:Debug("Special button")
-		self:paintButton('player',flyouts[id].frame)
-		return
-	end
-	local key=id..tostring(s)
-	if (flyoutDrawn[key]) then self:Debug("Button already drawn",key) return end
-	flyoutDrawn[key]=true
-	if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
-	if (not slots[button.id]) then self:Debug("No slot",button.id) return end
-	local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
-	self:Debug(player,bank,bags,voidStorage,slot,bag,tab,voidSlot)
-	if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
-		return;
-	end
-	local rc
-	itemid=nil
-	if (voidStorage and voidSlot) then
-		if (tab) then itemid=GetVoidItemInfo(tab,voidSlot) end
-	elseif (bags and slot) then
-		if bag then itemid=C_Container.GetContainerItemLink(bag,slot) end
-	elseif (player and slot) then
-		itemid=GetInventoryItemLink("player",slot)
-	else
-		itemid=nil
-	end
-	if (itemid) then
-		self:paintButton('player',flyouts[id].frame,button.id,itemid,average,slots[button.id].enchantable)
+		local key=id..tostring(s)
+		if (flyoutDrawn[key]) then return end
+		flyoutDrawn[key]=true
+		if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
+		if (not slots[button.id]) then self:Debug("No slot",button.id) return end
+		local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
+		if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
+			return;
+		end
+		local rc
+		itemLink=nil
+		if (voidStorage and voidSlot) then
+			if (tab) then itemLink=GetVoidItemInfo(tab,voidSlot) end
+		elseif (bags and slot) then
+			if bag then itemLink=C_Container.GetContainerItemLink(bag,slot) end
+		elseif (player and slot) then
+			itemLink=GetInventoryItemLink("player",slot)
+		else
+			itemLink=nil
+		end
+		if (itemLink) then
+			self:paintButton('flyout',flyouts[id].frame,button.id,itemLink,average,slots[button.id].enchantable)
+		end
 	end
 end
 function addon:IsClassEnabled(class)
@@ -678,7 +678,7 @@ function addon:IsClassEnabled(class)
 	return self:GetVar("CLASSES")[class2sort[class]]
 end
 
-local function wipefly() 
+local function wipefly()
 	wipe(flyoutDrawn)
 end
 function addon:OnInitialized()
@@ -732,13 +732,14 @@ function addon:OnInitialized()
 	self:HookScript(CharacterFrame,"OnShow","slotsCheck")
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",wipefly)
 	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",wipefly)
+	average=GetAverageItemLevel()-range -- 1 tier up are full green
 
-
-	-- self:SecureHook("EquipmentFlyout_DisplayButton")
+	self:SecureHook("EquipmentFlyout_DisplayButton")
 
 	self:RegisterEvent("ARTIFACT_XP_UPDATE")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("ADDON_ACTION_FORBIDDEN")
+	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 end
 
 function addon:ARTIFACT_XP_UPDATE(event,...)
@@ -747,6 +748,9 @@ end
 function addon:ADDON_ACTION_FORBIDDEN(...)
 	self:Debug(...)
 	self:Debug(debugstack())
+end
+function addon:PLAYER_EQUIPMENT_CHANGED(event,...)
+	self:slotsCheck()
 end
 function addon:ADDON_LOADED(event,addonName)
 	if addonName=="Blizzard_InspectUI" then
@@ -874,9 +878,6 @@ function addon:switchProfile(fromPanel)
 	wininfo:AddChild(b)
 	b:SetPoint("RIGHT")
 	b:SetUserData("Father",wininfo)
-	--@debug@
-	print(wininfo.frame,wininfo.frame:GetName())
-	--@end-debug@
 	wininfo:Show()
 end
 function addon:cmdInfo()
