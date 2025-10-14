@@ -1,5 +1,28 @@
 {
     "NOTES": {
+        "k021600": {
+            "major": "2",
+            "minor": "16",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Feature",
+                    "info": "Added category"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "IBlizzard bags work again in retail"
+                },
+                {
+                    "tag": "Feature",
+                    "info": "added category"
+                },
+                {
+                    "tag": "Fix",
+                    "info": "Insopect and flyout woik again"
+                }
+            ]
+        },
         "k021500": {
             "major": "2",
             "minor": "15",
