@@ -29,6 +29,12 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Baudbag: Baud Bag (with bank)
 ]])
 self:HF_Paragraph('Release Notes')
+self:RelNotes(2,16,0,[[
+Feature: Added category
+Fix: IBlizzard bags work again in retail
+Feature: added category
+Fix: Insopect and flyout woik again
+]])
 self:RelNotes(2,15,0,[[
 Fix: work in progress
 ]])

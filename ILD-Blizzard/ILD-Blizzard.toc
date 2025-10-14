@@ -3,6 +3,18 @@
 ## Notes: Displays item's levels in Blizzard bags
 ## Notes-itIT: Mostra il livello degli items nelle borse standard
 ## Author: Alar of Daggerspine
+## Group: ItemLevelDisplay
+## Category: Inventory
+## Category-deDE: Inventar
+## Category-esES: Inventario
+## Category-esMX: Inventario
+## Category-frFR: Inventaire
+## Category-itIT: Inventario
+## Category-koKR: 소지품
+## Category-ptBR: Inventário
+## Category-ruRU: Инвентарь
+## Category-zhCN: 物品栏
+## Category-zhTW: 物品欄
 ## Version: @project-version@ 70200
 ## X-Revision: @project-abbreviated-hash@
 ## eMail: alar@aspide.it
