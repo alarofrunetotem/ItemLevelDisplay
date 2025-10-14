@@ -2,6 +2,17 @@
 ## Title: ItemLevelDisplay
 ## Notes: Displays item's levels in paperdoll and optionally bags
 ## Notes-itIT: Mostra il livello degli items nella schermata del personaggio e opzionalmente nelle borse
+## Category: Inventory
+## Category-deDE: Inventar
+## Category-esES: Inventario
+## Category-esMX: Inventario
+## Category-frFR: Inventaire
+## Category-itIT: Inventario
+## Category-koKR: 소지품
+## Category-ptBR: Inventário
+## Category-ruRU: Инвентарь
+## Category-zhCN: 物品栏
+## Category-zhTW: 物品欄
 ## Author: Alar of Runetotem
 ## Version: @project-version@ 70200
 ## X-Revision: @project-abbreviated-hash@
