@@ -16,7 +16,7 @@ ns.print=function() end
 --local print=ns.print or print
 C_AddOns.LoadAddOn("ItemLevelDisplay")
 local addon=LibStub("LibInit"):GetAddon("ItemLevelDisplay")
-local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.0','AceEvent-3.0','AceTimer-3.0') ---@class module
+local module=LibStub("AceAddon-3.0"):NewAddon(ns,me,'AceConsole-3.0','AceHook-3.0','AceEvent-3.0','AceTimer-3.0') 
 --local I=LibStub("LibItemUpgradeInfo-1.0")
 ---@class LibSharedMedia-3.0
 local LSM=LibStub("LibSharedMedia-3.0")
@@ -42,6 +42,7 @@ local frameLayers=setmetatable({},
 {
 	__index=function(t,frame)
 		local f=addon:addLayer(frame,frame:GetName(),true,fontObject)
+		frame:Show()
 		t[frame]=f
 		return f
 	end
