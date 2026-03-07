@@ -29,6 +29,9 @@ Bags management is implemented via separated addon!! (ILD-<bagmanager name>)
 * ILD-Baudbag: Baud Bag (with bank)
 ]])
 self:HF_Paragraph('Release Notes')
+self:RelNotes(2,19,0,[[
+Fix: removed lua errors
+]])
 self:RelNotes(2,18,0,[[
 Toc: 12.0.1
 ]])
