@@ -1,5 +1,16 @@
 {
     "NOTES": {
+        "k021900": {
+            "major": "2",
+            "minor": "19",
+            "patch": "0",
+            "description": [
+                {
+                    "tag": "Fix",
+                    "info": "removed lua errors"
+                }
+            ]
+        },
         "k021800": {
             "major": "2",
             "minor": "18",
