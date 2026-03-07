@@ -653,17 +653,16 @@ function addon:EquipmentFlyout_DisplayButton(button,s)
 		flyoutDrawn[key]=true
 		if (not slots) then self:loadSlots(PaperDollItemsFrame:GetChildren()) end
 		if (not slots[button.id]) then self:Debug("No slot",button.id) return end
-		local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
-		if ( not player and not bank and not bags and not voidStorage ) then -- Invalid location
+		local data= EquipmentManager_GetLocationData(location)
+		local isPlayer, isBank, isBags, slot, bag = data.isPlayer, data.isBank, data.isBags, data.slot, data.bag
+		if ( not isPlayer and not isBank and not isBags  ) then -- Invalid location
 			return;
 		end
 		local rc
 		itemLink=nil
-		if (voidStorage and voidSlot) then
-			if (tab) then itemLink=GetVoidItemInfo(tab,voidSlot) end
-		elseif (bags and slot) then
+		if (isBags and slot) then
 			if bag then itemLink=C_Container.GetContainerItemLink(bag,slot) end
-		elseif (player and slot) then
+		elseif (isPlayer and slot) then
 			itemLink=GetInventoryItemLink("player",slot)
 		else
 			itemLink=nil
@@ -729,9 +728,9 @@ function addon:OnInitialized()
 		self.db.global.hascommon=true
 	end
 	self:ApplySettings()
-	self:HookScript(CharacterFrame,"OnShow","slotsCheck")
-	self:HookScript(EquipmentFlyoutFrameButtons,"OnHide",wipefly)
-	self:HookScript(EquipmentFlyoutFrameButtons,"OnShow",wipefly)
+	self:SecureHookScript(CharacterFrame,"OnShow","slotsCheck")
+	self:SecureHookScript(EquipmentFlyoutFrameButtons,"OnHide",wipefly)
+	self:SecureHookScript(EquipmentFlyoutFrameButtons,"OnShow",wipefly)
 	average=GetAverageItemLevel()-range -- 1 tier up are full green
 
 	self:SecureHook("EquipmentFlyout_DisplayButton")
@@ -755,7 +754,7 @@ end
 function addon:ADDON_LOADED(event,addonName)
 	if addonName=="Blizzard_InspectUI" then
 		self.inspectCheck=self.realinspectCheck
-		self:HookScript(InspectPaperDollItemsFrame,"OnShow","inspectCheck")
+		self:SecureHookScript(InspectPaperDollItemsFrame,"OnShow","inspectCheck")
 		self:ScheduleTimer("inspectCheck",0.5)
 	end
 end
@@ -823,7 +822,7 @@ function addon:switchProfile(fromPanel)
 	wininfo:SetTitle('ItemLevelDisplay')
 	wininfo:SetUserData("currentprofile",self.db:GetCurrentProfile())
 	wininfo:SetUserData("newprofile",self.db:GetCurrentProfile())
-	wininfo:SetStatusText("")
+	-- wininfo:SetStatusText("")
 	local l0=gui:Create("Label")
 	local l1=gui:Create("Label")
 	local l2=gui:Create("Label")
@@ -884,7 +883,7 @@ function addon:cmdInfo()
 	local gui=LibStub("AceGUI-3.0")
 	wininfo=gui:Create("Frame")
 	wininfo:SetTitle("Please post this screenshot to curse, thanks")
-	wininfo:SetStatusText("Add the expected ilevel for upgraded items")
+	-- wininfo:SetStatusText("Add the expected ilevel for upgraded items")
 	local rehide=true
 	if (not CharacterFrame:IsShown()) then
 		ToggleCharacter("PaperDollFrame")
@@ -928,7 +927,7 @@ function addon:cmdProfiles()
 	local gui=LibStub("AceGUI-3.0")
 	wininfo=gui:Create("Frame")
 	wininfo:SetTitle("Please post this screenshot to curse, thanks")
-	wininfo:SetStatusText("Add the expected ilevel for upgraded items")
+	-- wininfo:SetStatusText("Add the expected ilevel for upgraded items")
 	wipe(profiles)
 	profiles=self.db:GetProfiles(profiles)
 	for index,name in pairs(profiles) do
